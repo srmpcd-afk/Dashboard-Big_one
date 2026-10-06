@@ -264,6 +264,31 @@ body.mbig #mp0 .msr{position:fixed!important;z-index:1001;left:2vw;right:2vw;top
 :root[data-theme="light"] ::-webkit-scrollbar{width:10px;height:10px}
 :root[data-theme="light"] ::-webkit-scrollbar-thumb{background:#c3d2ce;border-radius:8px;border:2px solid transparent;background-clip:content-box}
 :root[data-theme="light"] ::-webkit-scrollbar-thumb:hover{background:#a5bab5;background-clip:content-box;border:2px solid transparent}
+
+.xl{margin:8px 0 0;padding-left:18px}.xl li{margin:0 0 9px;line-height:1.55}.xl li::marker{color:var(--ac)}
+.xtg{display:flex;gap:6px;margin:4px 0 10px}.xtg .ib{font:inherit;font-size:.82rem;padding:4px 12px;border-radius:99px;border:1px solid var(--ln);background:none;color:var(--mut);cursor:pointer}
+.xtg .ib[aria-pressed=true]{background:var(--ac);color:#fff;border-color:var(--ac)}
+
+table.hm{border-collapse:separate;border-spacing:3px;font-size:13.5px;table-layout:fixed;min-width:780px}
+.hm th,.hm td{text-align:center;border:0;white-space:normal}
+.hm th:first-child,.hm td:first-child{text-align:left;width:150px;white-space:nowrap}
+.hm td:first-child{font-weight:600;padding-left:6px}
+.hm th:nth-child(2){width:110px}
+.hm thead th{background:none;border:0;color:var(--mut);font-size:12px;font-weight:600;line-height:1.3;padding:6px 4px 10px;vertical-align:bottom}
+.hm thead th i{display:inline-block;width:8px;height:8px;border-radius:50%;margin-right:5px}
+.hm td{padding:9px 6px;border-radius:8px;font-variant-numeric:tabular-nums}
+.hm td.n{text-align:right;padding-right:12px;font-weight:700}
+.hm td.v{transition:transform .12s,box-shadow .12s;cursor:default}
+.hm td.v:hover{transform:scale(1.08);position:relative;z-index:1;box-shadow:0 4px 14px rgba(0,0,0,.22)}
+.hm td.mx{font-weight:700;outline:2px solid rgba(var(--hot),.95);outline-offset:-2px}
+.hm td.z{color:var(--mut);opacity:.45;background:var(--h1)}
+.hm tbody tr:hover td:first-child{color:var(--ac)}
+.hm tfoot td{border:0;background:var(--h1);font-weight:700;padding:10px 6px}
+.hm tfoot td:first-child{padding-left:6px}
+:root[data-theme="light"] .hm thead th{background:none;border:0}
+:root[data-theme="light"] .hm tfoot td{background:#e6f1ef}
+:root[data-theme="light"] .hm td.z{background:#f1f6f5}
+:root[data-theme="light"] .hm tbody tr:hover td:not([style]){background:none}
 </style></head><body>
 <div class="top"><div><h1>ผลดำเนินการเรื่องร้องเรียนด้านมลพิษ</h1><p id="rng">ยังไม่มีข้อมูล</p></div><div class="imp"><button class="btn" id="thm" type="button"></button> <button class="btn" id="gsb" type="button">↻ ดึงข้อมูลล่าสุด</button> <button class="btn" id="pick">นำเข้าไฟล์ Excel (สำรอง)</button> <span class="note" id="gst" aria-live="polite"></span> <button class="btn" id="clr" hidden>ล้างข้อมูล</button><div id="fs"></div></div></div>
 <div class="wrap"><aside id="side"></aside><main>
@@ -273,9 +298,9 @@ body.mbig #mp0 .msr{position:fixed!important;z-index:1001;left:2vw;right:2vw;top
 <div class="kp" id="kp"></div>
 <section id="ov"><h2 class="sec">ภาพรวม</h2><div class="g"><div class="card s8"><h2>เรื่องที่รับ รายเดือน</h2><p class="ins" id="i1"></p><div><canvas id="c1"></canvas></div></div><div class="card s4"><h2>สถานะการดำเนินการ</h2><p class="ins" id="i11"></p><div><canvas id="c11"></canvas></div></div></div></section>
 <section id="dy"><h2 class="sec">รายเดือนและรายวัน</h2><div class="card" id="dyb"></div></section>
-<section id="pb"><h2 class="sec">ปัญหามลพิษและการดำเนินงาน</h2><div class="g"><div class="card s12"><h2>ปัญหามลพิษที่ถูกร้องเรียน</h2><p class="ins" id="i2"></p><div class="pgr" id="pol"></div><p class="note">คลิกการ์ดเพื่อดูรายละเอียดเรื่องของปัญหานั้นเป็นตาราง · เส้นเล็กในการ์ด = แนวโน้มรายเดือน · 1 เรื่องมีได้หลายปัญหา</p></div><div class="card s6"><h2 id="h3">ประเภทกิจการ</h2><p class="ins" id="i3"></p><div class="rl" id="c3"></div></div><div class="card s6"><h2 id="h4">ช่องทางที่รับเรื่อง</h2><p class="ins" id="i4"></p><div class="rl" id="c4"></div></div><div class="card s6"><h2>ระยะเวลาดำเนินการ (จำนวนเรื่อง)</h2><p class="ins" id="i5"></p><div class="rl" id="c5"></div></div></div></section>
+<section id="pb"><h2 class="sec">ปัญหามลพิษและการดำเนินงาน</h2><div class="g"><div class="card s12"><h2>ปัญหามลพิษที่ถูกร้องเรียน</h2><p class="ins" id="i2"></p><div class="pgr" id="pol"></div><p class="note">คลิกการ์ดเพื่อดูรายละเอียดเรื่องของปัญหานั้นเป็นตาราง · เส้นเล็กในการ์ด = แนวโน้มรายเดือน · 1 เรื่องมีได้หลายปัญหา</p></div><div class="card s6"><h2 id="h3">ประเภทกิจการ</h2><p class="ins" id="i3"></p><div class="rl" id="c3"></div></div><div class="card s6"><h2 id="h4">ช่องทางที่รับเรื่อง</h2><p class="ins" id="i4"></p><div class="rl" id="c4"></div></div><div class="card s6"><h2>ระยะเวลาดำเนินการ (จำนวนเรื่อง)</h2><p class="ins" id="i5"></p><div class="rl" id="c5"></div></div><div class="card s6" id="xins"><h2>ข้อสังเกตจากข้อมูล</h2><ul class="xl" id="xi"></ul><p class="note">คำนวณอัตโนมัติจากข้อมูลตามตัวกรองที่เลือกอยู่ · 1 เรื่องมีได้หลายปัญหา/หลายช่องทาง</p></div><div class="card s12"><h2>ช่องทางที่รับเรื่อง รายเดือน</h2><p class="ins" id="xi1"></p><div class="xtg" id="xtg"><button class="ib" data-xm="group">แยกแท่ง</button><button class="ib" data-xm="stack">เรียงซ้อน</button></div><div style="height:340px"><canvas id="xc1"></canvas></div></div><div class="card s12"><h2>ประเภทกิจการ รายเดือน</h2><p class="ins" id="xi2"></p><div id="xh2"><canvas id="xc2"></canvas></div></div></div></section>
 <section id="lc"><h2 class="sec">ที่ตั้งของเรื่องที่รับ</h2><div class="g"><div class="kp s12" id="lk"></div><div class="card s12" id="mp0"><h2>แผนที่ประเทศไทย · เรื่องร้องเรียนและเรื่องขอความอนุเคราะห์ แยกตามจังหวัด อำเภอ ตำบล</h2><p class="ins" id="i12"></p><div class="msr"><div><label for="sp">1. จังหวัด</label><input id="sp" list="dp" placeholder="พิมพ์หรือเลือกจังหวัด" autocomplete="off"></div><div><label for="sa">2. อำเภอ/เขต (ในจังหวัดที่เลือก)</label><input id="sa" list="da" placeholder="พิมพ์หรือเลือกอำเภอ/เขต" autocomplete="off"></div><div><label for="st">3. ตำบล/แขวง (ในอำเภอที่เลือก)</label><input id="st" list="dt" placeholder="พิมพ์หรือเลือกตำบล/แขวง" autocomplete="off"></div><button type="button" id="sclr">ล้างการค้นหา</button><datalist id="dp"></datalist><datalist id="da"></datalist><datalist id="dt"></datalist></div><div id="mapsum" style="display:none"></div><div id="mapgeo" class="note" style="margin:0 0 8px"></div><div class="mhd"><span>แผนที่ย่อ · กดขยายเพื่อดูภาพใหญ่</span><button type="button" class="xb" id="mx">⤢ ขยายแผนที่</button></div><div class="mw"><div id="mapc0"></div><div id="mapl"></div></div><h3 style="margin:16px 0 6px;font-size:1rem">ตารางรายละเอียด: จังหวัด › อำเภอ/เขต › ตำบล/แขวง</h3><p class="note" id="mapt_n" style="margin:0 0 6px"></p><div id="mapt"></div><div id="mapcase" style="display:none"></div></div><div class="card s4"><h2>รายภาค</h2><p class="ins" id="i7"></p><div><canvas id="c7"></canvas></div></div><div class="card s8"><h2 class="th" data-k="c8"><span>จังหวัด (<em>10</em> อันดับแรก)</span></h2><p class="ins" id="i8"></p><div><canvas id="c8"></canvas></div></div><div class="card s6"><h2 class="th" data-k="c9"><span>อำเภอ/เขต (<em>10</em> อันดับแรก)</span></h2><p class="ins" id="i9"></p><div><canvas id="c9"></canvas></div></div><div class="card s6"><h2 class="th" data-k="c10"><span>ตำบล/แขวง (<em>10</em> อันดับแรก)</span></h2><p class="ins" id="i10"></p><div><canvas id="c10"></canvas></div></div><div class="card s12"><h2 class="th" data-k="t4"><span>ปัญหามลพิษ แยกตามจังหวัด (<em>10</em> อันดับแรก)</span></h2><div class="ov" id="t4"></div></div></div><p class="note">แยกจากคอลัมน์ "ที่ตั้ง" อัตโนมัติ · นับเฉพาะเรื่องที่ระบุจังหวัด · แผนที่วางวงกลมที่จุดกลางจังหวัด · ชื่ออำเภอ/ตำบลมีจังหวัดหรืออำเภอกำกับเพราะชื่อซ้ำกันได้</p></section>
-<section id="ag"><h2 class="sec">หน่วยงานและตารางรายละเอียด</h2><div class="g"><div class="card s12" id="k3"><h2>ผลดำเนินการ แยกตามหน่วยงานรับผิดชอบ</h2><div class="ov" id="t3"></div><p class="note">แล้วเสร็จ = มีวันที่สิ้นสุดการดำเนินการ · หน่วยงานรับผิดชอบมีเฉพาะเรื่องร้องเรียน · 1 เรื่องอาจมีปัญหามลพิษมากกว่า 1 ประเด็น จึงรวมกันแล้วเกิน 100% ได้</p></div><div class="card s12"><h2>ปัญหามลพิษ แยกตามเดือน</h2><div class="ov" id="t1"></div></div><div class="card s12" id="k2"><h2>ปัญหามลพิษ แยกตามประเภทกิจการ</h2><div class="ov" id="t2"></div></div></div></section>
+<section id="ag"><h2 class="sec">หน่วยงานและตารางรายละเอียด</h2><div class="g"><div class="card s12" id="k3"><h2>ผลดำเนินการ แยกตามหน่วยงานรับผิดชอบ</h2><div class="ov" id="t3"></div><p class="note">แล้วเสร็จ = มีวันที่สิ้นสุดการดำเนินการ · หน่วยงานรับผิดชอบมีเฉพาะเรื่องร้องเรียน · 1 เรื่องอาจมีปัญหามลพิษมากกว่า 1 ประเด็น จึงรวมกันแล้วเกิน 100% ได้</p></div><div class="card s12"><h2>ปัญหามลพิษ แยกตามเดือน</h2><div class="ov" id="t1"></div><p class="note">สีเข้ม = จำนวนเรื่องมาก (เทียบกันทั้งตาราง) · ตัวหนาและกรอบ = ปัญหาที่พบมากที่สุดในแถวนั้น · เอาเมาส์ชี้ที่ช่องเพื่อดูสัดส่วน</p></div><div class="card s12" id="k2"><h2>ปัญหามลพิษ แยกตามประเภทกิจการ</h2><div class="ov" id="t2"></div><p class="note">สีเข้ม = จำนวนเรื่องมาก (เทียบกันทั้งตาราง) · ตัวหนาและกรอบ = ปัญหาที่พบมากที่สุดในแถวนั้น · เอาเมาส์ชี้ที่ช่องเพื่อดูสัดส่วน</p></div></div></section>
 </div>
 </main></div>
 <button type="button" class="xb" id="mxc">✕ ปิดแผนที่ขยาย</button>
@@ -313,10 +338,13 @@ document.getElementById('s_'+k).textContent=st(k)}else F[k]=t.value;draw()};
 let QT;document.getElementById('side').oninput=e=>{const t=e.target;if(t.classList.contains('fq')){const v=t.value.trim().toLowerCase();t.closest('.pn').querySelectorAll('label[data-l]').forEach(l=>l.hidden=!l.dataset.l.includes(v))}else if(t.dataset.k=='q'){clearTimeout(QT);QT=setTimeout(()=>{F.q=t.value.trim().toLowerCase();draw()},250)}};
 document.addEventListener('click',e=>document.querySelectorAll('details.dd[open]').forEach(d=>{if(!d.contains(e.target))d.open=false}));
 document.getElementById('side').onclick=e=>{if(e.target.id=='rs'){rsF();side();draw()}};
-function heat(id,labels,key){const rs=D2.filter(r=>key(r)>=0);let h=`<table><thead><tr><th>${id=='t1'?'ปี/เดือน':'ประเภทกิจการ'}</th><th>จำนวนเรื่อง</th>${SEL().map(j=>'<th>'+POL[j]+'</th>').join('')}</tr></thead><tbody>`;
-const g=labels.map((_,i)=>rs.filter(r=>key(r)==i)),pcnt=g.map(a=>SEL().map(j=>a.filter(r=>r.p>>j&1).length)),mx=SEL().map((_,q)=>Math.max(1,...pcnt.map(x=>x[q])));
-labels.forEach((l,i)=>{if(!g[i].length)return;h+=`<tr><td>${l}</td><td>${g[i].length}</td>${pcnt[i].map((n,j)=>{const a=n/mx[j];return`<td style="background:rgba(var(--hot),${(.06+.8*a).toFixed(2)});color:${a>.55?'#fff':'inherit'}">${n}</td>`}).join('')}</tr>`});
-document.getElementById(id).innerHTML=h+`</tbody><tfoot><tr><td>รวมทั้งหมด</td><td>${rs.length}</td>${SEL().map((_,q)=>`<td>${sum(pcnt.map(x=>x[q]))}</td>`).join('')}</tr></tfoot></table>`}
+function heat(id,labels,key){const rs=D2.filter(r=>key(r)>=0),S=SEL();
+ const g=labels.map((_,i)=>rs.filter(r=>key(r)==i)),pcnt=g.map(a=>S.map(j=>a.filter(r=>r.p>>j&1).length)),gm=Math.max(1,...pcnt.flat()),nm=Math.max(1,...g.map(a=>a.length));
+ let h=`<table class="hm"><thead><tr><th>${id=='t1'?'ปี/เดือน':'ประเภทกิจการ'}</th><th>จำนวนเรื่อง</th>${S.map(j=>`<th><i style="background:${PCOL[j]}"></i>${POL[j]}</th>`).join('')}</tr></thead><tbody>`;
+ labels.forEach((l,i)=>{if(!g[i].length)return;const tp=Math.max(...pcnt[i]),pr=Math.round(100*g[i].length/nm);
+  h+=`<tr><td>${l}</td><td class="n" style="background:linear-gradient(90deg,var(--ch) ${pr}%,transparent ${pr}%)">${g[i].length}</td>${pcnt[i].map((n,q)=>{const al=(.07+.8*Math.sqrt(n/gm)).toFixed(2),t=`${l} · ${POL[S[q]]}: ${n} เรื่อง (${Math.round(100*n/g[i].length)}% ของเรื่องในแถวนี้)`;
+   return n?`<td class="v${n==tp?' mx':''}" title="${esc(t)}" style="background:rgba(var(--hot),${al});color:${al>.5?'#fff':'inherit'}">${n}</td>`:`<td class="z">0</td>`}).join('')}</tr>`});
+ document.getElementById(id).innerHTML=h+`</tbody><tfoot><tr><td>รวมทั้งหมด</td><td>${rs.length}</td>${S.map((_,q)=>`<td>${sum(pcnt.map(x=>x[q]))}</td>`).join('')}</tr></tfoot></table>`}
 function bar(id,labels,vals,horiz,total){const cv=document.getElementById(id),ink=v('--ink'),mut=v('--mut'),ac=v('--ac'),mx=Math.max(...vals,1);
 cv.parentNode.style.height=(horiz?labels.length*30+20:280)+'px';
 ch.push(new Chart(cv,{type:'bar',data:{labels,datasets:[{data:vals,backgroundColor:vals.map(x=>x==mx?ac:ac+'77'),borderRadius:3,barPercentage:.75}]},
@@ -594,7 +622,7 @@ document.getElementById('side').addEventListener('click',e=>{const a=e.target.cl
 if('IntersectionObserver'in window){const sc=[...document.querySelectorAll('main section')],rv=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){e.target.classList.add('in');rv.unobserve(e.target)}}),{threshold:.04}),io=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){CUR=e.target.id;spy()}}),{rootMargin:'-20% 0px -70% 0px'});sc.forEach(s=>{s.classList.add('rv');rv.observe(s);io.observe(s)})}
 addEventListener('scroll',()=>{const h=document.documentElement;document.getElementById('pg').style.transform='scaleX('+(h.scrollTop/((h.scrollHeight-h.clientHeight)||1))+')'},{passive:true});
 document.getElementById('clr').onclick=()=>{for(const k in files)delete files[k];bad=[];rebuild()};
-addEventListener('dragover',e=>{e.preventDefault();document.body.classList.add('dz')});addEventListener('dragleave',e=>{if(!e.relatedTarget)document.body.classList.remove('dz')});addEventListener('drop',e=>{e.preventDefault();document.body.classList.remove('dz');openD();stage([...e.dataTransfer.files])});
+const hasF=e=>!!(e.dataTransfer&&[...(e.dataTransfer.types||[])].includes('Files'));addEventListener('dragover',e=>{if(!hasF(e))return;e.preventDefault();document.body.classList.add('dz')});addEventListener('dragleave',e=>{if(!e.relatedTarget)document.body.classList.remove('dz')});addEventListener('drop',e=>{document.body.classList.remove('dz');if(!hasF(e))return;e.preventDefault();if(!e.dataTransfer.files.length)return;openD();stage([...e.dataTransfer.files])});
 
 const PIC=['👃','🔊','🌫️','💧','🗑️','☣️','📳','⋯'];
 function polv(){const n=D2.length,el=document.getElementById('pol'),ms=[...F.m].sort((a,b)=>a-b),cnt=POL.map((_,j)=>D2.filter(r=>r.p>>j&1).length),
@@ -710,6 +738,56 @@ document.getElementById('gsb').onclick=()=>gsLoad(true);
 setInterval(()=>{if(!document.hidden)gsLoad(false)},GS.every);
 document.addEventListener('visibilitychange',()=>{if(!document.hidden)gsLoad(false)});
 
+
+/* ===== insight เพิ่มเติม: ช่องทาง/ประเภทกิจการรายเดือน + ข้อสังเกตอัตโนมัติ ===== */
+const XPAL=['#2a7fa6','#e8913a','#4caf6a','#9b6bd1','#d6609b','#e25555','#c9a227','#8d99a6'];let XMODE='group';
+const xs=(r,i)=>r.ss.filter(x=>x==i).length,xsum=a=>a.reduce((p,q)=>p+q,0);
+const xlab={id:'xlab',afterDatasetsDraw(c){const o=c.options.plugins.xlab||{},x=c.ctx,hz=c.options.indexAxis=='y';x.save();x.font='600 11px "IBM Plex Sans Thai"';x.fillStyle=v('--ink');
+ const vis=c.data.datasets.map((_,i)=>i).filter(i=>c.isDatasetVisible(i));
+ if(o.mode=='each'){x.textAlign='center';x.textBaseline='bottom';vis.forEach(i=>c.getDatasetMeta(i).data.forEach((b,j)=>{const t=c.data.datasets[i].data[j];if(t&&b.width>=16)x.fillText(t,b.x,b.y-3)}))}
+ else c.data.labels.forEach((_,j)=>{const t=vis.reduce((a,i)=>a+(c.data.datasets[i].data[j]||0),0);if(!t||!vis.length)return;const el=vis.map(i=>c.getDatasetMeta(i).data[j]);
+  if(hz){x.textAlign='left';x.textBaseline='middle';x.fillText(t,Math.max(...el.map(b=>b.x))+6,el[0].y)}else{x.textAlign='center';x.textBaseline='bottom';x.fillText(t,el[0].x,Math.min(...el.map(b=>b.y))-3)}});
+ x.restore()}};
+function xtop(L,tot,k,rest){const o=L.map((l,i)=>[i,tot[i]]).filter(q=>q[1]>0).sort((a,b)=>b[1]-a[1]),top=o.slice(0,k),oth=o.slice(k);return{top,oth}}
+function xcfg(labels,ds,hz,mode){const ink=v('--ink'),mut=v('--mut'),F='IBM Plex Sans Thai';return{type:'bar',data:{labels,datasets:ds.map((d,k)=>({label:d.l,data:d.v,backgroundColor:XPAL[k%XPAL.length],borderRadius:2}))},
+ options:{indexAxis:hz?'y':'x',maintainAspectRatio:false,layout:{padding:{top:16,right:hz?28:0}},interaction:{mode:'index',intersect:false},plugins:{legend:{position:'bottom',labels:{color:ink,font:{family:F}}},xlab:{mode}},
+ scales:{x:{stacked:mode=='total',grid:{display:hz},ticks:{color:mut,precision:0}},y:{stacked:mode=='total',beginAtZero:true,grid:{display:!hz},ticks:{color:mut,precision:0}}}},plugins:[xlab]}}
+function xtra(){const box=document.getElementById('xc1');if(!box||!R.length)return;
+ const n=D2.length,ms=MN.map((_,i)=>i).filter(i=>D2.some(r=>r.m==i)),lb=ms.map(i=>MN[i]),byM=m=>D2.filter(r=>r.m==m);
+ document.querySelectorAll('#xtg .ib').forEach(b=>b.setAttribute('aria-pressed',b.dataset.xm==XMODE));
+ const c1=document.getElementById('xi1'),c2=document.getElementById('xi2'),li=document.getElementById('xi');
+ if(!n||!ms.length){c1.textContent=c2.textContent='ไม่มีข้อมูลตามตัวกรองนี้';li.innerHTML='';return}
+ /* ช่องทาง x เดือน */
+ const stot=SRC.map((_,i)=>xsum(D2.map(r=>xs(r,i)))),{top:st,oth:so}=xtop(SRC,stot,6),sd=st.map(([i])=>({l:SRC[i],v:ms.map(m=>xsum(byM(m).map(r=>xs(r,i))))}));
+ if(so.length)sd.push({l:'ช่องทางอื่น',v:ms.map(m=>xsum(so.map(([i])=>xsum(byM(m).map(r=>xs(r,i))))))});
+ ch.push(new Chart(box,xcfg(lb,sd,false,XMODE=='group'?'each':'total')));
+ const sm=stot.indexOf(Math.max(...stot));c1.textContent=st.length?`ช่องทางหลักคือ ${SRC[st[0][0]]} (${st[0][1]} ครั้ง, ${Math.round(100*st[0][1]/xsum(stot))}% ของทุกช่องทาง) · กดสลับมุมมองแยกแท่ง/เรียงซ้อนได้`:'';
+ /* ประเภทกิจการ x เดือน */
+ const bt=BIZ.map((_,i)=>D2.filter(r=>r.b==i&&BIZ[i]).length),{top:bp,oth:bo}=xtop(BIZ,bt,6);
+ if(!bp.length){c2.textContent='ไม่มีข้อมูลประเภทกิจการตามตัวกรองนี้ (มีเฉพาะเรื่องร้องเรียน)';document.getElementById('xh2').style.display='none'}
+ else{document.getElementById('xh2').style.display='';const bd=bp.map(([i])=>({l:BIZ[i],v:ms.map(m=>byM(m).filter(r=>r.b==i).length)}));
+  if(bo.length)bd.push({l:'อื่นๆ',v:ms.map(m=>byM(m).filter(r=>bo.some(([i])=>r.b==i)).length)});
+  document.getElementById('xh2').style.height=Math.max(220,ms.length*44+90)+'px';ch.push(new Chart(document.getElementById('xc2'),xcfg(lb,bd,true,'total')));
+  c2.textContent=`${BIZ[bp[0][0]]} ถูกร้องเรียนมากที่สุด ${bp[0][1]} เรื่อง (${Math.round(100*bp[0][1]/xsum(bt))}% ของเรื่องที่ระบุประเภทกิจการ)`}
+ /* ข้อสังเกตอัตโนมัติ */
+ const L=[],pct=(a,b)=>b?Math.round(100*Math.abs(a-b)/b)+'%':'-';
+ if(ms.length>=2){const c=ms[ms.length-1],p=ms[ms.length-2],a=byM(c).length,b=byM(p).length,d=a-b;
+  L.push(`<b>${MN[c]}</b> รับ ${a} เรื่อง ${d==0?'เท่ากับ':d>0?'เพิ่มขึ้น '+d+' เรื่อง ('+pct(a,b)+') จาก':'ลดลง '+(-d)+' เรื่อง ('+pct(a,b)+') จาก'}เดือนก่อน (${b} เรื่อง)`);
+  const pj=[...F.p].map(j=>[j,byM(c).filter(r=>r.p>>j&1).length-byM(p).filter(r=>r.p>>j&1).length]).sort((u,w)=>Math.abs(w[1])-Math.abs(u[1]))[0];
+  if(pj&&Math.abs(pj[1])>=3)L.push(`ปัญหา<b>${POL[pj[0]]}</b> ${pj[1]>0?'เพิ่มขึ้น':'ลดลง'}มากที่สุดเมื่อเทียบเดือนก่อน (${pj[1]>0?'+':''}${pj[1]} เรื่อง)`);
+  const cj=SRC.map((_,i)=>[i,xsum(byM(c).map(r=>xs(r,i)))-xsum(byM(p).map(r=>xs(r,i)))]).sort((u,w)=>Math.abs(w[1])-Math.abs(u[1]))[0];
+  if(cj&&Math.abs(cj[1])>=3)L.push(`ช่องทาง<b>${SRC[cj[0]]}</b> ${cj[1]>0?'เพิ่มขึ้น':'ลดลง'}มากที่สุด (${cj[1]>0?'+':''}${cj[1]} ครั้ง)`)}
+ let bp2=null;BIZ.forEach((b,i)=>{if(!b)return;[...F.p].forEach(j=>{const k=D2.filter(r=>r.b==i&&r.p>>j&1).length;if(!bp2||k>bp2[2])bp2=[i,j,k]})});
+ if(bp2&&bp2[2]>0)L.push(`คู่ที่พบมากที่สุดคือ <b>${BIZ[bp2[0]]}</b> × <b>${POL[bp2[1]]}</b> (${bp2[2]} เรื่อง)`);
+ const pv=tl(D2,r=>r.w['ที่ตั้ง › จังหวัด'],3);if(pv.length>=2){const t3=xsum(pv.map(q=>q[1]));L.push(`3 จังหวัดแรก (${pv.map(q=>esc(q[0])).join(', ')}) รวมกัน ${t3} เรื่อง หรือ ${Math.round(100*t3/n)}% ของทั้งหมด`)}
+ const dd=D2.filter(r=>r.d<1295),ov=dd.filter(r=>r.d>45);
+ if(dd.length){const lg=dd.reduce((a,r)=>r.d>a.d?r:a,dd[0]);L.push(`<b>${ov.length}</b> เรื่อง (${Math.round(100*ov.length/dd.length)}%) ใช้เวลาเกิน 45 วัน · นานสุดคือลำดับที่ ${esc(lg.w['ลำดับที่']??'-')} ใช้ ${lg.d} วัน ${lg.d>365?'(ควรตรวจว่าข้อมูลถูกต้องหรือไม่)':''}`)}
+ const wip=D2.filter(r=>!r.k).length;if(wip)L.push(`ยังอยู่ระหว่างดำเนินการ <b>${wip}</b> เรื่อง (${Math.round(100*wip/n)}%)`);
+ const rp=tl(D2,r=>{const t=String(r.w['ชื่อ']||'').trim();return t.length<3||/^(ไม่ทราบ|ไม่ระบุ|ประชาชน|บ้านพัก|-)/.test(t)?null:t},99).filter(q=>q[1]>=3).slice(0,3);
+ if(rp.length)L.push(`ถูกร้องเรียนซ้ำ (ชื่อตรงกัน ≥ 3 เรื่อง): ${rp.map(q=>esc(q[0].length>40?q[0].slice(0,40)+'…':q[0])+' <b>('+q[1]+')</b>').join(' · ')}`);
+ li.innerHTML=L.map(x=>'<li>'+x+'</li>').join('')}
+document.getElementById('xtg').onclick=e=>{const b=e.target.closest('[data-xm]');if(b){XMODE=b.dataset.xm;draw()}};
+{const _d0=draw;draw=function(){_d0();try{xtra()}catch(e){console.error(e)}}}
 const TK='pollution-theme';let TH2=null;try{TH2=localStorage.getItem(TK)}catch(e){}
 if(TH2!='dark'&&TH2!='light')TH2=matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light';
 function applyTheme(){document.documentElement.dataset.theme=TH2;document.getElementById('thm').textContent=TH2=='dark'?'☀ โหมดสว่าง':'☾ โหมดมืด';
