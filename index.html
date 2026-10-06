@@ -742,7 +742,7 @@ PCOL=['#9b6bd1','#e8913a','#94a3b8','#2f9fd6','#4caf6a','#e25555','#c9a227','#8d
 chp=(t,a,c)=>a.length?`<div class="cg"><small>${t}</small>${a.map(x=>`<span class="tg" style="--c:${typeof c=='function'?c(x[0]):c}">${esc(x[0])}<b>${x[1]}</b></span>`).join('')}</div>`:'',
 POLT=r=>POL.filter((_,i)=>r.p>>i&1&&F.p.has(i)),LOC=r=>[r.w['ที่ตั้ง › ตำบล/แขวง'],r.w['ที่ตั้ง › อำเภอ/เขต'],r.w['ที่ตั้ง › จังหวัด']].filter(Boolean).join(' › '),
 kinds=a=>{const R=(t,arr,c)=>arr.length?`<div class="kr"><small>${t}</small><div class="kc">${arr.map(x=>`<span class="tg" style="--c:${typeof c=='function'?c(x[0]):c}">${esc(x[0])}<b>${x[1]}</b></span>`).join('')}</div></div>`:'';
-return'<div class="kw">'+R('ประเภทเรื่อง',tl(a,r=>r.t?'ขอความอนุเคราะห์':'เรื่องร้องเรียน'),k=>k=='เรื่องร้องเรียน'?CC():CA)+R('ปัญหามลพิษ',tl(a,POLT,8),pcol)+R('รับจาก',tl(a,r=>r.ss.map(i=>SRC[i]),8),'#1fb5a8')+R('จังหวัด',tl(a,r=>r.w['ที่ตั้ง › จังหวัด'],6),'#d6609b')+'</div>'};
+return'<div class="kw">'+R('ประเภทเรื่อง',tl(a,r=>r.t?'ขอความอนุเคราะห์':'เรื่องร้องเรียน'),k=>k=='เรื่องร้องเรียน'?CC():CA)+R('ปัญหามลพิษ',tl(a,POLT,8),pcol)+R('รับจาก',tl(a,r=>r.ss.filter(i=>!F.s.size||F.s.has(i)).map(i=>SRC[i]),8),'#1fb5a8')+R('จังหวัด',tl(a,r=>(!F.pv.size||F.pv.has(r.pv))?r.w['ที่ตั้ง › จังหวัด']:'',6),'#d6609b')+'</div>'};
 function card(r){const tk=Object.keys(r.w).find(k=>DTX.test(k)&&String(r.w[k]||'').length>3),tx=tk?String(r.w[tk]):'',
 all=Object.entries(r.w).filter(([k,x])=>x!=null&&String(x).trim()!==''&&!k.startsWith('ที่ตั้ง ›')).map(([k,x])=>`<dt>${esc(k)}</dt><dd>${esc(x)}</dd>`).join('');
 return`<article class="dc"><div class="dh2"><span class="tg t${r.t}">${r.t?'ขอความอนุเคราะห์':'เรื่องร้องเรียน'}</span><b>#${esc(r.w['ลำดับที่']??'')}</b><span class="st ${r.k?'ok':'wip'}">${r.k?'แล้วเสร็จ':'อยู่ระหว่างดำเนินการ'}${r.d<1295?' · '+r.d+' วัน':''}</span></div>
@@ -774,8 +774,7 @@ plugins:{legend:{labels:{color:ink,usePointStyle:true,pointStyle:'rect',boxWidth
  tooltip:{backgroundColor:band,titleColor:'#fff',bodyColor:'#dbe7f5',footerColor:'#fff',titleFont:{family:FF,weight:'700'},bodyFont:{family:FF},footerFont:{family:FF,weight:'700'},padding:10,cornerRadius:10,callbacks:{title:q=>'วันที่ '+q[0].label,footer:q=>'รวม '+tot[q[0].dataIndex]+' เรื่อง'}}},
  scales:{x:{stacked:true,grid:{display:false},border:{color:ln},ticks:{color:mut,font:{family:FF}}},y:{stacked:true,beginAtZero:true,grid:{color:ln,drawTicks:false},border:{display:false},ticks:{color:mut,precision:0,padding:8}}}},
 plugins:[{id:'dylb',afterDatasetsDraw(c0){if(!mxT)return;const x=c0.ctx,a=c0.chartArea,y=c0.scales.y.getPixelForValue(avgT);x.save();const m0=c0.getDatasetMeta(0);xs.forEach((_,q)=>{const n=tot[q];if(!n||!m0.data[q])return;const cx=m0.data[q].x,ty=c0.scales.y.getPixelForValue(n),top=n==mxT;
-  x.textAlign='center';x.textBaseline='alphabetic';x.fillStyle=top?tc:ink;x.font=(top?'700 12px ':'600 10.5px ')+FF;x.fillText(n,cx,ty-5);
-  if(top)pl(x,'สูงสุด',cx,ty-24,tc,dk?'#1e1b4b':'#fff')});x.restore()}}]});}
+  x.textAlign='center';x.textBaseline='alphabetic';x.fillStyle=top?tc:ink;x.font=(top?'700 12px ':'600 10.5px ')+FF;x.fillText(n,cx,ty-5);});x.restore()}}]});}
 box.querySelectorAll('details[open]').forEach(fill);if(go){const e=document.getElementById('dr'+DY.d);if(e)e.scrollIntoView({behavior:'smooth',block:'center'})}}
 function goDay(d){const e=document.getElementById('dr'+d);if(!e)return;DY.d=d;DY.o=true;document.querySelector('#dyb .dsec').open=true;
 document.querySelectorAll('#dyb .dr[open]').forEach(x=>{if(x!==e)x.open=false});e.open=true;fill(e);
