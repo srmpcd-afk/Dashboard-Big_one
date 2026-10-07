@@ -1172,7 +1172,7 @@ function pmon(x){if(x==null||x==='')return null;let y,m;
  else{const t=cl(x);let k=t.match(/^([A-Za-z]{3})[A-Za-z]*[-\s\/]+(\d{2,4})$/);if(k){m=EN.indexOf(k[1].toLowerCase());y=+k[2];if(m<0)return null}
   else{k=t.match(/^([ก-๙\.]+)\s*(\d{2,4})$/);if(!k)return null;m=TM.findIndex(q=>q.replace('.','')==k[1].replace(/\./g,''));y=+k[2];if(m<0)return null}
   if(y<100)y+=2500}
- return{m,y:y>2400?y:y+543}}
+ return{m,y:y>2400?y:y>=2000?y+543:2500+y%100}}
 const mlab=k=>TM[k.m]+' '+String(k.y%100).padStart(2,'0');
 const wl=(s,n=22)=>{const w=[];let t=cl(s);while(t.length>n){let i=t.lastIndexOf(' ',n);if(i<8)i=n;w.push(t.slice(0,i));t=t.slice(i).trim()}w.push(t);return w.length>3?[w[0],w[1],w[2].slice(0,n-1)+'…']:w};
 function xparse(rows){
@@ -1183,13 +1183,13 @@ function xparse(rows){
   return cols.length?{hr,cols,tot}:null},
  P=tbl('ประเภทปัญหามลพิษ'),C=tbl('ช่องทาง'),B=tbl('ประเภทกิจการ');
  if(!P&&!C&&!B)return null;
- let months=[],cases=null;const mf=find('เดือน',1);
- if(mf){const hr=mf[0],a=rows[hr]||[],cc=a.findIndex(x=>/จำนวน/.test(cl(x)));for(let r=hr+1;r<rows.length;r++){const k=pmon(g(r,mf[1]));if(!k)break;months.push(k)}
-  if(cc>=0)cases=months.map((_,i)=>num(g(hr+1+i,cc)))}
+ let months=[],cases=null,ms=-1;const mf=find('เดือน',1);
+ if(mf){const hr=mf[0],a=rows[hr]||[],cc=a.findIndex(x=>/จำนวน/.test(cl(x)));for(let r=hr+1;r<rows.length;r++){const k=pmon(g(r,mf[1]));if(!k){if(!months.length&&r<hr+4)continue;break}if(ms<0)ms=r;months.push(k)}
+  if(cc>=0)cases=months.map((_,i)=>num(g(ms+i,cc)))}
  let N=months.length;
  if(!N){const T=P||C||B;if(T.tot>=0){let sm=0;for(let r=T.hr+1;r<rows.length;r++){const v=num(g(r,T.tot));if(v>0&&v===sm){N=r-T.hr-1;break}sm+=v}}if(!N)return null}
  const lab=months.length?months.map(mlab):Array.from({length:N},(_,i)=>'ลำดับ '+(i+1));
- const fill=T=>T&&{cols:T.cols.map(c=>({h:c.h,v:Array.from({length:N},(_,i)=>num(g(T.hr+1+i,c.c)))})),tot:T.tot>=0?Array.from({length:N},(_,i)=>num(g(T.hr+1+i,T.tot))):null};
+ const fill=T=>{if(!T)return T;const S=ms>=0?ms:T.hr+1;return{cols:T.cols.map(c=>({h:c.h,v:Array.from({length:N},(_,i)=>num(g(S+i,c.c)))})),tot:T.tot>=0?Array.from({length:N},(_,i)=>num(g(S+i,T.tot))):null}};
  const o={lab,P:fill(P),C:fill(C),B:fill(B)};
  for(const k of['P','C','B'])if(o[k]){o[k].cols=o[k].cols.filter(c=>c.v.some(x=>x>0));o[k].tot=o[k].tot||lab.map((_,i)=>o[k].cols.reduce((a,c)=>a+c.v[i],0))}
  o.cases=cases||(o.B?o.B.tot:o.C?o.C.tot:o.P.tot);return o}
@@ -1236,7 +1236,7 @@ function xdraw(){xch.forEach(c=>c.destroy());xch=[];const box=document.getElemen
  stack('xsp',D.P,5,(q,i)=>pcol(q.h,q.i));stack('xsc',D.C,4,(q,i)=>PAL[i%PAL.length]);stack('xsb',D.B,5,(q,i)=>PAL[i%PAL.length])}
 async function xfetch(){let sh=null;
  try{sh=await gsXlsx()}catch(e){}
- if(sh){xnames=sh.map(s=>s.n);const s=sh.find(s=>s.n.includes('นอกระบบ'));if(s)return s.rows}
+ if(sh){xnames=sh.map(s=>s.n);const s=sh.find(s=>s.n.includes('นอกระบบ'))||sh[2];if(s)return s.rows}
  const r=await fetch('https://docs.google.com/spreadsheets/d/'+GS.id+'/gviz/tq?tqx=out:csv&headers=0&sheet='+encodeURIComponent('เรื่องนอกระบบ'),{cache:'no-store'});if(!r.ok)throw new Error('HTTP '+r.status);
  const w=XLSX.read(await r.text(),{type:'string'});return XLSX.utils.sheet_to_json(w.Sheets[w.SheetNames[0]],{header:1,defval:null})}
 async function xload(){if(xbusy||(Date.now()-xt<3e5&&xrows))return;xbusy=true;
