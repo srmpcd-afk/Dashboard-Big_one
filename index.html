@@ -683,16 +683,33 @@ ms.forEach((m,i)=>{const st=m.index+m[0].length,v=String(s).slice(st,i+1<ms.leng
 let pv=(o['จังหวัด']||'').trim(),zip='';const z=pv.match(/\s*(\d{5})$/);if(z){zip=z[1];pv=pv.slice(0,z.index).trim()}
 const c=x=>{x=(x||'').trim();return x==='-'?'':x},T=c(o['ตำบล']||o['แขวง']),A=c(o['อำเภอ']||o['เขต']),P=c(pv),j=(...a)=>a.every(Boolean)?a.join(' › '):'';
 return[['ที่ตั้ง › จังหวัด',P],['ที่ตั้ง › อำเภอ/เขต',A],['ที่ตั้ง › ตำบล/แขวง',T],['ที่ตั้ง › จังหวัด › อำเภอ/เขต',j(P,A)],['ที่ตั้ง › จังหวัด › อำเภอ/เขต › ตำบล/แขวง',j(P,A,T)],['ที่ตั้ง › ถนน',c(o['ถนน'])],['ที่ตั้ง › ซอย',c(o['ซอย'])],['ที่ตั้ง › หมู่บ้าน',c(o['หมู่บ้าน'])],['ที่ตั้ง › หมู่ที่',c(o['หมู่ที่'])],['ที่ตั้ง › รหัสไปรษณีย์',zip]]}
+/* แยกหน่วยงานแบบเดียวกับหน้า "ประมวลผลอัตโนมัติ": ค่าในวงเล็บของ ผู้รับผิดชอบ (หรือคอลัมน์ หน่วยงานที่รับผิดชอบ)
+   -> จับคู่ สตพ.1/2/3, สรม., สตฉ. -> ไม่ตรงให้ดูเลข R ใน CPN เป็น สคพ. N -> ไม่มีเลย = สคพ. */
+const UNITS=['สตพ.1','สตพ.2','สตพ.3','สรม.','สตฉ.'],UNITS_N=UNITS.map(s=>s.replace(/\s+/g,''));
+const uNorm=s=>String(s==null?'':s).replace(/\s+/g,'').trim();
+const uParen=raw=>{const s=String(raw==null?'':raw).trim();const m=s.match(/^(.*?)[\(（]([^\)）]*)[\)）]\s*(.*)$/);return m?m[2].trim():''};
+const uCpn=v=>{const m=String(v==null?'':v).match(/R\s*0*(\d+)/i);return m?'สคพ.'+m[1]:null};
+function areaUnit(r,H){
+ const col=ks=>{for(const k of ks){const i=H.indexOf(k);if(i>=0)return i}for(const k of ks){const i=H.findIndex(h=>h.includes(k));if(i>=0)return i}return -1};
+ const ci=col(['หน่วยงานที่รับผิดชอบ']),oi=col(['ผู้รับผิดชอบ']),pi=col(['CPN']);
+ if(ci<0&&oi<0)return null;
+ let raw=ci>=0?r[ci]:'';if(!uNorm(raw)&&oi>=0)raw=uParen(r[oi]);
+ const v=uNorm(raw);let k=UNITS_N.findIndex(n=>v===n);if(k<0)k=UNITS_N.findIndex(n=>v&&v.includes(n));
+ if(k>=0)return UNITS[k];
+ return uCpn(pi>=0?r[pi]:'')||'สคพ.'}
+
+
 function parse(rows,f){const hi=rows.findIndex(r=>r[0]==='ลำดับที่');if(hi<0)throw 0;const H=rows[hi].map(x=>x==null?'':String(x).trim()),t=H.includes('ทะเบียนโรงงาน')?0:H.includes('การดำเนินการ')?1:-1;if(t<0)throw 0;
 const DH=H.findIndex(h=>/วันที่/.test(h)&&/(รับ|ร้องเรียน|ขอ|เกิดเหตุ)/.test(h)&&!/(สิ้นสุด|เสร็จ|ตอบ|ส่ง|ตรวจ)/.test(h)),out=[];for(const r of rows.slice(hi+1)){if(r[0]==null)continue;const g=n=>{const i=H.indexOf(n);return i<0?null:r[i]},y=+g('ปีที่รับเรื่อง'),m=+g('เดือนที่รับเรื่อง');if(!y||!m)continue;
-const dn=g(t?'วันที่สิ้นสุด':'เวลาสิ้นสุดให้บริการจริง');out.push({dd:dayOf(r[DH]),t,y,m,pol:g('ปัญหามลพิษ'),biz:t?'':String(g('ประเภทกิจการ')||'').trim(),src:g('แหล่งที่มา'),area:t?'':g('พื้นที่รับผิดชอบ'),done:dn!=null&&dn!=='',d:num(g(t?'ผลการดำเนินการ (วัน)':'ระยะเวลาให้บริการจริง')),c:t?actr(g('การดำเนินการ')):actc(g('ดำเนินการตรวจสอบ')),w:Object.fromEntries(H.map((h,i)=>[h,r[i]]).filter(x=>x[0]).flatMap(x=>x[0]=='ที่ตั้ง'&&x[1]?[x,...addr(x[1])]:[x]))})}
+const dn=g(t?'วันที่สิ้นสุด':'เวลาสิ้นสุดให้บริการจริง');out.push({dd:dayOf(r[DH]),t,y,m,pol:g('ปัญหามลพิษ'),biz:t?'':String(g('ประเภทกิจการ')||'').trim(),src:g('แหล่งที่มา'),area:t?'':(areaUnit(r,H)||String(g('พื้นที่รับผิดชอบ')||'').trim()),done:dn!=null&&dn!=='',d:num(g(t?'ผลการดำเนินการ (วัน)':'ระยะเวลาให้บริการจริง')),c:t?actr(g('การดำเนินการ')):actc(g('ดำเนินการตรวจสอบ')),w:Object.fromEntries(H.map((h,i)=>[h,r[i]]).filter(x=>x[0]).flatMap(x=>x[0]=='ที่ตั้ง'&&x[1]?[x,...addr(x[1])]:[x]))})}
 files[t]={name:f.name,rows:out}}
 function rebuild(){const all=Object.values(files).flatMap(o=>o.rows),C=all.filter(o=>!o.t),YM=[...new Set(all.map(o=>o.y*100+o.m))].sort((a,b)=>a-b);
 MN.splice(0,MN.length,...YM.map(k=>TH[k%100-1]+' '+String(Math.floor(k/100)).slice(-2)));
 BIZ.splice(0,BIZ.length,...topN(C.map(o=>o.biz),7,['อื่นๆ']),'อื่นๆ/ไม่ระบุ');
 const toks=o=>{const m=String(o.src||'').split(/\s*,\s*/).map(x=>x.replace(/^[\s\-']+/,'').trim()).filter(Boolean).map(o.t?rsrc:nrm);return m.length?m:['อื่นๆ']},T=all.map(toks),cn={};T.forEach(a=>a.forEach(k=>cn[k]=(cn[k]||0)+1));
 SRC.splice(0,SRC.length,...Object.keys(cn).sort((a,b)=>(a=='อื่นๆ')-(b=='อื่นๆ')||cn[b]-cn[a]));
-AREA.splice(0,AREA.length,'-',...topN(C.map(o=>o.area),99,[]));
+{const ar=[...new Set(C.map(o=>o.area).filter(Boolean))],rk=s=>{const i=UNITS.indexOf(s);if(i>=0)return[0,i];const m=s.match(/^สคพ\.(\d+)$/);return m?[1,+m[1]]:s=='สคพ.'?[2,0]:[3,0]};
+AREA.splice(0,AREA.length,'-',...ar.sort((x,y)=>{const p=rk(x),q=rk(y);return p[0]-q[0]||p[1]-q[1]||x.localeCompare(y,'th')}))}
 R.splice(0,R.length,...all.map((o,ix)=>{const mo=o.m;const ss=T[ix].map(k=>SRC.indexOf(k)),b=BIZ.indexOf(o.biz);return{dd:o.dd,y:o.y,mo,t:o.t,m:YM.indexOf(o.y*100+o.m),p:mask(o.pol),b:!o.t&&b>=0?b:BIZ.length-1,ss,a:o.t?0:Math.max(0,AREA.indexOf(o.area)),k:o.done?1:0,d:o.d,c:o.c,w:o.w}}));
 prep();rsF();side();
 document.getElementById('fs').innerHTML=Object.entries(files).map(([t,o])=>`${t==0?'ร้องเรียน':'ขอความอนุเคราะห์'}: ${o.name} (${o.rows.length} เรื่อง)`).join('<br>')+(R.length&&Object.keys(files).length<2?'<br>ยังไม่ได้นำเข้า: '+(files[0]?'เรื่องขอความอนุเคราะห์':'เรื่องร้องเรียน')+' (กดนำเข้าไฟล์เพิ่มได้)':'')+(bad.length?'<br>อ่านไฟล์ไม่ได้ (ไม่ใช่รูปแบบรายงานที่รองรับ): '+bad.join(', '):'');
