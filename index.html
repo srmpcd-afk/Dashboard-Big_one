@@ -1242,7 +1242,7 @@ async function xfetch(){let sh=null;
  const r=await fetch('https://docs.google.com/spreadsheets/d/'+GS.id+'/gviz/tq?tqx=out:csv&headers=0&sheet='+encodeURIComponent('เรื่องนอกระบบ'),{cache:'no-store'});if(!r.ok)throw new Error('HTTP '+r.status);
  const w=XLSX.read(await r.text(),{type:'string'});return XLSX.utils.sheet_to_json(w.Sheets[w.SheetNames[0]],{header:1,defval:null})}
 function kx(){const el=document.getElementById('kx');if(!el)return;let D=null;try{D=xrows&&xparse(xrows)}catch(e){}
- if(!D){el.style.display='none';return}const x=sm(D.cases),b=R.length;el.style.display='';
+ if(!D){const m=xerr||(xrows?'อ่านตารางสรุปในชีต “เรื่องนอกระบบ” ไม่ได้ (ไม่พบหัวตาราง “เดือน”/“ประเภทกิจการ”)':'กำลังดึงข้อมูลชีต “เรื่องนอกระบบ”…');el.style.display='';el.innerHTML='<p class="note" style="grid-column:1/-1;margin:0">'+xe(m)+'</p>';return}const x=sm(D.cases),b=R.length;el.style.display='';
  el.innerHTML=`<div><small>จำนวนเรื่องนอกระบบ ทั้งหมด</small><b>${fm(x)}</b><small>เรื่อง · ${xe(D.lab[0])} – ${xe(D.lab[D.lab.length-1])}</small></div><div><small>รวมทุกประเภท (ร้องเรียน + อนุเคราะห์ + นอกระบบ)</small><b>${fm(b+x)}</b><small>${fm(b)} + ${fm(x)} เรื่อง</small></div>`}
 async function xload(){if(xbusy||Date.now()-xt<3e5)return;xbusy=true;
  try{xrows=await xfetch();xerr='';xt=Date.now()}catch(e){xt=Date.now();xerr='ดึงชีต “เรื่องนอกระบบ” ไม่สำเร็จ: '+(e.message||e)+(xnames.length?' · ชีตที่พบ: '+xnames.join(', '):'')+' · ตรวจสอบว่าชื่อชีตมีคำว่า “เรื่องนอกระบบ” และแชร์แบบทุกคนที่มีลิงก์ดูได้'}
