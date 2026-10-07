@@ -1159,80 +1159,87 @@ document.getElementById('thm').onclick=()=>{TH2=TH2=='dark'?'light':'dark';try{l
 matchMedia('(prefers-color-scheme: dark)').addEventListener('change',draw);draw();gsLoad(true);
 </script><script>(function(){const el=document.getElementById('mapc0');if(!el)return;let t;const fix=()=>{clearTimeout(t);t=setTimeout(()=>{try{if(typeof MPM!=='undefined'&&MPM&&MPM.map)MPM.map.invalidateSize()}catch(e){}},150)};if(window.ResizeObserver)new ResizeObserver(fix).observe(el);window.addEventListener('resize',fix);window.addEventListener('load',fix)})();</script>
 <script>
-/* ===== แถบ เรื่องนอกระบบ : อ่านชีต "เรื่องนอกระบบ" แล้วเลือกกราฟตามชนิดข้อมูลอัตโนมัติ ===== */
+/* ===== แถบ เรื่องนอกระบบ : อ่านตารางสรุปในชีต "เรื่องนอกระบบ" (ปัญหามลพิษ / ช่องทาง / ประเภทกิจการ รายเดือน) ===== */
 (function(){
-const XN='นอกระบบ',TM=['ม.ค.','ก.พ.','มี.ค.','เม.ย.','พ.ค.','มิ.ย.','ก.ค.','ส.ค.','ก.ย.','ต.ค.','พ.ย.','ธ.ค.'],
-TF=['มกราคม','กุมภาพันธ์','มีนาคม','เมษายน','พฤษภาคม','มิถุนายน','กรกฎาคม','สิงหาคม','กันยายน','ตุลาคม','พฤศจิกายน','ธันวาคม'];
+const TM=['ม.ค.','ก.พ.','มี.ค.','เม.ย.','พ.ค.','มิ.ย.','ก.ค.','ส.ค.','ก.ย.','ต.ค.','พ.ย.','ธ.ค.'],EN=['jan','feb','mar','apr','may','jun','jul','aug','sep','oct','nov','dec'];
 let xch=[],xrows=null,xnames=[],xerr='',xbusy=false,xt=0;
-const xe=t=>String(t==null?'':t).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c])),
-cl=x=>x==null?'':String(x).replace(/\s+/g,' ').trim(),
-by543=y=>y>2400?y-543:y;
-function pdate(x){if(x==null||x==='')return null;
- if(x instanceof Date)return{y:x.getFullYear(),m:x.getMonth()};
- if(typeof x=='number'){if(x>20000&&x<80000){const d=new Date(Math.round((x-25569)*864e5));return{y:d.getUTCFullYear(),m:d.getUTCMonth()}}return null}
- const t=cl(x);let m=t.match(/^(\d{1,2})[\/\-.](\d{1,2})[\/\-.](\d{2,4})/);
- if(m){let y=+m[3];if(y<100)y+=y>50?2500:2000;return{y:by543(y),m:+m[2]-1}}
- m=t.match(/^(\d{4})-(\d{1,2})-(\d{1,2})/);if(m)return{y:by543(+m[1]),m:+m[2]-1};
- m=t.match(/(\d{1,2})?\s*([ก-๙\.]+)\s*(\d{2,4})/);
- if(m){const i=TF.findIndex(f=>m[2].startsWith(f.slice(0,4)))>=0?TF.findIndex(f=>m[2].startsWith(f.slice(0,4))):TM.findIndex(f=>m[2]==f);if(i>=0){let y=+m[3];if(y<100)y+=2500;return{y:by543(y),m:i}}}
- return null}
+const cl=x=>x==null?'':String(x).replace(/\s+/g,' ').trim(),xe=t=>cl(t).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c])),
+num=x=>{if(typeof x=='number')return x;const n=parseFloat(cl(x).replace(/,/g,''));return isNaN(n)?0:n},
+fm=n=>Math.round(n).toLocaleString('en-US'),pc1=(a,b)=>b?(100*a/b).toFixed(1)+'%':'-';
+function pmon(x){if(x==null||x==='')return null;let y,m;
+ if(x instanceof Date){y=x.getFullYear();m=x.getMonth()}
+ else if(typeof x=='number'){if(x<20000||x>3e6)return null;const d=new Date(Math.round((x-25569)*864e5));y=d.getUTCFullYear();m=d.getUTCMonth()}
+ else{const t=cl(x);let k=t.match(/^([A-Za-z]{3})[A-Za-z]*[-\s\/]+(\d{2,4})$/);if(k){m=EN.indexOf(k[1].toLowerCase());y=+k[2];if(m<0)return null}
+  else{k=t.match(/^([ก-๙\.]+)\s*(\d{2,4})$/);if(!k)return null;m=TM.findIndex(q=>q.replace('.','')==k[1].replace(/\./g,''));y=+k[2];if(m<0)return null}
+  if(y<100)y+=2500}
+ return{m,y:y>2400?y:y+543}}
+const mlab=k=>TM[k.m]+' '+String(k.y%100).padStart(2,'0');
+const wl=(s,n=22)=>{const w=[];let t=cl(s);while(t.length>n){let i=t.lastIndexOf(' ',n);if(i<8)i=n;w.push(t.slice(0,i));t=t.slice(i).trim()}w.push(t);return w.length>3?[w[0],w[1],w[2].slice(0,n-1)+'…']:w};
 function xparse(rows){
- let hi=0,best=-1;rows.slice(0,15).forEach((r,i)=>{const n=(r||[]).filter(c=>typeof c=='string'&&cl(c)).length;if(n>best){best=n;hi=i}});
- const H=(rows[hi]||[]).map(cl),data=rows.slice(hi+1).filter(r=>r&&r.filter(c=>cl(c)!=='').length>=2);
- const cols=H.map((h,i)=>({h,i,v:data.map(r=>r[i]==null?null:r[i])})).filter(c=>c.h&&c.v.some(x=>cl(x)!==''));
- return{cols,data,H}}
-function xmonths(P){const n=P.data.length;let dc=P.cols.find(c=>/วันที่/.test(c.h)&&c.v.filter(x=>pdate(x)).length>=n*.4);
- let keys=null,used=[];
- if(dc){keys=dc.v.map(pdate);used=[dc.i]}
- else{const mc=P.cols.find(c=>/^เดือน/.test(c.h)),yc=P.cols.find(c=>/^ปี/.test(c.h));
-  if(mc){keys=mc.v.map((x,k)=>{let m=typeof x=='number'?x-1:TF.findIndex(f=>cl(x).startsWith(f.slice(0,4)));if(m<0||m>11||isNaN(m))m=TM.indexOf(cl(x));if(m<0)return null;const yv=yc?+yc.v[k]:NaN;return{y:isNaN(yv)?0:by543(yv),m}});used=[mc.i].concat(yc?[yc.i]:[])}}
- return{keys,used,dc}}
-function xcat(P,skip){const n=P.data.length,out=[];
- P.cols.forEach(c=>{if(skip.includes(c.i)||/ลำดับ|เลขที่|เลข|หนังสือ|รายละเอียด|หมายเหตุ|โทร|ที่อยู่|ที่ตั้ง|^ชื่อ/.test(c.h))return;
-  const vals=c.v.map(cl).filter(Boolean);if(vals.length<Math.max(3,n*.3))return;
-  const multi=vals.filter(v=>v.includes(',')).length>=vals.length*.15,sp=v=>(multi?v.split(/\s*,\s*/):[v]).map(t=>t.replace(/^[-•\s]+/,'').trim()).filter(Boolean);
-  const cnt={};c.v.forEach(x=>{new Set(sp(cl(x))).forEach(t=>cnt[t]=(cnt[t]||0)+1)});
-  const ks=Object.keys(cnt),avg=ks.reduce((a,k)=>a+k.length,0)/(ks.length||1);
-  if(ks.length<2||ks.length>40||avg>50||(n>=8&&ks.length>n*.6))return;
-  out.push({h:c.h,cnt,ks,fill:vals.length/n})});
- return out.sort((a,b)=>a.ks.length-b.ks.length||b.fill-a.fill).slice(0,6)}
+ const g=(r,c)=>(rows[r]||[])[c],
+ find=(t,ex)=>{for(let r=0;r<Math.min(rows.length,60);r++){const a=rows[r]||[];for(let c=0;c<a.length;c++){const s=cl(a[c]);if(ex?s===t:s.startsWith(t))return[r,c]}}return null},
+ tbl=t=>{const f=find(t,1)||find(t);if(!f)return null;const hr=f[0]+1,a=rows[hr]||[];let c0=f[1];while(c0<a.length&&cl(a[c0])==='')c0++;if(c0>0&&/รวม/.test(cl(a[c0])))c0--;while(c0>0&&cl(a[c0-1])!==''&&!/รวม|^เดือน|^จำนวน/.test(cl(a[c0-1])))c0--;
+  const cols=[];let tot=-1;for(let c=c0;c<a.length&&cl(a[c])!=='';c++){if(/รวม/.test(cl(a[c]))){tot=c;break}cols.push({h:cl(a[c]),c})}
+  return cols.length?{hr,cols,tot}:null},
+ P=tbl('ประเภทปัญหามลพิษ'),C=tbl('ช่องทาง'),B=tbl('ประเภทกิจการ');
+ if(!P&&!C&&!B)return null;
+ let months=[],cases=null;const mf=find('เดือน',1);
+ if(mf){const hr=mf[0],a=rows[hr]||[],cc=a.findIndex(x=>/จำนวน/.test(cl(x)));for(let r=hr+1;r<rows.length;r++){const k=pmon(g(r,mf[1]));if(!k)break;months.push(k)}
+  if(cc>=0)cases=months.map((_,i)=>num(g(hr+1+i,cc)))}
+ let N=months.length;
+ if(!N){const T=P||C||B;if(T.tot>=0){let sm=0;for(let r=T.hr+1;r<rows.length;r++){const v=num(g(r,T.tot));if(v>0&&v===sm){N=r-T.hr-1;break}sm+=v}}if(!N)return null}
+ const lab=months.length?months.map(mlab):Array.from({length:N},(_,i)=>'ลำดับ '+(i+1));
+ const fill=T=>T&&{cols:T.cols.map(c=>({h:c.h,v:Array.from({length:N},(_,i)=>num(g(T.hr+1+i,c.c)))})),tot:T.tot>=0?Array.from({length:N},(_,i)=>num(g(T.hr+1+i,T.tot))):null};
+ const o={lab,P:fill(P),C:fill(C),B:fill(B)};
+ for(const k of['P','C','B'])if(o[k]){o[k].cols=o[k].cols.filter(c=>c.v.some(x=>x>0));o[k].tot=o[k].tot||lab.map((_,i)=>o[k].cols.reduce((a,c)=>a+c.v[i],0))}
+ o.cases=cases||(o.B?o.B.tot:o.C?o.C.tot:o.P.tot);return o}
+const sm=a=>a.reduce((p,q)=>p+q,0),csum=c=>sm(c.v);
 function xdraw(){xch.forEach(c=>c.destroy());xch=[];const box=document.getElementById('xapp');if(!box)return;
- if(xerr){box.innerHTML=`<div class="card"><h2>เรื่องนอกระบบ</h2><p class="note">${xe(xerr)}</p></div>`;return}
- if(!xrows){box.innerHTML='<div class="card"><h2>เรื่องนอกระบบ</h2><p class="note">กำลังดึงข้อมูลชีต “เรื่องนอกระบบ” จาก Google Sheets…</p></div>';return}
- const P=xparse(xrows),n=P.data.length;
- if(!n){box.innerHTML='<div class="card"><h2>เรื่องนอกระบบ</h2><p class="note">ชีตนี้ยังไม่มีข้อมูล</p></div>';return}
- const M=xmonths(P),cats=xcat(P,M.used),ink=v('--ink'),mut=v('--mut'),ac=v('--ac'),FF='IBM Plex Sans Thai',
- PAL=['#2a7fa6','#e8913a','#4caf6a','#9b6bd1','#d6609b','#e25555','#c9a227','#8d99a6'];
- let mk=null,ml=[],mv=[];
- if(M.keys){const c={};M.keys.forEach(k=>{if(!k)return;const q=(k.y*12+k.m);c[q]=(c[q]||0)+1});mk=Object.keys(c).map(Number).sort((a,b)=>a-b);
-  ml=mk.map(q=>TM[q%12]+(q>=12?' '+String((Math.floor(q/12)+543)%100).padStart(2,'0'):''));mv=mk.map(q=>c[q])}
- const top=cats[0]&&cats[0].ks.slice().sort((a,b)=>cats[0].cnt[b]-cats[0].cnt[a])[0];
- let h=`<div class="xk"><div><small>จำนวนเรื่องนอกระบบ</small><b>${n}</b></div>`+
-  (mv.length?`<div><small>เดือนที่รับมากสุด</small><b>${xe(ml[mv.indexOf(Math.max(...mv))])}</b><small>${Math.max(...mv)} เรื่อง</small></div><div><small>เฉลี่ยต่อเดือน</small><b>${(n/mv.length).toFixed(1)}</b></div>`:'')+
-  (top?`<div><small>${xe(cats[0].h)} สูงสุด</small><b style="font-size:1.25rem">${xe(top)}</b><small>${cats[0].cnt[top]} เรื่อง</small></div>`:'')+`</div><div class="g">`;
- const ids=[];
- if(mv.length){h+=`<div class="card s12"><h2>จำนวนเรื่องนอกระบบ รายเดือน</h2><div class="xh" style="height:280px"><canvas id="xm"></canvas></div></div>`;ids.push('m')}
- cats.forEach((c,i)=>{const hz=c.ks.length>7||c.ks.some(k=>k.length>14),ht=hz?Math.min(c.ks.length,12)*30+50:280;
-  h+=`<div class="card ${cats.length==1||(i==0&&!mv.length)?'s12':'s6'}"><h2>แยกตาม${xe(c.h)}</h2><p class="ins">${xe([...c.ks].sort((a,b)=>c.cnt[b]-c.cnt[a])[0])} มากที่สุด ${Math.max(...Object.values(c.cnt))} เรื่อง</p><div class="xh" style="height:${ht}px"><canvas id="xc${i}"></canvas></div></div>`});
- const cols=P.cols.slice(0,14);
- h+=`</div><details class="xt card"><summary>ข้อมูลดิบ (${Math.min(n,300)} จาก ${n} แถว)</summary><div class="ov"><table><thead><tr>${cols.map(c=>`<th>${xe(c.h)}</th>`).join('')}</tr></thead><tbody>${P.data.slice(0,300).map(r=>`<tr>${cols.map(c=>{const t=cl(r[c.i]);return`<td title="${xe(t)}">${xe(t)}</td>`}).join('')}</tr>`).join('')}</tbody></table></div></details>`;
- box.innerHTML=h;
- const lab={id:'xl',afterDatasetsDraw(c){const x=c.ctx,hz=c.options.indexAxis=='y';x.save();x.fillStyle=ink;x.font='600 12px "'+FF+'"';x.textBaseline='middle';
-  c.getDatasetMeta(0).data.forEach((e,i)=>{const t=c.data.datasets[0].data[i];if(hz){x.textAlign='left';x.fillText(t,e.x+6,e.y)}else{x.textAlign='center';x.fillText(t,e.x,e.y-10)}});x.restore()}};
- const mkc=(id,type,labels,vals,hz,colors)=>{const cv=document.getElementById(id);if(!cv)return;
-  xch.push(new Chart(cv,{type,data:{labels,datasets:[{data:vals,backgroundColor:colors||ac,borderRadius:type=='bar'?3:0,barPercentage:.75}]},
-  options:{indexAxis:hz?'y':'x',maintainAspectRatio:false,layout:{padding:{top:type=='bar'&&!hz?22:0,right:hz?40:0}},plugins:{legend:{display:type=='doughnut',position:'right',labels:{color:ink,font:{family:FF}}},tooltip:{enabled:type=='doughnut'}},
-  scales:type=='bar'?{x:{grid:{display:false},ticks:{color:hz?mut:ink,precision:0,font:{family:FF}}},y:{beginAtZero:true,grid:{display:!hz?true:false},ticks:{color:hz?ink:mut,precision:0,font:{family:FF}}}}:{}},plugins:type=='bar'?[lab]:[]}))};
- if(mv.length)mkc('xm','bar',ml,mv,false);
- cats.forEach((c,i)=>{const o=[...c.ks].sort((a,b)=>c.cnt[b]-c.cnt[a]).slice(0,12),hz=c.ks.length>7||c.ks.some(k=>k.length>14);
-  if(c.ks.length<=6&&!hz)mkc('xc'+i,'doughnut',o,o.map(k=>c.cnt[k]),false,o.map((_,j)=>PAL[j%PAL.length]));
-  else mkc('xc'+i,'bar',o,o.map(k=>c.cnt[k]),hz,hz?ac:o.map((_,j)=>PAL[j%PAL.length]))})}
-async function xfetch(){const U='https://docs.google.com/spreadsheets/d/'+GS.id;let sh=null;
+ const msg=t=>box.innerHTML=`<div class="card"><h2>เรื่องนอกระบบ</h2><p class="note">${xe(t)}</p></div>`;
+ if(xerr)return msg(xerr);if(!xrows)return msg('กำลังดึงข้อมูลชีต “เรื่องนอกระบบ” จาก Google Sheets…');
+ const D=xparse(xrows);if(!D)return msg('ไม่พบตารางสรุป (ประเภทปัญหามลพิษ / ช่องทาง / ประเภทกิจการ) ในชีตนี้');
+ const ink=v('--ink'),mut=v('--mut'),ac=v('--ac'),ln=v('--ln'),band=v('--band')||'#12263f',hot=v('--hot')||'31,111,208',FF='IBM Plex Sans Thai',
+ PAL=['#2a7fa6','#e8913a','#4caf6a','#9b6bd1','#d6609b','#e25555','#c9a227','#8d99a6'],L=D.lab,N=L.length,
+ pcol=(n,i)=>{try{const j=POL.indexOf(n);if(j>=0&&PCOL[j])return PCOL[j]}catch(e){}return PAL[i%PAL.length]},
+ tot=sm(D.cases),mi=D.cases.indexOf(Math.max(...D.cases)),rk=T=>T?T.cols.map((c,i)=>({h:c.h,n:csum(c),i})).sort((a,b)=>b.n-a.n):[],
+ rp=rk(D.P),rc=rk(D.C),rb=rk(D.B),pt=D.P?sm(D.P.tot):0,ct=D.C?sm(D.C.tot):0,bt=D.B?sm(D.B.tot):0;
+ const kp=(t,b,s)=>`<div><small>${t}</small><b>${b}</b>${s?`<small>${s}</small>`:''}</div>`;
+ let h=`<h2 class="sec">เรื่องนอกระบบ</h2><div class="xk">${kp('จำนวนเรื่องทั้งหมด',fm(tot),L[0]+' – '+L[N-1])}${kp('เฉลี่ยต่อเดือน',fm(tot/N),'เรื่อง')}${kp('เดือนที่รับมากสุด',xe(L[mi]),fm(D.cases[mi])+' เรื่อง')}${D.P?kp('ปัญหามลพิษ (ครั้ง)',fm(pt),'เฉลี่ย '+(tot?(pt/tot).toFixed(2):'-')+' ปัญหา/เรื่อง'):''}${rc[0]?kp('ช่องทางหลัก',`<span style="font-size:1.3rem">${xe(rc[0].h)}</span>`,pc1(rc[0].n,ct)):''}</div><div class="g">`;
+ h+=`<div class="card s8"><h2>เรื่องที่รับ รายเดือน</h2><p class="ins">เดือน ${xe(L[mi])} รับเรื่องมากที่สุด ${fm(D.cases[mi])} เรื่อง · เส้นประ = ค่าเฉลี่ย ${fm(tot/N)} เรื่อง/เดือน</p><div class="xh" style="height:300px"><canvas id="xm"></canvas></div></div>`;
+ if(D.C)h+=`<div class="card s4"><h2>ช่องทางที่รับเรื่อง</h2><p class="ins">${xe(rc[0].h)} ${pc1(rc[0].n,ct)} ของทุกช่องทาง</p><div class="xh" style="height:300px"><canvas id="xd"></canvas></div></div>`;
+ if(D.P)h+=`<div class="card s6"><h2>ปัญหามลพิษ</h2><p class="ins">${xe(rp[0].h)} พบมากที่สุด ${fm(rp[0].n)} ครั้ง (${pc1(rp[0].n,pt)})</p><div class="xh" style="height:${rp.length*34+30}px"><canvas id="xp"></canvas></div></div>`;
+ if(D.B)h+=`<div class="card s6"><h2>ประเภทกิจการ</h2><p class="ins">${xe(rb[0].h)} ${fm(rb[0].n)} เรื่อง (${pc1(rb[0].n,bt)})</p><div class="xh" style="height:${rb.length*44+30}px"><canvas id="xb"></canvas></div></div>`;
+ if(D.P)h+=`<div class="card s12"><h2>ปัญหามลพิษรายเดือน</h2><p class="ins">แท่งซ้อน แยกตามประเภทปัญหา</p><div class="xh" style="height:300px"><canvas id="xsp"></canvas></div></div>`;
+ if(D.C)h+=`<div class="card s6"><h2>ช่องทางรายเดือน</h2><div class="xh" style="height:280px"><canvas id="xsc"></canvas></div></div>`;
+ if(D.B)h+=`<div class="card s6"><h2>ประเภทกิจการรายเดือน</h2><div class="xh" style="height:280px"><canvas id="xsb"></canvas></div></div>`;
+ const heat=(T,ttl)=>{const mx=Math.max(1,...T.cols.flatMap(c=>c.v)),tt=T.cols.map(csum);return`<div class="card s12"><h2>${ttl}</h2><div class="ov"><table class="hm"><thead><tr><th>เดือน</th>${T.cols.map(c=>`<th>${xe(c.h)}</th>`).join('')}<th>รวม</th></tr></thead><tbody>${L.map((l,i)=>`<tr><td>${xe(l)}</td>${T.cols.map(c=>{const n=c.v[i],al=(.08+.8*Math.sqrt(n/mx)).toFixed(2);return n?`<td class="v" title="${xe(c.h)}: ${fm(n)}" style="background:rgba(${hot},${al});color:${al>.55?'#fff':'inherit'}">${fm(n)}</td>`:'<td class="z">0</td>'}).join('')}<td><b>${fm(T.tot[i])}</b></td></tr>`).join('')}</tbody><tfoot><tr><td>รวม</td>${tt.map(n=>`<td>${fm(n)}</td>`).join('')}<td>${fm(sm(T.tot))}</td></tr><tr><td>ร้อยละ</td>${tt.map(n=>`<td>${pc1(n,sm(T.tot)).replace('%','')}</td>`).join('')}<td>100</td></tr></tfoot></table></div></div>`};
+ if(D.P)h+=heat(D.P,'ตารางปัญหามลพิษ × เดือน');if(D.C)h+=heat(D.C,'ตารางช่องทาง × เดือน');if(D.B)h+=heat(D.B,'ตารางประเภทกิจการ × เดือน');
+ box.innerHTML=h+'</div>';
+ const lbl={id:'xl',afterDatasetsDraw(c,_,o){if(!o.on)return;const x=c.ctx,hz=c.options.indexAxis=='y';x.save();x.fillStyle=ink;x.font='600 12px "'+FF+'"';x.textBaseline='middle';
+  c.getDatasetMeta(0).data.forEach((e,i)=>{const t=o.t(i);if(hz){x.textAlign='left';x.fillText(t,e.x+6,e.y)}else{x.textAlign='center';x.fillText(t,e.x,e.y-10)}});x.restore()}},
+ tip={backgroundColor:band,titleColor:'#fff',bodyColor:'#dbe7f5',padding:10,cornerRadius:10,titleFont:{family:FF,weight:'700'},bodyFont:{family:FF}},
+ mk=(id,cfg)=>{const cv=document.getElementById(id);if(cv)xch.push(new Chart(cv,cfg))},
+ sc=(st,hz)=>({x:{stacked:st,grid:{display:false},ticks:{color:hz?mut:ink,precision:0,font:{family:FF}}},y:{stacked:st,beginAtZero:true,grid:{display:!hz,color:ln},border:{display:false},ticks:{color:hz?ink:mut,precision:0,font:{family:FF}}}});
+ const avg=tot/N;
+ mk('xm',{type:'bar',data:{labels:L,datasets:[{data:D.cases,backgroundColor:D.cases.map((n,i)=>i==mi?ac:ac+'88'),borderRadius:4,barPercentage:.75}]},
+  options:{maintainAspectRatio:false,layout:{padding:{top:24}},plugins:{legend:{display:false},tooltip:{...tip,callbacks:{label:q=>fm(q.parsed.y)+' เรื่อง'}},xl:{on:1,t:i=>fm(D.cases[i])}},scales:sc(false,false)},
+  plugins:[lbl,{id:'avg',afterDatasetsDraw(c){const a=c.chartArea,y=c.scales.y.getPixelForValue(avg),x=c.ctx;x.save();x.setLineDash([6,4]);x.strokeStyle=v('--y');x.lineWidth=1.5;x.beginPath();x.moveTo(a.left,y);x.lineTo(a.right,y);x.stroke();x.restore()}}]});
+ if(D.C)mk('xd',{type:'doughnut',data:{labels:rc.map(r=>r.h),datasets:[{data:rc.map(r=>r.n),backgroundColor:rc.map((_,i)=>PAL[i%PAL.length]),borderColor:v('--pn'),borderWidth:2}]},
+  options:{maintainAspectRatio:false,cutout:'62%',plugins:{legend:{position:'bottom',labels:{color:ink,usePointStyle:true,font:{family:FF}}},tooltip:{...tip,callbacks:{label:q=>q.label+': '+fm(q.parsed)+' ('+pc1(q.parsed,ct)+')'}}}},
+  plugins:[{id:'ct',afterDraw(c){const x=c.ctx,a=c.chartArea;x.save();x.textAlign='center';x.fillStyle=ink;x.font='700 24px "'+FF+'"';x.fillText(fm(ct),(a.left+a.right)/2,(a.top+a.bottom)/2+4);x.font='12px "'+FF+'"';x.fillStyle=mut;x.fillText('ครั้ง',(a.left+a.right)/2,(a.top+a.bottom)/2+22);x.restore()}}]});
+ const hb=(id,r,cols,T)=>mk(id,{type:'bar',data:{labels:r.map(q=>wl(q.h)),datasets:[{data:r.map(q=>q.n),backgroundColor:r.map((q,i)=>cols(q,i)),borderRadius:3,barPercentage:.75}]},
+  options:{indexAxis:'y',maintainAspectRatio:false,layout:{padding:{right:92}},plugins:{legend:{display:false},tooltip:{enabled:false},xl:{on:1,t:i=>fm(r[i].n)+' ('+pc1(r[i].n,T)+')'}},scales:{...sc(false,true),x:{display:false,grid:{display:false}}}},plugins:[lbl]});
+ if(D.P)hb('xp',rp,(q,i)=>pcol(q.h,q.i),pt);if(D.B)hb('xb',rb,(q,i)=>PAL[i%PAL.length],bt);
+ const stack=(id,T,k,colf)=>{if(!T)return;const r=rk(T),top=r.slice(0,k),rest=r.slice(k),ds=top.map((q,i)=>({label:q.h,data:T.cols[q.i].v,backgroundColor:colf(q,i)}));
+  if(rest.length)ds.push({label:'อื่นๆ',data:L.map((_,j)=>sm(rest.map(q=>T.cols[q.i].v[j]))),backgroundColor:'#8d99a6'});
+  mk(id,{type:'bar',data:{labels:L,datasets:ds.map(d=>({...d,borderRadius:2}))},options:{maintainAspectRatio:false,interaction:{mode:'index',intersect:false},plugins:{legend:{position:'bottom',labels:{color:ink,usePointStyle:true,font:{family:FF}}},tooltip:{...tip,callbacks:{footer:q=>'รวม '+fm(sm(q.map(z=>z.parsed.y)))}}},scales:sc(true,false)}})};
+ stack('xsp',D.P,5,(q,i)=>pcol(q.h,q.i));stack('xsc',D.C,4,(q,i)=>PAL[i%PAL.length]);stack('xsb',D.B,5,(q,i)=>PAL[i%PAL.length])}
+async function xfetch(){let sh=null;
  try{sh=await gsXlsx()}catch(e){}
- if(sh){xnames=sh.map(s=>s.n);const s=sh.find(s=>s.n.includes(XN));if(s)return s.rows}
- const r=await fetch(U+'/gviz/tq?tqx=out:csv&headers=0&sheet='+encodeURIComponent('เรื่องนอกระบบ'),{cache:'no-store'});if(!r.ok)throw new Error('HTTP '+r.status);
+ if(sh){xnames=sh.map(s=>s.n);const s=sh.find(s=>s.n.includes('นอกระบบ'));if(s)return s.rows}
+ const r=await fetch('https://docs.google.com/spreadsheets/d/'+GS.id+'/gviz/tq?tqx=out:csv&headers=0&sheet='+encodeURIComponent('เรื่องนอกระบบ'),{cache:'no-store'});if(!r.ok)throw new Error('HTTP '+r.status);
  const w=XLSX.read(await r.text(),{type:'string'});return XLSX.utils.sheet_to_json(w.Sheets[w.SheetNames[0]],{header:1,defval:null})}
-async function xload(){if(xbusy||Date.now()-xt<3e5&&xrows)return;xbusy=true;
+async function xload(){if(xbusy||(Date.now()-xt<3e5&&xrows))return;xbusy=true;
  try{xrows=await xfetch();xerr='';xt=Date.now()}catch(e){xerr='ดึงชีต “เรื่องนอกระบบ” ไม่สำเร็จ: '+(e.message||e)+(xnames.length?' · ชีตที่พบ: '+xnames.join(', '):'')+' · ตรวจสอบว่าชื่อชีตมีคำว่า “เรื่องนอกระบบ” และแชร์แบบทุกคนที่มีลิงก์ดูได้'}
  finally{xbusy=false;if(XS)xdraw()}}
 const d0=draw;draw=function(){d0.apply(this,arguments);document.body.classList.toggle('xs',XS);if(XS){xdraw();xload()}};
