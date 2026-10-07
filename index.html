@@ -338,9 +338,9 @@ table.hm{border-collapse:separate;border-spacing:3px;font-size:13.5px;table-layo
 <div class="kp" id="kp"></div>
 <section id="ov"><h2 class="sec">ภาพรวม</h2><div class="g"><div class="card s8"><h2>เรื่องที่รับ รายเดือน</h2><p class="ins" id="i1"></p><div><canvas id="c1"></canvas></div></div><div class="card s4"><h2>สถานะการดำเนินการ</h2><p class="ins" id="i11"></p><div><canvas id="c11"></canvas></div></div><div class="card s6"><h2>ร้องเรียนเทียบขอความอนุเคราะห์รายเดือน</h2><p class="ins" id="ovi1"></p><div style="height:300px"><canvas id="ovc1"></canvas></div></div><div class="card s6"><h2>เรื่องใหม่ / เรื่องซ้ำ / เรื่องเดิม รายเดือน</h2><p class="ins" id="ovi2"></p><div style="height:300px"><canvas id="ovc2"></canvas></div></div></div></section>
 <section id="dy"><h2 class="sec">รายเดือนและรายวัน</h2><div class="card" id="dyb"></div></section>
-<section id="pb"><h2 class="sec">ปัญหามลพิษและการดำเนินงาน</h2><div class="g"><div class="card s12"><h2>ปัญหามลพิษที่ถูกร้องเรียน</h2><p class="ins" id="i2"></p><div class="pgr" id="pol"></div><p class="note">คลิกการ์ดเพื่อดูรายละเอียดเรื่องของปัญหานั้นเป็นตาราง · เส้นเล็กในการ์ด = แนวโน้มรายเดือน · 1 เรื่องมีได้หลายปัญหา</p></div><div class="card s6"><h2 id="h3">ประเภทกิจการ</h2><p class="ins" id="i3"></p><div class="rl" id="c3"></div></div><div class="card s6"><h2 id="h4">ช่องทางที่รับเรื่อง</h2><p class="ins" id="i4"></p><div class="rl" id="c4"></div></div><div class="card s6"><h2>ระยะเวลาดำเนินการ (จำนวนเรื่อง)</h2><p class="ins" id="i5"></p><div class="rl" id="c5"></div></div><div class="card s6" id="xins"><h2>ข้อสังเกตจากข้อมูล</h2><ul class="xl" id="xi"></ul><p class="note">คำนวณอัตโนมัติจากข้อมูลตามตัวกรองที่เลือกอยู่ · 1 เรื่องมีได้หลายปัญหา/หลายช่องทาง</p></div><div class="card s12"><h2>ช่องทางที่รับเรื่อง รายเดือน</h2><p class="ins" id="xi1"></p><div class="xtg" id="xtg"><button class="ib" data-xm="group">แยกแท่ง</button><button class="ib" data-xm="stack">เรียงซ้อน</button></div><div style="height:340px"><canvas id="xc1"></canvas></div></div><div class="card s12"><h2>ประเภทกิจการ รายเดือน</h2><p class="ins" id="xi2"></p><div id="xh2"><canvas id="xc2"></canvas></div></div></div></section>
+<section id="pb"><h2 class="sec">ปัญหามลพิษและการดำเนินงาน</h2><div class="g"><div class="card s12"><h2>ปัญหามลพิษที่ถูกร้องเรียน</h2><p class="ins" id="i2"></p><div class="pgr" id="pol"></div><p class="note">คลิกการ์ดเพื่อดูรายละเอียดเรื่องของปัญหานั้นเป็นตาราง · เส้นเล็กในการ์ด = แนวโน้มรายเดือน · 1 เรื่องมีได้หลายปัญหา</p></div><div class="card s6"><h2 id="h3">ประเภทกิจการ</h2><p class="ins" id="i3"></p><div class="rl" id="c3"></div></div><div class="card s6"><h2 id="h4">ช่องทางที่รับเรื่อง</h2><p class="ins" id="i4"></p><div class="rl" id="c4"></div></div><div class="card s12"><h2>ระยะเวลาดำเนินการ (จำนวนเรื่อง)</h2><p class="ins" id="i5"></p><div class="rl" id="c5"></div></div><div class="card s12"><h2>ช่องทางที่รับเรื่อง รายเดือน</h2><p class="ins" id="xi1"></p><div class="xtg" id="xtg"><button class="ib" data-xm="group">แยกแท่ง</button><button class="ib" data-xm="stack">เรียงซ้อน</button></div><div style="height:340px"><canvas id="xc1"></canvas></div></div><div class="card s12"><h2>ประเภทกิจการ รายเดือน</h2><p class="ins" id="xi2"></p><div id="xh2"><canvas id="xc2"></canvas></div></div></div></section>
 <section id="lc"><h2 class="sec">ที่ตั้งของเรื่องที่รับ</h2><div class="g"><div class="kp s12" id="lk"></div><div class="card s12" id="mp0"><h2>แผนที่ประเทศไทย · เรื่องร้องเรียนและเรื่องขอความอนุเคราะห์ แยกตามจังหวัด อำเภอ ตำบล</h2><p class="ins" id="i12"></p><div class="msr"><div><label for="sp">1. จังหวัด</label><input id="sp" list="dp" placeholder="พิมพ์หรือเลือกจังหวัด" autocomplete="off"></div><div><label for="sa">2. อำเภอ/เขต (ในจังหวัดที่เลือก)</label><input id="sa" list="da" placeholder="พิมพ์หรือเลือกอำเภอ/เขต" autocomplete="off"></div><div><label for="st">3. ตำบล/แขวง (ในอำเภอที่เลือก)</label><input id="st" list="dt" placeholder="พิมพ์หรือเลือกตำบล/แขวง" autocomplete="off"></div><button type="button" id="sclr">ล้างการค้นหา</button><datalist id="dp"></datalist><datalist id="da"></datalist><datalist id="dt"></datalist></div><div id="mapsum" style="display:none"></div><div id="mapgeo" class="note" style="margin:0 0 8px"></div><div class="mhd"><span>แผนที่ย่อ · กดขยายเพื่อดูภาพใหญ่</span><button type="button" class="xb" id="mx">⤢ ขยายแผนที่</button></div><div class="mw"><div id="mapc0"></div><div id="mapl"></div></div><details class="mtd" id="mtd"><summary><h3 style="margin:0;font-size:1rem">ตารางรายละเอียด: จังหวัด › อำเภอ/เขต › ตำบล/แขวง</h3></summary><p class="note" id="mapt_n" style="margin:0 0 6px"></p><div id="mapt"></div><div id="mapcase" style="display:none"></div></details></div><div class="card s4"><h2>รายภาค</h2><p class="ins" id="i7"></p><div><canvas id="c7"></canvas></div></div><div class="card s8"><h2 class="th" data-k="c8"><span>จังหวัด (<em>10</em> อันดับแรก)</span></h2><p class="ins" id="i8"></p><div><canvas id="c8"></canvas></div></div><div class="card s6"><h2 class="th" data-k="c9"><span>อำเภอ/เขต (<em>10</em> อันดับแรก)</span></h2><p class="ins" id="i9"></p><div><canvas id="c9"></canvas></div></div><div class="card s6"><h2 class="th" data-k="c10"><span>ตำบล/แขวง (<em>10</em> อันดับแรก)</span></h2><p class="ins" id="i10"></p><div><canvas id="c10"></canvas></div></div><div class="card s12"><h2 class="th" data-k="t4"><span>ปัญหามลพิษ แยกตามจังหวัด (<em>10</em> อันดับแรก)</span></h2><div class="ov" id="t4"></div></div></div><p class="note">แยกจากคอลัมน์ "ที่ตั้ง" อัตโนมัติ · นับเฉพาะเรื่องที่ระบุจังหวัด · แผนที่วางวงกลมที่จุดกลางจังหวัด · ชื่ออำเภอ/ตำบลมีจังหวัดหรืออำเภอกำกับเพราะชื่อซ้ำกันได้</p></section>
-<section id="ag"><h2 class="sec">หน่วยงานและตารางรายละเอียด</h2><div class="g"><div class="card s12" id="k3"><h2>ผลดำเนินการ แยกตามหน่วยงานรับผิดชอบ</h2><div class="ov" id="t3"></div><p class="note">แล้วเสร็จ = มีวันที่สิ้นสุดการดำเนินการ · หน่วยงานรับผิดชอบมีเฉพาะเรื่องร้องเรียน · 1 เรื่องอาจมีปัญหามลพิษมากกว่า 1 ประเด็น จึงรวมกันแล้วเกิน 100% ได้</p></div><div class="card s12"><h2>ปัญหามลพิษ แยกตามเดือน</h2><div class="ov" id="t1"></div><p class="note">สีตามชนิดปัญหา ยิ่งเข้มยิ่งมาก (เทียบกันทั้งตาราง) · ตัวหนาและกรอบ = ปัญหาที่พบมากที่สุดในแถวนั้น · เอาเมาส์ชี้ที่ช่องเพื่อดูสัดส่วน</p></div><div class="card s12" id="k2"><h2>ปัญหามลพิษ แยกตามประเภทกิจการ</h2><div class="ov" id="t2"></div><p class="note">สีตามชนิดปัญหา ยิ่งเข้มยิ่งมาก (เทียบกันทั้งตาราง) · ตัวหนาและกรอบ = ปัญหาที่พบมากที่สุดในแถวนั้น · เอาเมาส์ชี้ที่ช่องเพื่อดูสัดส่วน</p></div></div></section>
+<section id="ag"><h2 class="sec">หน่วยงานและตารางรายละเอียด</h2><div class="g"><div class="card s12" id="k3"><h2>ผลดำเนินการเรื่องร้องเรียน แยกตามหน่วยงาน</h2><div class="ov" id="t3"></div><p class="note">แล้วเสร็จ = มีวันที่สิ้นสุดการดำเนินการ · หน่วยงานรับผิดชอบมีเฉพาะเรื่องร้องเรียน · 1 เรื่องอาจมีปัญหามลพิษมากกว่า 1 ประเด็น จึงรวมกันแล้วเกิน 100% ได้</p></div><div class="card s12" id="ag_k_req"><h2>ผลดำเนินการเรื่องขอความอนุเคราะห์ แยกตามหน่วยงาน</h2><div class="ov" id="ag_t_req"></div><p class="note" id="ag_n_req"></p></div><div class="card s12" id="ag_k_all"><h2>สรุปตามหน่วยงาน (รวมประเภทการดำเนินงานและพื้นที่ กทม. / ตจว.)</h2><div class="ov" id="ag_t_all"></div><p class="note" id="ag_n_all"></p></div><div class="card s12"><h2>ปัญหามลพิษ แยกตามเดือน</h2><div class="ov" id="t1"></div><p class="note">สีตามชนิดปัญหา ยิ่งเข้มยิ่งมาก (เทียบกันทั้งตาราง) · ตัวหนาและกรอบ = ปัญหาที่พบมากที่สุดในแถวนั้น · เอาเมาส์ชี้ที่ช่องเพื่อดูสัดส่วน</p></div><div class="card s12" id="k2"><h2>ปัญหามลพิษ แยกตามประเภทกิจการ</h2><div class="ov" id="t2"></div><p class="note">สีตามชนิดปัญหา ยิ่งเข้มยิ่งมาก (เทียบกันทั้งตาราง) · ตัวหนาและกรอบ = ปัญหาที่พบมากที่สุดในแถวนั้น · เอาเมาส์ชี้ที่ช่องเพื่อดูสัดส่วน</p></div></div></section>
 </div>
 </main></div>
 <button type="button" class="xb" id="mxc">✕ ปิดแผนที่ขยาย</button>
@@ -413,12 +413,88 @@ rank('c4','i4',SRC,SRC.map((_,i)=>sum(D2.map(r=>r.ss.filter(x=>x==i).length))),o
 const BK=['ไม่เกิน 15 วัน','16–30 วัน','31–45 วัน','เกิน 45 วัน'],bv=BK.map((_,i)=>dd.filter(r=>[r.d<=15,r.d>15&&r.d<=30,r.d>30&&r.d<=45,r.d>45][i]).length);
 dur(BK,bv);TX('i5','');
 heat('t1',MN,r=>r.m);heat('t2',BIZ,r=>r.b);loc();ov2();dayv();anim()
-const rows=AREA.map((a,i)=>{const x=D2.filter(r=>r.a==i);return{a,x,n:x.length}}).filter(o=>o.n&&o.a!='-');
+const rows=AREA.map((a,i)=>{const x=D2.filter(r=>r.a==i&&!r.t);return{a,x,n:x.length}}).filter(o=>o.n&&o.a!='-');
 let h=`<table><thead><tr><th>หน่วยงาน</th><th>จำนวนเรื่อง</th><th class="c">ตรวจสอบ</th><th class="c">ประสาน</th><th class="c">อยู่ระหว่างการมอบหมาย</th><th class="p">แล้วเสร็จ</th><th class="p">อยู่ระหว่างดำเนินการ</th><th class="p">% แล้วเสร็จ</th><th class="p">% ระหว่างดำเนินการ</th></tr></thead><tbody>`;
 const L=o=>{const d=o.x.filter(r=>r.k).length,w=o.n-d;return[o.n,...[0,1,2].map(c=>o.x.filter(r=>r.c==c).length),d,w,100*d/o.n,100*w/o.n]};
-rows.forEach(o=>{const a=L(o);h+=`<tr><td>${o.a}</td>${a.slice(0,6).map(x=>'<td>'+x+'</td>').join('')}<td>${a[6].toFixed(1)}<span class="bar" style="width:${a[6]*.9}px;background:var(--g)"></span></td><td>${a[7].toFixed(1)}<span class="bar" style="width:${a[7]*.9}px;background:var(--y)"></span></td></tr>`});
+const AG1=['สตพ.1','สตพ.2','สตพ.3','สรม.','สตฉ.','สผป.'],AGT=['กองตรวจมลพิษ','สำนักงานสิ่งแวดล้อมและควบคุมมลพิษที่ 1-16','หน่วยงานอื่น'],agp=o=>AG1.includes(o.a)?0:/^สคพ\./.test(o.a)?1:2,agn=o=>+(String(o.a).match(/\d+/)||[0])[0],agrw=o=>{const a=L(o);h+=`<tr><td>${o.a}</td>${a.slice(0,6).map(x=>'<td>'+x+'</td>').join('')}<td>${a[6].toFixed(1)}<span class="bar" style="width:${a[6]*.9}px;background:var(--g)"></span></td><td>${a[7].toFixed(1)}<span class="bar" style="width:${a[7]*.9}px;background:var(--y)"></span></td></tr>`};
+[0,1,2].forEach(g=>{const q=rows.filter(o=>agp(o)==g).sort((x,y)=>g==0?AG1.indexOf(x.a)-AG1.indexOf(y.a):g==1?agn(x)-agn(y):0);if(!q.length)return;h+=`<tr><td colspan="9" style="text-align:left;font-weight:700;background:var(--h1)">${AGT[g]}</td></tr>`;q.forEach(agrw)});
 const T=L({x:rows.flatMap(o=>o.x),n:sum(rows.map(o=>o.n))}).map(x=>x);
-document.getElementById('t3').innerHTML=rows.length?h+`</tbody><tfoot><tr><td>รวมทั้งหมด</td>${T.slice(0,6).map(x=>'<td>'+x+'</td>').join('')}<td>${T[6].toFixed(1)}</td><td>${T[7].toFixed(1)}</td></tr></tfoot></table>`:'<p class="note">ไม่มีข้อมูลหน่วยงานรับผิดชอบในตัวกรองนี้ (มีเฉพาะเรื่องร้องเรียน)</p>'}
+document.getElementById('t3').innerHTML=rows.length?h+`</tbody><tfoot><tr><td>รวมทั้งหมด</td>${T.slice(0,6).map(x=>'<td>'+x+'</td>').join('')}<td>${T[6].toFixed(1)}</td><td>${T[7].toFixed(1)}</td></tr></tfoot></table>`:'<p class="note">ไม่มีข้อมูลหน่วยงานรับผิดชอบในตัวกรองนี้ (มีเฉพาะเรื่องร้องเรียน)</p>';agT4();agT5();agT7()}
+/* ตารางสรุปตามหน่วยงาน (เรื่องร้องเรียน + ขอความอนุเคราะห์) */
+const isBkk=r=>/กรุงเทพ|กทม/.test(String(r.w['ที่ตั้ง › จังหวัด']||''));
+function agT4(){
+ const el=document.getElementById('ag_t_act'),nt=document.getElementById('ag_n_act');if(!el)return;
+ const grp=AREA.map((a,i)=>({a:i?a:'ไม่ระบุ',x:D2.filter(r=>r.a==i)})).filter(o=>o.x.length);
+ if(!grp.length){el.innerHTML='<p class="note">ไม่มีข้อมูลในตัวกรองนี้</p>';nt.textContent='';return}
+ const th=(t,c,a)=>`<th ${a||''} style="text-align:center;${c||''}">${t}</th>`,
+  P='background:rgba(232,98,150,.32)',G='background:rgba(60,170,90,.28)',Y='background:rgba(240,190,40,.34)',Z='background:rgba(128,128,128,.2)',B='background:rgba(60,180,220,.26)',O='background:rgba(200,150,30,.34)',
+  cell=v=>'<td>'+(v||'-')+'</td>',L='style="vertical-align:bottom"';
+ /* ตาราง 1: ประเภทการดำเนินงาน (ไม่แยกที่ตั้ง) */
+ const A=x=>{const c=x.filter(r=>!r.t),a=x.filter(r=>r.t),c0=c.filter(r=>r.c==0).length,a0=a.filter(r=>r.c==0).length,a1=a.filter(r=>r.c==1).length;
+  return[x.length,c0,a0,a1,a0+a1,x.length-c0-a0-a1]};
+ let h=`<table><thead><tr><th rowspan="3" ${L}>หน่วยงาน</th><th rowspan="3" ${L}>รวมทั้งหมด<br>(เรื่อง)</th>`+th('ประเภทการดำเนินงาน',P,'colspan="4"')+`</tr><tr>`
+  +th('เรื่องร้องเรียน',G)+th('เรื่องขอความอนุเคราะห์',Y,'colspan="3"')+`</tr><tr>`
+  +th('ตรวจสอบ',G)+th('ตรวจสอบ',B)+th('เข้าร่วมตรวจสอบ',O)+th('รวม',Y)+`</tr></thead><tbody>`;
+ const T=new Array(6).fill(0);
+ grp.forEach(o=>{const a=A(o.x);a.forEach((v,i)=>T[i]+=v);h+=`<tr><td>${esc(o.a)}</td>${a.slice(0,5).map(cell).join('')}</tr>`});
+ h+=`</tbody><tfoot><tr><td>Grand total</td>${T.slice(0,5).map(cell).join('')}</tr></tfoot></table>`;
+ el.innerHTML=h;
+ nt.textContent='เรื่องร้องเรียนนับเฉพาะที่เป็น "ตรวจสอบ" · เรื่องขอความอนุเคราะห์นับ "ตรวจสอบ" และ "เข้าร่วมตรวจสอบ"'
+  +(T[5]?` · มี ${T[5]} เรื่องที่เป็นการดำเนินการอื่น (เช่น ประสาน/ทำ ส./ยังไม่ระบุ) ซึ่งอยู่ในรวมทั้งหมดแต่ไม่อยู่ในคอลัมน์ประเภทการดำเนินงาน`:'');
+}
+/* ตารางรวม: ประเภทการดำเนินงาน + พื้นที่ กทม./ตจว. (รูปแบบเดียวกับที่เคยทำ ไม่มีคอลัมน์ จคพ.) */
+function agT7(){
+ const el=document.getElementById('ag_t_all'),nt=document.getElementById('ag_n_all');if(!el)return;
+ const grp=AREA.map((a,i)=>({a:i?a:'ไม่ระบุ',x:D2.filter(r=>r.a==i)})).filter(o=>o.x.length);
+ if(!grp.length){el.innerHTML='<p class="note">ไม่มีข้อมูลในตัวกรองนี้</p>';nt.textContent='';return}
+ const bk=a=>a.filter(isBkk).length,L=x=>{
+  const c=x.filter(r=>!r.t),a=x.filter(r=>r.t),c0=c.filter(r=>r.c==0),a0=a.filter(r=>r.c==0),a1=a.filter(r=>r.c==1);
+  return[x.length,bk(x),x.length-bk(x),bk(c0),c0.length-bk(c0),c0.length,bk(a0),a0.length-bk(a0),bk(a1),a1.length-bk(a1),a0.length+a1.length,
+   (c.length-c0.length)+(a.length-a0.length-a1.length),x.filter(r=>!String(r.w['ที่ตั้ง › จังหวัด']||'').trim()).length]};
+ const th=(t,c,a)=>`<th ${a||''} style="text-align:center;${c||''}">${t}</th>`,
+  P='background:rgba(232,98,150,.32)',G='background:rgba(60,170,90,.28)',Y='background:rgba(240,190,40,.34)',Z='background:rgba(128,128,128,.2)',B='background:rgba(60,180,220,.26)',O='background:rgba(200,150,30,.34)';
+ let h=`<table><thead><tr><th rowspan="4" style="vertical-align:bottom">หน่วยงาน</th><th rowspan="4" style="vertical-align:bottom">รวมทั้งหมด<br>(เรื่อง)</th>`
+ +th('พื้นที่ดำเนินการทั้งหมด',Z,'colspan="2" rowspan="3"')+th('ประเภทการดำเนินงาน',P,'colspan="8"')+`</tr><tr>`
+ +th('เรื่องร้องเรียน',G,'colspan="3"')+th('เรื่องขอความอนุเคราะห์',Y,'colspan="5"')+`</tr><tr>`
+ +th('ตรวจสอบ',G,'colspan="3"')+th('ตรวจสอบ',B,'colspan="2"')+th('เข้าร่วมตรวจสอบ',O,'colspan="2"')+th('รวม',Y,'rowspan="2"')+`</tr><tr>`
+ +[['กทม.',Z],['ตจว.',Z],['กทม.',G],['ตจว.',G],['รวม',G],['กทม.',B],['ตจว.',B],['กทม.',O],['ตจว.',O]].map(k=>th(k[0],k[1])).join('')+`</tr></thead><tbody>`;
+ const T=new Array(13).fill(0);
+ grp.forEach(o=>{const a=L(o.x);a.forEach((v,i)=>T[i]+=v);
+  h+=`<tr><td>${esc(o.a)}</td>${a.slice(0,11).map(v=>'<td>'+(v||'-')+'</td>').join('')}</tr>`});
+ h+=`</tbody><tfoot><tr><td>Grand total</td>${T.slice(0,11).map(v=>'<td>'+(v||'-')+'</td>').join('')}</tr></tfoot></table>`;
+ el.innerHTML=h;
+ const rest=T[11],np=T[12];
+ nt.textContent='กทม. = จังหวัดเป็นกรุงเทพมหานคร ที่เหลือนับเป็น ตจว.'+(np?` (มี ${np} เรื่องที่ไม่ระบุจังหวัด นับรวมใน ตจว.)`:'')
+  +' · เรื่องร้องเรียนนับเฉพาะที่เป็น "ตรวจสอบ" และเรื่องขอความอนุเคราะห์นับ "ตรวจสอบ" กับ "เข้าร่วมตรวจสอบ"'
+  +(rest?` · มี ${rest} เรื่องที่เป็นการดำเนินการอื่น (เช่น ประสาน/ทำ ส./ไม่ระบุ) ซึ่งอยู่ในรวมทั้งหมดแต่ไม่อยู่ในคอลัมน์ประเภทการดำเนินงาน`:'')}
+
+/* ตารางผลดำเนินการเรื่องขอความอนุเคราะห์ แยกตามหน่วยงาน (รูปแบบรายงานตารางที่ 10) */
+function agT5(){
+ const el=document.getElementById('ag_t_req'),nt=document.getElementById('ag_n_req');if(!el)return;
+ const A=D2.filter(r=>r.t);
+ if(!A.length){el.innerHTML='<p class="note">ไม่มีเรื่องขอความอนุเคราะห์ในตัวกรองนี้</p>';nt.textContent='';return}
+ const un=r=>AREA[r.a]||'',
+  G1=[['สตพ.1'],['สตพ.2'],['สตพ.3'],['สรม.'],['สตฉ.','สตฉ./ศคพ.รย.'],['สผป.']],
+  G2=Array.from({length:16},(_,i)=>['สคพ.'+(i+1),'สคพ. '+(i+1)]),
+  known=new Set([...G1,...G2].map(k=>k[0])),
+  oth=A.filter(r=>!known.has(un(r)));
+ const L=x=>{const d=x.filter(r=>r.k).length,w=x.length-d,n=x.length;
+  return[n,x.filter(r=>r.c==0).length,x.filter(r=>r.c==2).length,x.filter(r=>r.c==1).length,x.filter(r=>r.c==3).length,d,w]};
+ const pb=(n,v,c)=>{if(!n)return'<td>-</td>';const p=100*v/n;return`<td>${p.toFixed(1)}<span class="bar" style="width:${p*.9}px;background:${c}"></span></td>`},
+   row=(nm,x)=>{const a=L(x);return`<tr><td>${esc(nm)}</td>${a.map(v=>'<td>'+v+'</td>').join('')}${pb(a[0],a[5],'var(--g)')}${pb(a[0],a[6],'var(--y)')}</tr>`},
+  grp=t=>`<tr><td colspan="10" style="text-align:left;font-weight:700;background:var(--h1)">${t}</td></tr>`,
+  sh=(t,rs,cs)=>`<th ${rs?'rowspan="2"':''} ${cs?'colspan="'+cs+'"':''} style="text-align:center;vertical-align:bottom">${t}</th>`;
+ let h=`<table><thead><tr>${sh('หน่วยงาน',1)}${sh('จำนวนเรื่อง<br>ขอความอนุเคราะห์',1)}${sh('การดำเนินการ (เรื่อง)',0,4)}${sh('ดำเนินการแล้วเสร็จ',1)}${sh('อยู่ระหว่างดำเนินการ',1)}${sh('% แล้วเสร็จ',1)}${sh('% ระหว่างดำเนินการ',1)}</tr><tr>${['ตรวจสอบ','ประสาน','เข้าร่วมตรวจสอบ','อยู่ระหว่างมอบหมาย'].map(t=>sh(t)).join('')}</tr></thead><tbody>`;
+ h+=grp('กองตรวจมลพิษ')+G1.map(k=>row(k[1]||k[0],A.filter(r=>un(r)==k[0]))).join('');
+ h+=grp('สำนักงานสิ่งแวดล้อมและควบคุมมลพิษที่ 1-16')+G2.map(k=>row(k[1],A.filter(r=>un(r)==k[0]))).join('');
+ if(oth.length)h+=grp('ไม่ระบุหน่วยงาน')+row('ไม่ระบุ / อื่นๆ',oth);
+ const T=L(A);
+ h+=`</tbody><tfoot><tr><td>รวม</td>${T.map(v=>'<td>'+v+'</td>').join('')}${pb(T[0],T[5],'var(--g)')}${pb(T[0],T[6],'var(--y)')}</tr></tfoot></table>`;
+ el.innerHTML=h;
+ nt.textContent='ตรวจสอบ / เข้าร่วมตรวจสอบ = ตามที่ระบุในคอลัมน์ "การดำเนินการ" · ประสาน = มีการดำเนินการอื่น (เช่น ทำ ส. แจ้งตอบหน่วยงาน) · อยู่ระหว่างมอบหมาย = ยังไม่ระบุการดำเนินการ · แล้วเสร็จ = มีวันที่สิ้นสุดการดำเนินการ'}
+
+
+
 const RG={'ภาคเหนือ':'เชียงราย เชียงใหม่ น่าน พะเยา แพร่ แม่ฮ่องสอน ลำปาง ลำพูน อุตรดิตถ์','ภาคตะวันออกเฉียงเหนือ':'กาฬสินธุ์ ขอนแก่น ชัยภูมิ นครพนม นครราชสีมา บึงกาฬ บุรีรัมย์ มหาสารคาม มุกดาหาร ยโสธร ร้อยเอ็ด เลย สกลนคร สุรินทร์ ศรีสะเกษ หนองคาย หนองบัวลำภู อำนาจเจริญ อุดรธานี อุบลราชธานี','ภาคกลาง':'กรุงเทพมหานคร กำแพงเพชร ชัยนาท นครนายก นครปฐม นครสวรรค์ นนทบุรี ปทุมธานี พระนครศรีอยุธยา พิจิตร พิษณุโลก เพชรบูรณ์ ลพบุรี สมุทรปราการ สมุทรสงคราม สมุทรสาคร สิงห์บุรี สุโขทัย สุพรรณบุรี สระบุรี อ่างทอง อุทัยธานี','ภาคตะวันออก':'จันทบุรี ฉะเชิงเทรา ชลบุรี ตราด ปราจีนบุรี ระยอง สระแก้ว','ภาคตะวันตก':'กาญจนบุรี ตาก ประจวบคีรีขันธ์ เพชรบุรี ราชบุรี','ภาคใต้':'กระบี่ ชุมพร ตรัง นครศรีธรรมราช นราธิวาส ปัตตานี พังงา พัทลุง ภูเก็ต ระนอง สงขลา สตูล สุราษฎร์ธานี ยะลา'},PR2RG={};Object.entries(RG).forEach(([g,s])=>s.split(' ').forEach(p=>PR2RG[p]=g));
 /* ===== ส่วนที่ตั้ง (ย้ายมาจากไฟล์ v3: แผนที่ + ช่องค้นหา + กราฟ) ===== */
 const PAL=['#1f6f8b','#2fa4a0','#8fc27a','#e0a526','#e07b3b','#b0527a','#7a6fc0','#4d8fd6','#c7a46b','#6b8a99'];
@@ -686,7 +762,7 @@ const c=x=>{x=(x||'').trim();return x==='-'?'':x},T=c(o['ตำบล']||o['แ�
 return[['ที่ตั้ง › จังหวัด',P],['ที่ตั้ง › อำเภอ/เขต',A],['ที่ตั้ง › ตำบล/แขวง',T],['ที่ตั้ง › จังหวัด › อำเภอ/เขต',j(P,A)],['ที่ตั้ง › จังหวัด › อำเภอ/เขต › ตำบล/แขวง',j(P,A,T)],['ที่ตั้ง › ถนน',c(o['ถนน'])],['ที่ตั้ง › ซอย',c(o['ซอย'])],['ที่ตั้ง › หมู่บ้าน',c(o['หมู่บ้าน'])],['ที่ตั้ง › หมู่ที่',c(o['หมู่ที่'])],['ที่ตั้ง › รหัสไปรษณีย์',zip]]}
 /* แยกหน่วยงานแบบเดียวกับหน้า "ประมวลผลอัตโนมัติ": ค่าในวงเล็บของ ผู้รับผิดชอบ (หรือคอลัมน์ หน่วยงานที่รับผิดชอบ)
    -> จับคู่ สตพ.1/2/3, สรม., สตฉ. -> ไม่ตรงให้ดูเลข R ใน CPN เป็น สคพ. N -> ไม่มีเลย = สคพ. */
-const UNITS=['สตพ.1','สตพ.2','สตพ.3','สรม.','สตฉ.'],UNITS_N=UNITS.map(s=>s.replace(/\s+/g,''));
+const UNITS=['สตพ.1','สตพ.2','สตพ.3','สรม.','สตฉ.','สผป.'],UNITS_N=UNITS.map(s=>s.replace(/\s+/g,''));
 const uNorm=s=>String(s==null?'':s).replace(/\s+/g,'').trim();
 const uParen=raw=>{const s=String(raw==null?'':raw).trim();const m=s.match(/^(.*?)[\(（]([^\)）]*)[\)）]\s*(.*)$/);return m?m[2].trim():''};
 const uCpn=v=>{const m=String(v==null?'':v).match(/R\s*0*(\d+)/i);return m?'สคพ.'+m[1]:null};
@@ -696,22 +772,23 @@ function areaUnit(r,H){
  if(ci<0&&oi<0)return null;
  let raw=ci>=0?r[ci]:'';if(!uNorm(raw)&&oi>=0)raw=uParen(r[oi]);
  const v=uNorm(raw);let k=UNITS_N.findIndex(n=>v===n);if(k<0)k=UNITS_N.findIndex(n=>v&&v.includes(n));
+ if(k<0&&/ศคพ\.?รย/.test(v))k=UNITS_N.indexOf('สตฉ.');
  if(k>=0)return UNITS[k];
  return uCpn(pi>=0?r[pi]:'')||'สคพ.'}
 
 
 function parse(rows,f){const hi=rows.findIndex(r=>r[0]==='ลำดับที่');if(hi<0)throw 0;const H=rows[hi].map(x=>x==null?'':String(x).trim()),t=H.includes('ทะเบียนโรงงาน')?0:H.includes('การดำเนินการ')?1:-1;if(t<0)throw 0;
 const DH=H.findIndex(h=>/วันที่/.test(h)&&/(รับ|ร้องเรียน|ขอ|เกิดเหตุ)/.test(h)&&!/(สิ้นสุด|เสร็จ|ตอบ|ส่ง|ตรวจ)/.test(h)),out=[];for(const r of rows.slice(hi+1)){if(r[0]==null)continue;const g=n=>{const i=H.indexOf(n);return i<0?null:r[i]},y=+g('ปีที่รับเรื่อง'),m=+g('เดือนที่รับเรื่อง');if(!y||!m)continue;
-const dn=g(t?'วันที่สิ้นสุด':'เวลาสิ้นสุดให้บริการจริง');out.push({dd:dayOf(r[DH]),t,y,m,pol:g('ปัญหามลพิษ'),biz:t?'':String(g('ประเภทกิจการ')||'').trim(),src:g('แหล่งที่มา'),area:t?'':(areaUnit(r,H)||String(g('พื้นที่รับผิดชอบ')||'').trim()),done:dn!=null&&dn!=='',d:num(g(t?'ผลการดำเนินการ (วัน)':'ระยะเวลาให้บริการจริง')),c:t?actr(g('การดำเนินการ')):actc(g('ดำเนินการตรวจสอบ')),w:Object.fromEntries(H.map((h,i)=>[h,r[i]]).filter(x=>x[0]).flatMap(x=>x[0]=='ที่ตั้ง'&&x[1]?[x,...addr(x[1])]:[x]))})}
+const dn=g(t?'วันที่สิ้นสุด':'เวลาสิ้นสุดให้บริการจริง');out.push({dd:dayOf(r[DH]),t,y,m,pol:g('ปัญหามลพิษ'),biz:t?'':String(g('ประเภทกิจการ')||'').trim(),src:g('แหล่งที่มา'),area:areaUnit(r,H)||(t?'':String(g('พื้นที่รับผิดชอบ')||'').trim()),done:dn!=null&&dn!=='',d:num(g(t?'ผลการดำเนินการ (วัน)':'ระยะเวลาให้บริการจริง')),c:t?actr(g('การดำเนินการ')):actc(g('ดำเนินการตรวจสอบ')),w:Object.fromEntries(H.map((h,i)=>[h,r[i]]).filter(x=>x[0]).flatMap(x=>x[0]=='ที่ตั้ง'&&x[1]?[x,...addr(x[1])]:[x]))})}
 files[t]={name:f.name,rows:out}}
 function rebuild(){const all=Object.values(files).flatMap(o=>o.rows),C=all.filter(o=>!o.t),YM=[...new Set(all.map(o=>o.y*100+o.m))].sort((a,b)=>a-b);
 MN.splice(0,MN.length,...YM.map(k=>TH[k%100-1]+' '+String(Math.floor(k/100)).slice(-2)));
 BIZ.splice(0,BIZ.length,...topN(C.map(o=>o.biz),7,['อื่นๆ']),'อื่นๆ/ไม่ระบุ');
 const toks=o=>{const m=String(o.src||'').split(/\s*,\s*/).map(x=>x.replace(/^[\s\-']+/,'').trim()).filter(Boolean).map(o.t?rsrc:nrm);return m.length?m:['อื่นๆ']},T=all.map(toks),cn={};T.forEach(a=>a.forEach(k=>cn[k]=(cn[k]||0)+1));
 SRC.splice(0,SRC.length,...Object.keys(cn).sort((a,b)=>(a=='อื่นๆ')-(b=='อื่นๆ')||cn[b]-cn[a]));
-{const ar=[...new Set(C.map(o=>o.area).filter(Boolean))],rk=s=>{const i=UNITS.indexOf(s);if(i>=0)return[0,i];const m=s.match(/^สคพ\.(\d+)$/);return m?[1,+m[1]]:s=='สคพ.'?[2,0]:[3,0]};
+{const ar=[...new Set(all.map(o=>o.area).filter(Boolean))],rk=s=>{const i=UNITS.indexOf(s);if(i>=0)return[0,i];const m=s.match(/^สคพ\.(\d+)$/);return m?[1,+m[1]]:s=='สคพ.'?[2,0]:[3,0]};
 AREA.splice(0,AREA.length,'-',...ar.sort((x,y)=>{const p=rk(x),q=rk(y);return p[0]-q[0]||p[1]-q[1]||x.localeCompare(y,'th')}))}
-R.splice(0,R.length,...all.map((o,ix)=>{const mo=o.m;const ss=T[ix].map(k=>SRC.indexOf(k)),b=BIZ.indexOf(o.biz);return{dd:o.dd,y:o.y,mo,t:o.t,m:YM.indexOf(o.y*100+o.m),p:mask(o.pol),b:!o.t&&b>=0?b:BIZ.length-1,ss,a:o.t?0:Math.max(0,AREA.indexOf(o.area)),k:o.done?1:0,d:o.d,c:o.c,w:o.w}}));
+R.splice(0,R.length,...all.map((o,ix)=>{const mo=o.m;const ss=T[ix].map(k=>SRC.indexOf(k)),b=BIZ.indexOf(o.biz);return{dd:o.dd,y:o.y,mo,t:o.t,m:YM.indexOf(o.y*100+o.m),p:mask(o.pol),b:!o.t&&b>=0?b:BIZ.length-1,ss,a:Math.max(0,AREA.indexOf(o.area)),k:o.done?1:0,d:o.d,c:o.c,w:o.w}}));
 prep();rsF();side();
 document.getElementById('fs').innerHTML=Object.entries(files).map(([t,o])=>`${t==0?'ร้องเรียน':'ขอความอนุเคราะห์'}: ${o.name} (${o.rows.length} เรื่อง)`).join('<br>')+(R.length&&Object.keys(files).length<2?'<br>ยังไม่ได้นำเข้า: '+(files[0]?'เรื่องขอความอนุเคราะห์':'เรื่องร้องเรียน')+' (กดนำเข้าไฟล์เพิ่มได้)':'')+(bad.length?'<br>อ่านไฟล์ไม่ได้ (ไม่ใช่รูปแบบรายงานที่รองรับ): '+bad.join(', '):'');
 draw()}
@@ -878,7 +955,7 @@ function xcfg(labels,ds,hz,mode){const ink=v('--ink'),mut=v('--mut'),F='IBM Plex
 function xtra(){const box=document.getElementById('xc1');if(!box||!R.length)return;
  const n=D2.length,ms=MN.map((_,i)=>i).filter(i=>D2.some(r=>r.m==i)),lb=ms.map(i=>MN[i]),byM=m=>D2.filter(r=>r.m==m);
  document.querySelectorAll('#xtg .ib').forEach(b=>b.setAttribute('aria-pressed',b.dataset.xm==XMODE));
- const c1=document.getElementById('xi1'),c2=document.getElementById('xi2'),li=document.getElementById('xi');
+ const c1=document.getElementById('xi1'),c2=document.getElementById('xi2'),li=document.getElementById('xi')||document.createElement('ul');
  if(!n||!ms.length){c1.textContent=c2.textContent='ไม่มีข้อมูลตามตัวกรองนี้';li.innerHTML='';return}
  /* ช่องทาง x เดือน */
  const stot=SRC.map((_,i)=>xsum(D2.map(r=>xs(r,i)))),{top:st,oth:so}=xtop(SRC,stot,6),sd=st.map(([i])=>({l:SRC[i],v:ms.map(m=>xsum(byM(m).map(r=>xs(r,i))))}));
