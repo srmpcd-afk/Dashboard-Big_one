@@ -1196,6 +1196,24 @@ function xparse(rows){
  for(const k of['P','C','B'])if(o[k]){o[k].cols=o[k].cols.filter(c=>c.v.some(x=>x>0));o[k].tot=o[k].tot||lab.map((_,i)=>o[k].cols.reduce((a,c)=>a+c.v[i],0))}
  o.cases=cases||(o.B?o.B.tot:o.C?o.C.tot:o.P.tot);return o}
 const sm=a=>a.reduce((p,q)=>p+q,0),csum=c=>sm(c.v);
+function xfilt(D){
+ const keep=[];D.lab.forEach((l,i)=>{const k=MN.indexOf(l);if(k<0||F.m.has(k))keep.push(i)});
+ const n=keep.length,sl=a=>keep.map(i=>a[i]),zero=()=>Array(n).fill(0);
+ const pA=F.p.size<POL.length,bA=F.b.size>0,cA=F.s.size>0;
+ const mkT=(T,act,list,set,oth)=>{if(!T)return null;let cols=T.cols;
+  if(act)cols=cols.filter(c=>{const j=list.indexOf(c.h);return j>=0?set.has(j):(oth!=null&&set.has(oth))});
+  cols=cols.map(c=>({h:c.h,v:sl(c.v)}));if(!cols.length)return null;
+  return{cols,tot:act?Array.from({length:n},(_,i)=>cols.reduce((a,c)=>a+c.v[i],0)):sl(T.tot)}};
+ const P=mkT(D.P,pA,POL,F.p,POL.length-1),B=mkT(D.B,bA,BIZ,F.b,BIZ.length-1),C=mkT(D.C,cA,SRC,F.s,null);
+ let cases=sl(D.cases);
+ if(bA&&D.B)cases=B?B.tot:zero();else if(cA&&D.C)cases=C?C.tot:zero();
+ const bad=[['t','ประเภทเรื่อง',F.t!==''],['q','ค้นหาคำ',!!F.q],['a','หน่วยงานรับผิดชอบ',F.a.size],['pv','จังหวัด',F.pv.size],['am','อำเภอ/เขต',F.am.size],['st','สถานะ',F.st.size],['du','ระยะเวลาดำเนินการ',F.du.size]].filter(x=>x[2]).map(x=>x[1]);
+ let note='ข้อมูลนอกระบบเป็นตารางสรุปรายเดือน ตัวกรองที่ใช้ได้คือ ปี/เดือนที่รับเรื่อง · ปัญหามลพิษ · ประเภทกิจการ · แหล่งที่มา (ช่องทาง)';
+ if(bad.length)note+=' · <b>ตัวกรองที่ไม่มีผลกับข้อมูลนี้:</b> '+bad.join(', ');
+ if(bA&&cA)note+=' · เลือกทั้งประเภทกิจการและแหล่งที่มา: แต่ละตารางกรองตามหมวดของตัวเอง ส่วนจำนวนเรื่องนับตามประเภทกิจการ';
+ if(pA)note+=' · 1 เรื่องมีได้หลายปัญหา จำนวนเรื่องจึงไม่เปลี่ยนตามตัวกรองปัญหามลพิษ';
+ const active=pA||bA||cA||n<D.lab.length;
+ return{D:{lab:sl(D.lab),P,B,C,cases},pf:pA,note,active,empty:{P:pA&&D.P&&!P,B:bA&&D.B&&!B,C:cA&&D.C&&!C}}}
 let xio=null,XCUR='';
 function xnavFill(){const sd=document.getElementById('side');if(!sd)return;sd.querySelectorAll('.xnav,.xnavhr').forEach(e=>e.remove());if(xio){xio.disconnect();xio=null}
  if(!XS)return;const secs=[...document.querySelectorAll('#xapp section')];
@@ -1209,14 +1227,14 @@ function xnavFill(){const sd=document.getElementById('side');if(!sd)return;sd.qu
 function xdraw(){xch.forEach(c=>c.destroy());xch=[];const box=document.getElementById('xapp');if(!box)return;
  const msg=t=>{box.innerHTML=`<div class="card"><h2>เรื่องนอกระบบ</h2><p class="note">${xe(t)}</p></div>`;xnavFill()};
  if(xerr)return msg(xerr);if(!xrows)return msg('กำลังดึงข้อมูลชีต “เรื่องนอกระบบ” จาก Google Sheets…');
- const D=xparse(xrows);if(!D)return msg('ไม่พบตารางสรุป (ประเภทปัญหามลพิษ / ช่องทาง / ประเภทกิจการ) ในชีตนี้');
+ const D0=xparse(xrows);if(!D0)return msg('ไม่พบตารางสรุป (ประเภทปัญหามลพิษ / ช่องทาง / ประเภทกิจการ) ในชีตนี้');const XF=xfilt(D0),D=XF.D;if(!D.lab.length||!sm(D.cases))return msg('ไม่มีข้อมูลนอกระบบตรงกับตัวกรองที่เลือก (ลองล้างตัวกรองปี/เดือน ปัญหามลพิษ ประเภทกิจการ หรือแหล่งที่มา)');
  const ink=v('--ink'),mut=v('--mut'),ac=v('--ac'),ln=v('--ln'),band=v('--band')||'#12263f',hot=v('--hot')||'31,111,208',FF='IBM Plex Sans Thai',
  PAL=['#2a7fa6','#e8913a','#4caf6a','#9b6bd1','#d6609b','#e25555','#c9a227','#8d99a6'],L=D.lab,N=L.length,
  pcol=(n,i)=>{try{const j=POL.indexOf(n);if(j>=0&&PCOL[j])return PCOL[j]}catch(e){}return PAL[i%PAL.length]},
  tot=sm(D.cases),mi=D.cases.indexOf(Math.max(...D.cases)),rk=T=>T?T.cols.map((c,i)=>({h:c.h,n:csum(c),i})).sort((a,b)=>b.n-a.n):[],
  rp=rk(D.P),rc=rk(D.C),rb=rk(D.B),pt=D.P?sm(D.P.tot):0,ct=D.C?sm(D.C.tot):0,bt=D.B?sm(D.B.tot):0;
  const kp=(t,b,s)=>`<div><small>${t}</small><b>${b}</b>${s?`<small>${s}</small>`:''}</div>`;
- let h=`<section id="xs-ov"><h2 class="sec">เรื่องนอกระบบ</h2><p class="note" style="margin:-4px 0 12px">ตัวกรองด้านซ้ายใช้กับแถบ “ทั้งหมด” เท่านั้น เพราะข้อมูลนอกระบบเป็นตารางสรุปรายเดือน · เลือกหัวข้อจากเมนูด้านซ้ายเพื่อเลื่อนไปยังส่วนที่ต้องการ</p><div class="xk">${kp('จำนวนเรื่องทั้งหมด',fm(tot),L[0]+' – '+L[N-1])}${kp('เฉลี่ยต่อเดือน',fm(tot/N),'เรื่อง')}${kp('เดือนที่รับมากสุด',xe(L[mi]),fm(D.cases[mi])+' เรื่อง')}${D.P?kp('ปัญหามลพิษ (ครั้ง)',fm(pt),'เฉลี่ย '+(tot?(pt/tot).toFixed(2):'-')+' ปัญหา/เรื่อง'):''}${rc[0]?kp('ช่องทางหลัก',`<span style="font-size:1.3rem">${xe(rc[0].h)}</span>`,pc1(rc[0].n,ct)):''}</div><div class="g">`;
+ let h=`<section id="xs-ov"><h2 class="sec">เรื่องนอกระบบ</h2><p class="note" style="margin:-4px 0 12px">${XF.note}</p><div class="xk">${kp('จำนวนเรื่องทั้งหมด',fm(tot),L[0]+' – '+L[N-1])}${kp('เฉลี่ยต่อเดือน',fm(tot/N),'เรื่อง')}${kp('เดือนที่รับมากสุด',xe(L[mi]),fm(D.cases[mi])+' เรื่อง')}${D.P?kp('ปัญหามลพิษ (ครั้ง)',fm(pt),(XF.pf?'ตามปัญหาที่เลือก':'เฉลี่ย '+(tot?(pt/tot).toFixed(2):'-')+' ปัญหา/เรื่อง')):''}${rc[0]?kp('ช่องทางหลัก',`<span style="font-size:1.3rem">${xe(rc[0].h)}</span>`,pc1(rc[0].n,ct)):''}</div><div class="g">`;
  h+=`<div class="card s8"><h2>เรื่องที่รับ รายเดือน</h2><p class="ins">เดือน ${xe(L[mi])} รับเรื่องมากที่สุด ${fm(D.cases[mi])} เรื่อง · เส้นประ = ค่าเฉลี่ย ${fm(tot/N)} เรื่อง/เดือน</p><div class="xh" style="height:300px"><canvas id="xm"></canvas></div></div>`;
  if(D.C)h+=`<div class="card s4"><h2>ช่องทางที่รับเรื่อง</h2><p class="ins">${xe(rc[0].h)} ${pc1(rc[0].n,ct)} ของทุกช่องทาง</p><div class="xh" style="height:300px"><canvas id="xd"></canvas></div></div>`;
  h+=`</div></section>`;
