@@ -880,7 +880,7 @@ document.getElementById('i2').textContent=o.length?`${POL[o[0]]} พบมาก
 el.innerHTML=o.map((j,rk)=>{const a=ms.map(m=>D2.filter(r=>r.m==m&&r.p>>j&1).length),k=a.length,mx=Math.max(...a,1),pct=Math.round(100*cnt[j]/n),
 pts=a.map((x,q)=>[2+q*(116/Math.max(k-1,1)),32-x/mx*28]),
 sp=k>1?`<svg viewBox="0 0 120 34" preserveAspectRatio="none" height="34" width="100%" aria-hidden="true"><polygon points="2,32 ${pts.map(p=>p.join(',')).join(' ')} ${pts[k-1][0]},32" fill="var(--c)" opacity=".18"/><polyline points="${pts.map(p=>p.join(',')).join(' ')}" fill="none" stroke="var(--c)" stroke-width="1.8" vector-effect="non-scaling-stroke"/></svg>`:'',
-d=k>1?a[k-1]-a[k-2]:0,tr=k>1?`${MN[ms[k-1]]}: ${a[k-1]} เรื่อง <b style="color:${d>0?'#e25555':d<0?'#2f9f5b':'inherit'}">${d>0?'▲ +'+d:d<0?'▼ '+d:'– คงที่'}</b>`:'';
+d=k>1?a[k-1]-a[k-2]:0,tr=k>1?`${a[k-1]} เรื่อง <b style="color:${d>0?'#e25555':d<0?'#2f9f5b':'inherit'}">${d>0?'▲ +'+d:d<0?'▼ '+d:'– คงที่'}</b>`:'';
 return`<button class="pc${F.p.size==1&&F.p.has(j)?' on':''}" data-j="${j}" style="--c:${PCOL[j]}"><span class="pk">อันดับ ${rk+1}</span><div class="ph"><span class="pi">${PIC[j]}</span><span class="pnm">${POL[j]}</span></div><div class="pv"><b>${cnt[j]}</b><small>เรื่อง · ${pct}%</small></div><div class="pbar"><i style="width:${pct}%"></i></div>${sp}<div class="ptr">${tr}</div></button>`}).join('')}
 document.getElementById('pol').onclick=e=>{const b=e.target.closest('.pc');if(!b)return;openDet('pol',[+b.dataset.j],POL[+b.dataset.j])};
 const SEL=()=>POL.map((_,j)=>j).filter(j=>F.p.has(j));
