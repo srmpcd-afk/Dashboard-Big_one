@@ -333,7 +333,7 @@ table.hm{border-collapse:separate;border-spacing:3px;font-size:13.5px;table-layo
 body.xs #app>:not(.sb){display:none!important}
 #kx{margin-top:14px}#kx div{color:#fff;border:0;overflow:hidden}#kx div::before{display:none}#kx small{color:rgba(255,255,255,.88)}#kx b{color:#fff}
 #kx div:nth-child(1){background:linear-gradient(135deg,#0f9d8a,#0b6f7a)}#kx div:nth-child(2){background:linear-gradient(135deg,#7b4fd6,#4a2f9e)}
-#xapp{display:none}body.xs #xapp{display:block}
+#xapp{display:none}body.xs #xapp{display:block}body.xs #side>:not(.xnav){display:none!important}#xapp section{scroll-margin-top:64px;margin-bottom:32px}#xapp .xk{margin-bottom:14px}
 .xk{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:14px;margin-bottom:16px}.xk div{background:var(--pn);border:1px solid var(--ln);border-radius:14px;padding:14px 20px;border-left:5px solid var(--ac)}.xk small{display:block;color:var(--mut)}.xk b{font-size:1.9rem;line-height:1.2}
 .xh{position:relative;width:100%}
 #xapp details.xt{margin-top:8px}#xapp .xt table td{max-width:260px;overflow:hidden;text-overflow:ellipsis}#xapp .xt td,#xapp .xt th{text-align:left}
@@ -1196,8 +1196,18 @@ function xparse(rows){
  for(const k of['P','C','B'])if(o[k]){o[k].cols=o[k].cols.filter(c=>c.v.some(x=>x>0));o[k].tot=o[k].tot||lab.map((_,i)=>o[k].cols.reduce((a,c)=>a+c.v[i],0))}
  o.cases=cases||(o.B?o.B.tot:o.C?o.C.tot:o.P.tot);return o}
 const sm=a=>a.reduce((p,q)=>p+q,0),csum=c=>sm(c.v);
+let xio=null,XCUR='';
+function xnavFill(){const sd=document.getElementById('side');if(!sd)return;const old=sd.querySelector('.xnav');if(old)old.remove();if(xio){xio.disconnect();xio=null}
+ if(!XS)return;const secs=[...document.querySelectorAll('#xapp section')];
+ const nav=document.createElement('div');nav.className='spy xnav';
+ nav.innerHTML='<h3>ส่วนของเรื่องนอกระบบ</h3>'+(secs.length?secs.map(s=>{const t=s.querySelector('h2.sec');return`<a href="#${s.id}" data-xsp="${s.id}">${xe(t?t.textContent:s.id)}</a>`}).join(''):'<p class="note" style="margin:0">กำลังโหลดข้อมูล…</p>');
+ sd.insertAdjacentElement('afterbegin',nav);
+ const mark=id=>{XCUR=id;nav.querySelectorAll('[data-xsp]').forEach(a=>a.classList.toggle('on',a.dataset.xsp===id))};
+ if(!secs.length)return;mark(secs.some(s=>s.id===XCUR)?XCUR:secs[0].id);
+ nav.onclick=e=>{const a=e.target.closest('[data-xsp]');if(a)mark(a.dataset.xsp)};
+ if('IntersectionObserver'in window){xio=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting)mark(e.target.id)}),{rootMargin:'-20% 0px -70% 0px'});secs.forEach(s=>xio.observe(s))}}
 function xdraw(){xch.forEach(c=>c.destroy());xch=[];const box=document.getElementById('xapp');if(!box)return;
- const msg=t=>box.innerHTML=`<div class="card"><h2>เรื่องนอกระบบ</h2><p class="note">${xe(t)}</p></div>`;
+ const msg=t=>{box.innerHTML=`<div class="card"><h2>เรื่องนอกระบบ</h2><p class="note">${xe(t)}</p></div>`;xnavFill()};
  if(xerr)return msg(xerr);if(!xrows)return msg('กำลังดึงข้อมูลชีต “เรื่องนอกระบบ” จาก Google Sheets…');
  const D=xparse(xrows);if(!D)return msg('ไม่พบตารางสรุป (ประเภทปัญหามลพิษ / ช่องทาง / ประเภทกิจการ) ในชีตนี้');
  const ink=v('--ink'),mut=v('--mut'),ac=v('--ac'),ln=v('--ln'),band=v('--band')||'#12263f',hot=v('--hot')||'31,111,208',FF='IBM Plex Sans Thai',
@@ -1206,17 +1216,16 @@ function xdraw(){xch.forEach(c=>c.destroy());xch=[];const box=document.getElemen
  tot=sm(D.cases),mi=D.cases.indexOf(Math.max(...D.cases)),rk=T=>T?T.cols.map((c,i)=>({h:c.h,n:csum(c),i})).sort((a,b)=>b.n-a.n):[],
  rp=rk(D.P),rc=rk(D.C),rb=rk(D.B),pt=D.P?sm(D.P.tot):0,ct=D.C?sm(D.C.tot):0,bt=D.B?sm(D.B.tot):0;
  const kp=(t,b,s)=>`<div><small>${t}</small><b>${b}</b>${s?`<small>${s}</small>`:''}</div>`;
- let h=`<h2 class="sec">เรื่องนอกระบบ</h2><p class="note" style="margin:-4px 0 12px">ตัวกรองด้านซ้ายใช้กับแถบ “ทั้งหมด” เท่านั้น เพราะข้อมูลนอกระบบเป็นตารางสรุปรายเดือน</p><div class="xk">${kp('จำนวนเรื่องทั้งหมด',fm(tot),L[0]+' – '+L[N-1])}${kp('เฉลี่ยต่อเดือน',fm(tot/N),'เรื่อง')}${kp('เดือนที่รับมากสุด',xe(L[mi]),fm(D.cases[mi])+' เรื่อง')}${D.P?kp('ปัญหามลพิษ (ครั้ง)',fm(pt),'เฉลี่ย '+(tot?(pt/tot).toFixed(2):'-')+' ปัญหา/เรื่อง'):''}${rc[0]?kp('ช่องทางหลัก',`<span style="font-size:1.3rem">${xe(rc[0].h)}</span>`,pc1(rc[0].n,ct)):''}</div><div class="g">`;
+ let h=`<section id="xs-ov"><h2 class="sec">เรื่องนอกระบบ</h2><p class="note" style="margin:-4px 0 12px">ข้อมูลนอกระบบเป็นตารางสรุปรายเดือน จึงไม่มีตัวกรองเหมือนแถบ “ทั้งหมด” · เลือกหัวข้อจากเมนูด้านซ้ายเพื่อเลื่อนไปยังส่วนที่ต้องการ</p><div class="xk">${kp('จำนวนเรื่องทั้งหมด',fm(tot),L[0]+' – '+L[N-1])}${kp('เฉลี่ยต่อเดือน',fm(tot/N),'เรื่อง')}${kp('เดือนที่รับมากสุด',xe(L[mi]),fm(D.cases[mi])+' เรื่อง')}${D.P?kp('ปัญหามลพิษ (ครั้ง)',fm(pt),'เฉลี่ย '+(tot?(pt/tot).toFixed(2):'-')+' ปัญหา/เรื่อง'):''}${rc[0]?kp('ช่องทางหลัก',`<span style="font-size:1.3rem">${xe(rc[0].h)}</span>`,pc1(rc[0].n,ct)):''}</div><div class="g">`;
  h+=`<div class="card s8"><h2>เรื่องที่รับ รายเดือน</h2><p class="ins">เดือน ${xe(L[mi])} รับเรื่องมากที่สุด ${fm(D.cases[mi])} เรื่อง · เส้นประ = ค่าเฉลี่ย ${fm(tot/N)} เรื่อง/เดือน</p><div class="xh" style="height:300px"><canvas id="xm"></canvas></div></div>`;
  if(D.C)h+=`<div class="card s4"><h2>ช่องทางที่รับเรื่อง</h2><p class="ins">${xe(rc[0].h)} ${pc1(rc[0].n,ct)} ของทุกช่องทาง</p><div class="xh" style="height:300px"><canvas id="xd"></canvas></div></div>`;
- if(D.P)h+=`<div class="card s6"><h2>ปัญหามลพิษ</h2><p class="ins">${xe(rp[0].h)} พบมากที่สุด ${fm(rp[0].n)} ครั้ง (${pc1(rp[0].n,pt)})</p><div class="xh" style="height:${rp.length*34+30}px"><canvas id="xp"></canvas></div></div>`;
- if(D.B)h+=`<div class="card s6"><h2>ประเภทกิจการ</h2><p class="ins">${xe(rb[0].h)} ${fm(rb[0].n)} เรื่อง (${pc1(rb[0].n,bt)})</p><div class="xh" style="height:${rb.length*44+30}px"><canvas id="xb"></canvas></div></div>`;
- if(D.P)h+=`<div class="card s12"><h2>ปัญหามลพิษรายเดือน</h2><p class="ins">แท่งซ้อน แยกตามประเภทปัญหา</p><div class="xh" style="height:300px"><canvas id="xsp"></canvas></div></div>`;
- if(D.C)h+=`<div class="card s6"><h2>ช่องทางรายเดือน</h2><div class="xh" style="height:280px"><canvas id="xsc"></canvas></div></div>`;
- if(D.B)h+=`<div class="card s6"><h2>ประเภทกิจการรายเดือน</h2><div class="xh" style="height:280px"><canvas id="xsb"></canvas></div></div>`;
+ h+=`</div></section>`;
  const heat=(T,ttl)=>{const mx=Math.max(1,...T.cols.flatMap(c=>c.v)),tt=T.cols.map(csum);return`<div class="card s12"><h2>${ttl}</h2><div class="ov"><table class="hm"><thead><tr><th>เดือน</th>${T.cols.map(c=>`<th>${xe(c.h)}</th>`).join('')}<th>รวม</th></tr></thead><tbody>${L.map((l,i)=>`<tr><td>${xe(l)}</td>${T.cols.map(c=>{const n=c.v[i],al=(.08+.8*Math.sqrt(n/mx)).toFixed(2);return n?`<td class="v" title="${xe(c.h)}: ${fm(n)}" style="background:rgba(${hot},${al});color:${al>.55?'#fff':'inherit'}">${fm(n)}</td>`:'<td class="z">0</td>'}).join('')}<td><b>${fm(T.tot[i])}</b></td></tr>`).join('')}</tbody><tfoot><tr><td>รวม</td>${tt.map(n=>`<td>${fm(n)}</td>`).join('')}<td>${fm(sm(T.tot))}</td></tr><tr><td>ร้อยละ</td>${tt.map(n=>`<td>${pc1(n,sm(T.tot)).replace('%','')}</td>`).join('')}<td>100</td></tr></tfoot></table></div></div>`};
- if(D.P)h+=heat(D.P,'ตารางปัญหามลพิษ × เดือน');if(D.C)h+=heat(D.C,'ตารางช่องทาง × เดือน');if(D.B)h+=heat(D.B,'ตารางประเภทกิจการ × เดือน');
- box.innerHTML=h+'</div>';
+const sec=(id,t,body)=>body?`<section id="${id}"><h2 class="sec">${t}</h2><div class="g">${body}</div></section>`:'';
+h+=sec('xs-pb','ปัญหามลพิษ',D.P?`<div class="card s6"><h2>ปัญหามลพิษ</h2><p class="ins">${xe(rp[0].h)} พบมากที่สุด ${fm(rp[0].n)} ครั้ง (${pc1(rp[0].n,pt)})</p><div class="xh" style="height:${rp.length*34+30}px"><canvas id="xp"></canvas></div></div><div class="card s6"><h2>ปัญหามลพิษรายเดือน</h2><p class="ins">แท่งซ้อน แยกตามประเภทปัญหา</p><div class="xh" style="height:300px"><canvas id="xsp"></canvas></div></div>${heat(D.P,'ตารางปัญหามลพิษ × เดือน')}`:'');
+h+=sec('xs-ch','ช่องทางที่รับเรื่อง',D.C?`<div class="card s12"><h2>ช่องทางรายเดือน</h2><div class="xh" style="height:280px"><canvas id="xsc"></canvas></div></div>${heat(D.C,'ตารางช่องทาง × เดือน')}`:'');
+h+=sec('xs-bz','ประเภทกิจการ',D.B?`<div class="card s6"><h2>ประเภทกิจการ</h2><p class="ins">${xe(rb[0].h)} ${fm(rb[0].n)} เรื่อง (${pc1(rb[0].n,bt)})</p><div class="xh" style="height:${rb.length*44+30}px"><canvas id="xb"></canvas></div></div><div class="card s6"><h2>ประเภทกิจการรายเดือน</h2><div class="xh" style="height:280px"><canvas id="xsb"></canvas></div></div>${heat(D.B,'ตารางประเภทกิจการ × เดือน')}`:'');
+box.innerHTML=h;xnavFill();
  const lbl={id:'xl',afterDatasetsDraw(c,_,o){if(!o.on)return;const x=c.ctx,hz=c.options.indexAxis=='y';x.save();x.fillStyle=ink;x.font='600 12px "'+FF+'"';x.textBaseline='middle';
   c.getDatasetMeta(0).data.forEach((e,i)=>{const t=o.t(i);if(hz){x.textAlign='left';x.fillText(t,e.x+6,e.y)}else{x.textAlign='center';x.fillText(t,e.x,e.y-10)}});x.restore()}},
  tip={backgroundColor:band,titleColor:'#fff',bodyColor:'#dbe7f5',padding:10,cornerRadius:10,titleFont:{family:FF,weight:'700'},bodyFont:{family:FF}},
@@ -1247,7 +1256,10 @@ function kx(){const el=document.getElementById('kx');if(!el)return;let D=null;tr
 async function xload(){if(xbusy||Date.now()-xt<3e5)return;xbusy=true;
  try{xrows=await xfetch();xerr='';xt=Date.now()}catch(e){xt=Date.now();xerr='ดึงชีต “เรื่องนอกระบบ” ไม่สำเร็จ: '+(e.message||e)+(xnames.length?' · ชีตที่พบ: '+xnames.join(', '):'')+' · ตรวจสอบว่าชื่อชีตมีคำว่า “เรื่องนอกระบบ” และแชร์แบบทุกคนที่มีลิงก์ดูได้'}
  finally{xbusy=false;if(XS)xdraw();kx()}}
-const d0=draw;draw=function(){d0.apply(this,arguments);document.body.classList.toggle('xs',XS);if(XS)xdraw();kx();xload()};
+const s0=side;side=function(){s0.apply(this,arguments);xnavFill()};
+const fl=()=>{const b=document.getElementById('ftg');if(b&&XS)b.innerHTML=b.innerHTML.replace('ตัวกรอง','เมนู')};
+const d0=draw;draw=function(){d0.apply(this,arguments);document.body.classList.toggle('xs',XS);if(XS)xdraw();else xnavFill();kx();xload();fl()};
+document.getElementById('ftg').addEventListener('click',fl);
 draw();
 })();
 </script>
