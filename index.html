@@ -332,7 +332,7 @@ table.hm{border-collapse:separate;border-spacing:3px;font-size:13.5px;table-layo
 
 body.xs #app>:not(.sb){display:none!important}
 #kx{margin-top:14px}#kx div{color:#fff;border:0;overflow:hidden}#kx div::before{display:none}#kx small{color:rgba(255,255,255,.88)}#kx b{color:#fff}
-#kx div:nth-child(1){background:linear-gradient(135deg,#0f9d8a,#0b6f7a)}#kx div:nth-child(2){background:linear-gradient(135deg,#7b4fd6,#4a2f9e)}
+#kx div:nth-child(1){background:linear-gradient(135deg,#0f9d8a,#0b6f7a)}#kx div:nth-child(2){background:linear-gradient(135deg,#7b4fd6,#4a2f9e)}#kx div[data-kx]{cursor:pointer;transition:transform .2s,box-shadow .2s}#kx div[data-kx]:hover{transform:translateY(-3px);box-shadow:0 14px 26px -10px rgba(0,0,0,.35)}#kx div[data-kx]:focus-visible{outline:3px solid #fff;outline-offset:-5px}#kx div[data-kx]::after{content:"ดูตาราง ›";position:absolute;right:16px;bottom:12px;font-size:.78rem;font-weight:600;color:#fff;background:rgba(255,255,255,.2);border-radius:99px;padding:2px 12px}#kx div[data-kx]:hover::after{background:rgba(255,255,255,.34)}@media(prefers-reduced-motion:reduce){#kx div[data-kx]{transition:none}}
 #xapp{display:none}body.xs #xapp{display:block}body.xs #side>*:not(.xnav):not(.xnavhr):not(.xflt){display:none!important}.xflt .dd .pn{position:static;margin:0;box-shadow:none!important;border:0;border-top:1px solid var(--ln);border-radius:0 0 10px 10px;max-height:240px;overflow-y:auto;overscroll-behavior:contain;padding:6px}.xflt .fq{position:sticky;top:0;z-index:2;background:var(--pn);margin-bottom:4px}:root[data-theme="light"] .xflt .fq,:root[data-theme="light"] .xflt .dd .pn{background:#fff}.xflt .dd .pn label{min-height:34px}.xflt .dd[open]>summary{border-radius:10px 10px 0 0}#xapp section{scroll-margin-top:64px;margin-bottom:32px}#xapp .xk{margin-bottom:14px}
 .xk{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:14px;margin-bottom:16px}.xk div{background:var(--pn);border:1px solid var(--ln);border-radius:14px;padding:14px 20px;border-left:5px solid var(--ac)}.xk small{display:block;color:var(--mut)}.xk b{font-size:1.9rem;line-height:1.2}
 #xapp .xk>div{position:relative;overflow:hidden;color:#fff;border:0;border-radius:18px;padding:16px 18px 14px;background:linear-gradient(135deg,var(--k1),var(--k2));box-shadow:0 8px 20px -10px var(--k1);transition:transform .25s,box-shadow .25s}
@@ -1413,7 +1413,32 @@ async function xfetch(){let sh=null;
  const w=XLSX.read(await r.text(),{type:'string'});return XLSX.utils.sheet_to_json(w.Sheets[w.SheetNames[0]],{header:1,defval:null})}
 function kx(){const el=document.getElementById('kx');if(!el)return;let D=null;try{D=xrows&&xparse(xrows)}catch(e){}
  if(!D){const m=xerr||(xrows?'อ่านตารางสรุปในชีต “เรื่องนอกระบบ” ไม่ได้ (ไม่พบหัวตาราง “เดือน”/“ประเภทกิจการ”)':'กำลังดึงข้อมูลชีต “เรื่องนอกระบบ”…');el.style.display='';el.innerHTML='<p class="note" style="grid-column:1/-1;margin:0">'+xe(m)+'</p>';return}const x=sm(D.cases),b=R.length;el.style.display='';
- el.innerHTML=`<div><small>จำนวนเรื่องนอกระบบ ทั้งหมด</small><b>${fm(x)}</b><small>เรื่อง · ${xe(D.lab[0])} – ${xe(D.lab[D.lab.length-1])}</small></div><div><small>รวมทุกประเภท (ร้องเรียน + อนุเคราะห์ + นอกระบบ)</small><b>${fm(b+x)}</b><small>${fm(b)} + ${fm(x)} เรื่อง</small></div>`}
+ el.innerHTML=`<div data-kx="1" role="button" tabindex="0" title="คลิกเพื่อดูตารางข้อมูล"><small>จำนวนเรื่องนอกระบบ ทั้งหมด</small><b>${fm(x)}</b><small>เรื่อง · ${xe(D.lab[0])} – ${xe(D.lab[D.lab.length-1])}</small></div><div data-kx="2" role="button" tabindex="0" title="คลิกเพื่อดูตารางข้อมูล"><small>รวมทุกประเภท (ร้องเรียน + อนุเคราะห์ + นอกระบบ)</small><b>${fm(b+x)}</b><small>${fm(b)} + ${fm(x)} เรื่อง</small></div>`}
+
+/* ===== การ์ดสรุปด้านบน: คลิกเพื่อดูตาราง (ใช้ข้อมูลชุดเดียวกับตัวเลขในการ์ด) ===== */
+function kxAll(D,tot){
+ const key=l=>{const m=String(l).match(/^(\S+)\s+(\d{2})$/);if(!m)return null;const i=TM.indexOf(m[1]);return i<0?null:(2500+ +m[2])*100+i+1};
+ const M=new Map(),get=(k,l)=>{if(!M.has(k))M.set(k,{l,a:0,r:0,x:0});return M.get(k)};
+ D.lab.forEach((l,i)=>{const k=key(l);get(k==null?1e9+i:k,l).x+=D.cases[i]});
+ R.forEach(r=>{let y=+r.y,m=+r.mo;if(y>0&&y<2400)y+=543;
+  if(!(y>0&&m>=1&&m<=12)){get(2e9,'ไม่ระบุเดือน')[r.t==1?'r':'a']++;return}
+  get(y*100+m,TM[m-1]+' '+String(y%100).padStart(2,'0'))[r.t==1?'r':'a']++});
+ const E=[...M.entries()].sort((p,q)=>p[0]-q[0]).map(e=>e[1]);
+ const A=sm(E.map(o=>o.a)),Q=sm(E.map(o=>o.r)),B=A+Q,G=B+tot,tt=o=>o.a+o.r+o.x;
+ const mx=Math.max(...E.map(tt)),im=E.findIndex(o=>tt(o)===mx);
+ const tx='รวมทุกประเภท '+fm(G)+' เรื่อง = เรื่องในระบบ '+fm(B)+' เรื่อง (ร้องเรียน '+fm(A)+' + ขอความอนุเคราะห์ '+fm(Q)+') + เรื่องนอกระบบ '+fm(tot)+' เรื่อง · ตัวเลขในตารางตรงกับการ์ด · เดือนที่รวมสูงสุดคือ '+xe(E[im].l)+' ('+fm(mx)+' เรื่อง, '+pct(mx,G)+'%)';
+ xshow('สรุปรวมทุกประเภท','รวมทุกประเภท (ร้องเรียน + อนุเคราะห์ + นอกระบบ)',
+  tiles([['รวมทุกประเภท',fm(G),'ร้องเรียน + อนุเคราะห์ + นอกระบบ','📊'],['เรื่องในระบบ',fm(B),'ร้องเรียน '+fm(A)+' · อนุเคราะห์ '+fm(Q)+' เรื่อง','📋'],['เรื่องนอกระบบ',fm(tot),pct(tot,G)+'% ของทั้งหมด','📈'],['เดือนที่รวมสูงสุด',xe(E[im].l),fm(mx)+' เรื่อง','🏆']])
+  +'<p class="xdp">'+tx+'</p>'+srch()
+  +tbl(['เดือน','ร้องเรียน','ขอความอนุเคราะห์','รวมในระบบ','เรื่องนอกระบบ','รวมทุกประเภท','% ของทั้งหมด'],
+   E.map(o=>[xe(o.l),fm(o.a),fm(o.r),fm(o.a+o.r),fm(o.x),fm(tt(o)),pct(tt(o),G)+'%']),
+   {hl:im,foot:['รวม',fm(A),fm(Q),fm(B),fm(tot),fm(G),'100%']}))}
+function kxOpen(n){let D=null;try{D=xrows&&xparse(xrows)}catch(e){}
+ if(!D||!D.lab.length)return;
+ const N=D.lab.length,tot=sm(D.cases),sv=xcur;xcur={D,N,tot,avg:tot/N};
+ try{if(n==1)detTotal();else kxAll(D,tot)}finally{xcur=sv}}
+document.addEventListener('click',e=>{const c=e.target.closest&&e.target.closest('#kx [data-kx]');if(c)kxOpen(+c.dataset.kx)});
+document.addEventListener('keydown',e=>{if(e.key!=='Enter'&&e.key!==' ')return;const c=e.target.closest&&e.target.closest('#kx [data-kx]');if(c){e.preventDefault();kxOpen(+c.dataset.kx)}});
 async function xload(){if(xbusy||Date.now()-xt<3e5)return;xbusy=true;const pr=JSON.stringify(xrows),pe=xerr;
  try{const nr=await withT(xfetch(),45000);if(JSON.stringify(nr)!==pr)xrows=nr;xerr='';xt=Date.now();xfail=0}catch(e){xt=Date.now()-27e4;if(++xfail<=5)setTimeout(xload,31000);xerr='ดึงชีต “เรื่องนอกระบบ” ไม่สำเร็จ: '+(e.message||e)+(xnames.length?' · ชีตที่พบ: '+xnames.join(', '):'')+' · ตรวจสอบว่าชื่อชีตมีคำว่า “เรื่องนอกระบบ” และแชร์แบบทุกคนที่มีลิงก์ดูได้'}
  finally{xbusy=false;if(XS&&(pr!==JSON.stringify(xrows)||pe!==xerr))xdraw();kx()}}
