@@ -356,7 +356,7 @@ body.xs #app>:not(.sb){display:none!important}
 #xdlg .kp small{position:relative;z-index:1;display:block;color:rgba(255,255,255,.92);font-size:.84rem;font-weight:600;padding-right:34px}
 #xdlg .kp small:first-child::after{content:var(--ic);position:absolute;right:-12px;top:-2px;font-size:1.6rem;line-height:1;filter:drop-shadow(0 2px 3px rgba(0,0,0,.18))}
 #xdlg .kp small:last-child:not(:first-child){font-weight:500;color:rgba(255,255,255,.85)}
-#xdlg .kp b{position:relative;z-index:1;display:block;color:#fff;font-size:2.4rem;line-height:1.15;margin-top:2px;text-shadow:0 1px 2px rgba(0,0,0,.12)}
+#xdlg .kp div,#tdlg .kp div{min-width:0}#xdlg .kp b{position:relative;z-index:1;display:block;color:#fff;font-size:2.4rem;line-height:1.15;margin-top:2px;text-shadow:0 1px 2px rgba(0,0,0,.12)}
 #xdlg .kp div:nth-child(1){--k1:#1f6fd0;--k2:#4d9ae8}#xdlg .kp div:nth-child(2){--k1:#2f5f9b;--k2:#4d8fd6}#xdlg .kp div:nth-child(3){--k1:#b07d00;--k2:#e0a400}#xdlg .kp div:nth-child(4){--k1:#0a3a82;--k2:#2f7fd8}
 .xdp{margin:0 0 14px;line-height:1.75;background:var(--h1);border-left:4px solid var(--ac);border-radius:10px;padding:10px 14px}#xdlg h3{margin:18px 0 8px;font-size:1rem}
 .xsr{display:block;width:min(480px,100%);min-height:42px;margin:0 0 12px;padding:8px 14px;border:1px solid var(--ln);border-radius:10px;background:var(--h1);color:var(--ink);font:inherit}
@@ -1422,6 +1422,21 @@ const fl=()=>{};
 const d0=draw;draw=function(){d0.apply(this,arguments);document.body.classList.toggle('xs',XS);if(XS)xdraw();else{xnavFill();const dg=document.getElementById('xdlg');if(dg&&dg.open)dg.close()}kx();xload();fl()};
 document.getElementById('ftg').addEventListener('click',fl);
 draw();
+})();
+</script>
+<script>
+/* ปรับขนาดตัวอักษรในการ์ดสรุปของหน้าต่างรายละเอียด ไม่ให้ข้อความยาวถูกตัด */
+(function(){
+ const fit=d=>{if(!d.open)return;d.querySelectorAll('.kp b').forEach(b=>{
+  if(!('fs0' in b.dataset))b.dataset.fs0=b.style.fontSize||'';b.style.fontSize=b.dataset.fs0;
+  let fs=parseFloat(getComputedStyle(b).fontSize),n=0;
+  while(n++<30&&fs>13&&b.scrollWidth>b.clientWidth+1){fs*=.92;b.style.fontSize=fs+'px'}})};
+ let raf=0;const later=d=>{cancelAnimationFrame(raf);raf=requestAnimationFrame(()=>fit(d))};
+ const watch=d=>{if(!d||d.__fit)return;d.__fit=1;
+  new MutationObserver(()=>later(d)).observe(d,{childList:true,subtree:true,attributes:true,attributeFilter:['open']});later(d)};
+ const scan=()=>['tdlg','xdlg'].forEach(id=>watch(document.getElementById(id)));
+ scan();new MutationObserver(scan).observe(document.body,{childList:true});
+ addEventListener('resize',()=>['tdlg','xdlg'].forEach(id=>{const d=document.getElementById(id);if(d)later(d)}));
 })();
 </script>
 </body></html>
