@@ -444,7 +444,7 @@ if(!has){document.getElementById('rng').textContent='ยังไม่มีข
 const pm=[...F.p].reduce((a,i)=>a|1<<i,0),allp=F.p.size==POL.length;
 const PFV=Object.values(FP());D2=R.filter(r=>PFV.every(f=>f(r)));facet();
 const rq=F.t==='1',n=D2.length,dd=D2.filter(r=>r.d<1295),done=D2.filter(r=>r.k).length;
-document.getElementById('tabs').innerHTML=[['','ทั้งหมด'],['x','เรื่องนอกระบบ']].map(k=>`<button data-t="${k[0]}" aria-pressed="${k[0]==='x'?XS:(!XS&&F.t===k[0])}">${k[1]}</button>`).join('');
+document.getElementById('tabs').innerHTML=[['','ทั้งหมด'],['x','เรื่องไม่รับเข้าระบบ']].map(k=>`<button data-t="${k[0]}" aria-pressed="${k[0]==='x'?XS:(!XS&&F.t===k[0])}">${k[1]}</button>`).join('');
 document.getElementById('k3').style.display=document.getElementById('k2').style.display=rq?'none':'';
 document.getElementById('h3').textContent=rq?'ผลการดำเนินการ':'ประเภทกิจการ';document.getElementById('h4').textContent=rq?'หน่วยงานที่ขอความอนุเคราะห์':'ช่องทางที่รับเรื่อง';
 document.getElementById('rng').textContent=`${MN[0]} – ${MN[MN.length-1]} · แสดง ${n} จาก ${R.length} เรื่อง`;
@@ -1243,7 +1243,7 @@ function xfilt(D){
  const P=mkT(D.P,pA,xst.p),B=mkT(D.B,bA,xst.b),C=mkT(D.C,cA,xst.c);
  let cases=sl(D.cases);
  if(bA&&D.B)cases=B?B.tot:zero();else if(cA&&D.C)cases=C?C.tot:zero();
- let note='ตัวกรองด้านซ้ายในแท็บนี้ใช้กับข้อมูลเรื่องนอกระบบโดยเฉพาะ ไม่เกี่ยวกับตัวกรองในแท็บ “ทั้งหมด” · เลือกหัวข้อจากเมนูด้านซ้ายเพื่อเลื่อนไปยังส่วนที่ต้องการ · คลิกที่การ์ดหรือกราฟทุกอันเพื่อดูตารางรายละเอียด';
+ let note='ตัวกรองด้านซ้ายในแท็บนี้ใช้กับข้อมูลเรื่องเรื่องที่ไม่รับเข้าระบบโดยเฉพาะ ไม่เกี่ยวกับตัวกรองในแท็บ “ทั้งหมด” · เลือกหัวข้อจากเมนูด้านซ้ายเพื่อเลื่อนไปยังส่วนที่ต้องการ · คลิกที่การ์ดหรือกราฟทุกอันเพื่อดูตารางรายละเอียด';
  if(pA)note+=' · 1 เรื่องมีได้หลายปัญหา จำนวนเรื่องจึงไม่เปลี่ยนตามตัวกรองปัญหามลพิษ';
  if(bA&&cA)note+=' · เลือกทั้งประเภทกิจการและช่องทาง: แต่ละตารางกรองตามหมวดของตัวเอง ส่วนจำนวนเรื่องนับตามประเภทกิจการ';
  return{D:{lab:sl(D.lab),P,B,C,cases},pf:pA,note}}
@@ -1281,16 +1281,16 @@ function xshow(kick,title,body){let d=document.getElementById('xdlg');
 const topAt=(T,i)=>{if(!T)return null;const r=T.cols.map(c=>({h:c.h,n:c.v[i]})).sort((a,b)=>b.n-a.n);return r[0]&&r[0].n>0?{h:r[0].h,n:r[0].n,p:pct(r[0].n,T.tot[i])}:null};
 const monthTbl=hl=>{const x=xcur,D=x.D,L=D.lab,mx=Math.max(...D.cases);return tbl(['เดือน','จำนวนเรื่อง','% ของทั้งช่วง','เทียบค่าเฉลี่ย','เปลี่ยนจากเดือนก่อน'],L.map((l,j)=>[xe(l),barc(D.cases[j],mx),pct(D.cases[j],x.tot)+'%',x.avg?sg(100*(D.cases[j]-x.avg)/x.avg):'-',j&&D.cases[j-1]?sg(100*(D.cases[j]-D.cases[j-1])/D.cases[j-1]):'–']),{hl,foot:['รวม',fm(x.tot),'100%','','']})};
 function detTotal(){const x=xcur,D=x.D,L=D.lab,N=x.N,mx=Math.max(...D.cases),mn=Math.min(...D.cases),im=D.cases.indexOf(mx),jn=D.cases.indexOf(mn);
- let tx=`ช่วง ${xe(L[0])} – ${xe(L[N-1])} (${N} เดือน) มีเรื่องนอกระบบรวม ${fm(x.tot)} เรื่อง เฉลี่ยเดือนละ ${fm(x.avg)} เรื่อง · เดือนที่รับมากที่สุดคือ ${xe(L[im])} (${fm(mx)} เรื่อง, ${pct(mx,x.tot)}%) และน้อยที่สุดคือ ${xe(L[jn])} (${fm(mn)} เรื่อง)`;
+ let tx=`ช่วง ${xe(L[0])} – ${xe(L[N-1])} (${N} เดือน) มีเรื่องเรื่องที่ไม่รับเข้าระบบรวม ${fm(x.tot)} เรื่อง เฉลี่ยเดือนละ ${fm(x.avg)} เรื่อง · เดือนที่รับมากที่สุดคือ ${xe(L[im])} (${fm(mx)} เรื่อง, ${pct(mx,x.tot)}%) และน้อยที่สุดคือ ${xe(L[jn])} (${fm(mn)} เรื่อง)`;
  if(N>=4){const h=Math.floor(N/2),a=sm(D.cases.slice(0,h))/h,b=sm(D.cases.slice(N-h))/h;if(a)tx+=` · ${h} เดือนล่าสุดเฉลี่ย ${fm(b)} เรื่อง/เดือน ${b>=a?'สูงกว่า':'ต่ำกว่า'} ${h} เดือนแรก (${fm(a)}) ${Math.abs(100*(b-a)/a).toFixed(1)}%`}
- xshow('เรื่องนอกระบบ','จำนวนเรื่องทั้งหมด',tiles([['จำนวนเรื่องทั้งหมด',fm(x.tot),'เรื่อง','📋'],['ช่วงข้อมูล',N+' เดือน',xe(L[0])+' – '+xe(L[N-1]),'🗓️'],['เดือนสูงสุด',xe(L[im]),fm(mx)+' เรื่อง','📈'],['เดือนต่ำสุด',xe(L[jn]),fm(mn)+' เรื่อง','📉']])+`<p class="xdp">${tx}</p>${srch()}`+monthTbl(im))}
+ xshow('เรื่องไม่รับเข้าระบบ','จำนวนเรื่องทั้งหมด',tiles([['จำนวนเรื่องทั้งหมด',fm(x.tot),'เรื่อง','📋'],['ช่วงข้อมูล',N+' เดือน',xe(L[0])+' – '+xe(L[N-1]),'🗓️'],['เดือนสูงสุด',xe(L[im]),fm(mx)+' เรื่อง','📈'],['เดือนต่ำสุด',xe(L[jn]),fm(mn)+' เรื่อง','📉']])+`<p class="xdp">${tx}</p>${srch()}`+monthTbl(im))}
 function detAvg(){const x=xcur,D=x.D,L=D.lab,N=x.N,mx=Math.max(...D.cases),mn=Math.min(...D.cases),im=D.cases.indexOf(mx),jn=D.cases.indexOf(mn),up=D.cases.filter(v=>v>x.avg).length,sr=[...D.cases].sort((a,b)=>a-b),md=N%2?sr[(N-1)/2]:(sr[N/2-1]+sr[N/2])/2;
  const tx=`ค่าเฉลี่ยรายเดือนคือ ${fm(x.avg)} เรื่อง (รวม ${fm(x.tot)} เรื่อง ÷ ${N} เดือน) มี ${up} เดือนที่สูงกว่าค่าเฉลี่ย และ ${N-up} เดือนที่เท่ากับหรือต่ำกว่า · ค่ามัธยฐาน ${fm(md)} เรื่อง · ${xe(L[im])} สูงกว่าค่าเฉลี่ย ${fm(mx-x.avg)} เรื่อง ส่วน ${xe(L[jn])} ต่ำกว่าค่าเฉลี่ย ${fm(x.avg-mn)} เรื่อง`;
- xshow('เรื่องนอกระบบ','เฉลี่ยต่อเดือน',tiles([['เฉลี่ยต่อเดือน',fm(x.avg),'เรื่อง','📈'],['เดือนที่สูงกว่าเฉลี่ย',up+'/'+N,'เดือน','📊'],['เดือนสูงสุด',xe(L[im]),fm(mx)+' เรื่อง','🏆'],['เดือนต่ำสุด',xe(L[jn]),fm(mn)+' เรื่อง','📉']])+`<p class="xdp">${tx}</p>${srch()}`+tbl(['เดือน','จำนวนเรื่อง','ส่วนต่างจากค่าเฉลี่ย (เรื่อง)','ส่วนต่าง (%)','สถานะ'],L.map((l,j)=>{const d=D.cases[j]-x.avg;return[xe(l),barc(D.cases[j],mx),(d>=0?'+':'−')+fm(Math.abs(d)),x.avg?sg(100*d/x.avg):'-',d>0?'สูงกว่าค่าเฉลี่ย':d<0?'ต่ำกว่าค่าเฉลี่ย':'เท่ากับค่าเฉลี่ย']}),{foot:['รวม / เฉลี่ย',fm(x.tot)+' / '+fm(x.avg),'','','']}))}
+ xshow('เรื่องไม่รับเข้าระบบ','เฉลี่ยต่อเดือน',tiles([['เฉลี่ยต่อเดือน',fm(x.avg),'เรื่อง','📈'],['เดือนที่สูงกว่าเฉลี่ย',up+'/'+N,'เดือน','📊'],['เดือนสูงสุด',xe(L[im]),fm(mx)+' เรื่อง','🏆'],['เดือนต่ำสุด',xe(L[jn]),fm(mn)+' เรื่อง','📉']])+`<p class="xdp">${tx}</p>${srch()}`+tbl(['เดือน','จำนวนเรื่อง','ส่วนต่างจากค่าเฉลี่ย (เรื่อง)','ส่วนต่าง (%)','สถานะ'],L.map((l,j)=>{const d=D.cases[j]-x.avg;return[xe(l),barc(D.cases[j],mx),(d>=0?'+':'−')+fm(Math.abs(d)),x.avg?sg(100*d/x.avg):'-',d>0?'สูงกว่าค่าเฉลี่ย':d<0?'ต่ำกว่าค่าเฉลี่ย':'เท่ากับค่าเฉลี่ย']}),{foot:['รวม / เฉลี่ย',fm(x.tot)+' / '+fm(x.avg),'','','']}))}
 function detMonth(i,kick){const x=xcur,D=x.D,L=D.lab,c=D.cases[i],mx=Math.max(...D.cases),mn=Math.min(...D.cases),
  df=x.avg?100*(c-x.avg)/x.avg:0,pv=i>0?D.cases[i-1]:null,ch=pv?100*(c-pv)/pv:null,
  tp=topAt(D.P,i),tc=topAt(D.C,i),tb=topAt(D.B,i);
- let tx=`เดือน ${xe(L[i])} มีเรื่องนอกระบบ ${fm(c)} เรื่อง คิดเป็น ${pct(c,x.tot)}% ของทั้งช่วง ${df>=0?'สูงกว่า':'ต่ำกว่า'}ค่าเฉลี่ยรายเดือน (${fm(x.avg)} เรื่อง) ${Math.abs(df).toFixed(1)}%`;
+ let tx=`เดือน ${xe(L[i])} มีเรื่องเรื่องที่ไม่รับเข้าระบบ ${fm(c)} เรื่อง คิดเป็น ${pct(c,x.tot)}% ของทั้งช่วง ${df>=0?'สูงกว่า':'ต่ำกว่า'}ค่าเฉลี่ยรายเดือน (${fm(x.avg)} เรื่อง) ${Math.abs(df).toFixed(1)}%`;
  if(ch!=null)tx+=` และ${ch>=0?'เพิ่มขึ้น':'ลดลง'}จากเดือนก่อนหน้า (${xe(L[i-1])}) ${Math.abs(ch).toFixed(1)}%`;
  if(L.length>1){if(c===mx)tx+=' · เป็นเดือนที่รับเรื่องมากที่สุดในช่วงนี้';else if(c===mn)tx+=' · เป็นเดือนที่รับเรื่องน้อยที่สุดในช่วงนี้'}
  const dom=[tc&&`ช่องทางหลัก <b>${xe(tc.h)}</b> (${fm(tc.n)} ครั้ง, ${tc.p}%)`,tb&&`ประเภทกิจการสูงสุด <b>${xe(tb.h)}</b> (${fm(tb.n)} เรื่อง, ${tb.p}%)`,tp&&`ปัญหามลพิษสูงสุด <b>${xe(tp.h)}</b> (${fm(tp.n)} ครั้ง, ${tp.p}%)`].filter(Boolean);
@@ -1356,7 +1356,7 @@ let xio=null,XCUR='';
 function xnavFill(){const sd=document.getElementById('side');if(!sd)return;sd.querySelectorAll('.xnav,.xnavhr').forEach(e=>e.remove());if(xio){xio.disconnect();xio=null}
  xfltFill();if(!XS)return;const secs=[...document.querySelectorAll('#xapp section')];
  const nav=document.createElement('div');nav.className='spy xnav';
- nav.innerHTML='<h3>ส่วนของเรื่องนอกระบบ</h3>'+(secs.length?secs.map(s=>{const t=s.querySelector('h2.sec');return`<a href="#${s.id}" data-xsp="${s.id}">${xe(t?t.textContent:s.id)}</a>`}).join(''):'<p class="note" style="margin:0">กำลังโหลดข้อมูล…</p>');
+ nav.innerHTML='<h3>ส่วนของเรื่องเรื่องที่ไม่รับเข้าระบบ</h3>'+(secs.length?secs.map(s=>{const t=s.querySelector('h2.sec');return`<a href="#${s.id}" data-xsp="${s.id}">${xe(t?t.textContent:s.id)}</a>`}).join(''):'<p class="note" style="margin:0">กำลังโหลดข้อมูล…</p>');
  const hr=document.createElement('hr');hr.className='sp xnavhr';sd.insertAdjacentElement('afterbegin',hr);sd.insertAdjacentElement('afterbegin',nav);
  const mark=id=>{XCUR=id;nav.querySelectorAll('[data-xsp]').forEach(a=>a.classList.toggle('on',a.dataset.xsp===id))};
  if(!secs.length)return;mark(secs.some(s=>s.id===XCUR)?XCUR:secs[0].id);
@@ -1365,19 +1365,19 @@ function xnavFill(){const sd=document.getElementById('side');if(!sd)return;sd.qu
 const withT=(p,ms)=>{let t;return Promise.race([p,new Promise((_,no)=>{t=setTimeout(()=>no(new Error('หมดเวลาเชื่อมต่อ')),ms)})]).finally(()=>clearTimeout(t))};
 let xraf=0;const xdrawSoon=()=>{cancelAnimationFrame(xraf);xraf=requestAnimationFrame(()=>xdraw())};
 function xdraw(){const box=document.getElementById('xapp');if(!box)return;const y=window.scrollY,had=box.childElementCount>0;xcur=null;
- try{xdraw0()}catch(err){console.error(err);xch.forEach(c=>{try{c.destroy()}catch(e){}});xch=[];box.innerHTML='<div class="card"><h2>เรื่องนอกระบบ</h2><p class="note">แสดงข้อมูลไม่สำเร็จ ('+xe(err&&err.message||err)+')</p><button type="button" class="btn" id="xretry">ลองใหม่</button></div>';try{xnavFill()}catch(e){}}
+ try{xdraw0()}catch(err){console.error(err);xch.forEach(c=>{try{c.destroy()}catch(e){}});xch=[];box.innerHTML='<div class="card"><h2>เรื่องไม่รับเข้าระบบ</h2><p class="note">แสดงข้อมูลไม่สำเร็จ ('+xe(err&&err.message||err)+')</p><button type="button" class="btn" id="xretry">ลองใหม่</button></div>';try{xnavFill()}catch(e){}}
  if(had&&XS)window.scrollTo({top:y,behavior:'instant'})}
 function xdraw0(){xch.forEach(c=>c.destroy());xch=[];const box=document.getElementById('xapp');if(!box)return;
- const msg=t=>{box.innerHTML=`<div class="card"><h2>เรื่องนอกระบบ</h2><p class="note">${xe(t)}</p>${xerr&&!xrows?'<button type="button" class="btn" id="xretry">ลองใหม่</button>':''}</div>`;xnavFill()};
+ const msg=t=>{box.innerHTML=`<div class="card"><h2>เรื่องไม่รับเข้าระบบ</h2><p class="note">${xe(t)}</p>${xerr&&!xrows?'<button type="button" class="btn" id="xretry">ลองใหม่</button>':''}</div>`;xnavFill()};
  if(xerr&&!xrows)return msg(xerr);if(!xrows)return msg('กำลังดึงข้อมูลชีต “เรื่องนอกระบบ” จาก Google Sheets…');
- const D0=xparse(xrows);xD0=D0;if(!D0)return msg('ไม่พบตารางสรุป (ประเภทปัญหามลพิษ / ช่องทาง / ประเภทกิจการ) ในชีตนี้');const XF=xfilt(D0),D=XF.D;if(xerr)XF.note+=' · ⚠ อัปเดตข้อมูลล่าสุดไม่สำเร็จ กำลังแสดงข้อมูลที่โหลดไว้ก่อนหน้า (ระบบจะลองใหม่อัตโนมัติ)';if(!D.lab.length||!sm(D.cases))return msg('ไม่มีข้อมูลนอกระบบตรงกับตัวกรองที่เลือก (ลองล้างตัวกรองปี/เดือน ปัญหามลพิษ ประเภทกิจการ หรือแหล่งที่มา)');
+ const D0=xparse(xrows);xD0=D0;if(!D0)return msg('ไม่พบตารางสรุป (ประเภทปัญหามลพิษ / ช่องทาง / ประเภทกิจการ) ในชีตนี้');const XF=xfilt(D0),D=XF.D;if(xerr)XF.note+=' · ⚠ อัปเดตข้อมูลล่าสุดไม่สำเร็จ กำลังแสดงข้อมูลที่โหลดไว้ก่อนหน้า (ระบบจะลองใหม่อัตโนมัติ)';if(!D.lab.length||!sm(D.cases))return msg('ไม่มีข้อมูลเรื่องที่ไม่รับเข้าระบบตรงกับตัวกรองที่เลือก (ลองล้างตัวกรองปี/เดือน ปัญหามลพิษ ประเภทกิจการ หรือแหล่งที่มา)');
  const ink=v('--ink'),mut=v('--mut'),ac=v('--ac'),ln=v('--ln'),band=v('--band')||'#12263f',hot=v('--hot')||'31,111,208',FF='IBM Plex Sans Thai',
  PAL=['#2a7fa6','#e8913a','#4caf6a','#9b6bd1','#d6609b','#e25555','#c9a227','#8d99a6'],L=D.lab,N=L.length,
  pcol=(n,i)=>{try{const j=POL.indexOf(n);if(j>=0&&PCOL[j])return PCOL[j]}catch(e){}return PAL[i%PAL.length]},
  tot=sm(D.cases),mi=D.cases.indexOf(Math.max(...D.cases)),rk=T=>T?T.cols.map((c,i)=>({h:c.h,n:csum(c),i})).sort((a,b)=>b.n-a.n):[],
  rp=rk(D.P),rc=rk(D.C),rb=rk(D.B),pt=D.P?sm(D.P.tot):0,ct=D.C?sm(D.C.tot):0,bt=D.B?sm(D.B.tot):0;
  const kp=(t,b,s)=>`<div><small>${t}</small><b>${b}</b>${s?`<small>${s}</small>`:''}</div>`;
- let h=`<section id="xs-ov"><h2 class="sec">เรื่องนอกระบบ</h2><p class="note" style="margin:-4px 0 12px">${XF.note}</p><div class="xk">${kp('จำนวนเรื่องทั้งหมด',fm(tot),L[0]+' – '+L[N-1])}${kp('เฉลี่ยต่อเดือน',fm(tot/N),'เรื่อง')}${kp('เดือนที่รับมากสุด',xe(L[mi]),fm(D.cases[mi])+' เรื่อง')}${D.P?kp('ปัญหามลพิษ (ครั้ง)',fm(pt),(XF.pf?'ตามปัญหาที่เลือก':'เฉลี่ย '+(tot?(pt/tot).toFixed(2):'-')+' ปัญหา/เรื่อง')):''}${rc[0]?kp('ช่องทางหลัก',`<span style="font-size:1.3rem">${xe(rc[0].h)}</span>`,pc1(rc[0].n,ct)):''}</div><div class="g">`;
+ let h=`<section id="xs-ov"><h2 class="sec">เรื่องไม่รับเข้าระบบ</h2><p class="note" style="margin:-4px 0 12px">${XF.note}</p><div class="xk">${kp('จำนวนเรื่องทั้งหมด',fm(tot),L[0]+' – '+L[N-1])}${kp('เฉลี่ยต่อเดือน',fm(tot/N),'เรื่อง')}${kp('เดือนที่รับมากสุด',xe(L[mi]),fm(D.cases[mi])+' เรื่อง')}${D.P?kp('ปัญหามลพิษ (ครั้ง)',fm(pt),(XF.pf?'ตามปัญหาที่เลือก':'เฉลี่ย '+(tot?(pt/tot).toFixed(2):'-')+' ปัญหา/เรื่อง')):''}${rc[0]?kp('ช่องทางหลัก',`<span style="font-size:1.3rem">${xe(rc[0].h)}</span>`,pc1(rc[0].n,ct)):''}</div><div class="g">`;
  h+=`<div class="card s8"><h2>เรื่องที่รับ รายเดือน</h2><p class="ins">เดือน ${xe(L[mi])} รับเรื่องมากที่สุด ${fm(D.cases[mi])} เรื่อง · เส้นประ = ค่าเฉลี่ย ${fm(tot/N)} เรื่อง/เดือน</p><div class="xh" style="height:300px"><canvas id="xm"></canvas></div></div>`;
  if(D.C)h+=`<div class="card s4"><h2>ช่องทางที่รับเรื่อง</h2><p class="ins">${xe(rc[0].h)} ${pc1(rc[0].n,ct)} ของทุกช่องทาง</p><div class="xh" style="height:300px"><canvas id="xd"></canvas></div></div>`;
  h+=`</div></section>`;
@@ -1413,14 +1413,14 @@ async function xfetch(){let sh=null;
  const w=XLSX.read(await r.text(),{type:'string'});return XLSX.utils.sheet_to_json(w.Sheets[w.SheetNames[0]],{header:1,defval:null})}
 function kx(){const el=document.getElementById('kx');if(!el)return;kxBtn(el);let D=null;try{D=xrows&&xparse(xrows)}catch(e){}
  if(!D){const m=xerr||(xrows?'อ่านตารางสรุปในชีต “เรื่องนอกระบบ” ไม่ได้ (ไม่พบหัวตาราง “เดือน”/“ประเภทกิจการ”)':'กำลังดึงข้อมูลชีต “เรื่องนอกระบบ”…');el.style.display='';el.innerHTML='<p class="note" style="grid-column:1/-1;margin:0">'+xe(m)+'</p>';return}const x=sm(D.cases),b=R.length;el.style.display='';
- el.innerHTML=`<div data-kx="1" role="button" tabindex="0" title="คลิกเพื่อดูตารางข้อมูล"><small>จำนวนเรื่องนอกระบบ ทั้งหมด</small><b>${fm(x)}</b><small>เรื่อง · ${xe(D.lab[0])} – ${xe(D.lab[D.lab.length-1])}</small></div><div data-kx="2" role="button" tabindex="0" title="คลิกเพื่อดูตารางข้อมูล"><small>รวมทุกประเภท (ร้องเรียน + อนุเคราะห์ + นอกระบบ)</small><b>${fm(b+x)}</b><small>${fm(b)} + ${fm(x)} เรื่อง</small></div>`}
+ el.innerHTML=`<div data-kx="1" role="button" tabindex="0" title="คลิกเพื่อดูตารางข้อมูล"><small>จำนวนเรื่องไม่รับเข้าระบบ ทั้งหมด</small><b>${fm(x)}</b><small>เรื่อง · ${xe(D.lab[0])} – ${xe(D.lab[D.lab.length-1])}</small></div><div data-kx="2" role="button" tabindex="0" title="คลิกเพื่อดูตารางข้อมูล"><small>รวมทุกประเภท (ร้องเรียน + อนุเคราะห์ + ไม่รับเข้าระบบ)</small><b>${fm(b+x)}</b><small>${fm(b)} + ${fm(x)} เรื่อง</small></div>`}
 
 /* ===== การ์ดสรุปด้านบน: คลิกเพื่อดูตาราง (ใช้ข้อมูลชุดเดียวกับตัวเลขในการ์ด) ===== */
 
-/* ปุ่มซ่อน/แสดงการ์ดสรุปเรื่องนอกระบบ (จำสถานะไว้ในเบราว์เซอร์) */
+/* ปุ่มซ่อน/แสดงการ์ดสรุปเรื่องไม่รับเข้าระบบ (จำสถานะไว้ในเบราว์เซอร์) */
 function kxBtn(el){let b=document.getElementById('kxt');if(b)return;
  b=document.createElement('button');b.id='kxt';b.type='button';b.className='kxt';
- const set=h=>{el.classList.toggle('kxc',h);b.setAttribute('aria-expanded',String(!h));b.textContent=h?'▸ แสดงสรุปเรื่องนอกระบบ':'▾ ซ่อนสรุปเรื่องนอกระบบ'};
+ const set=h=>{el.classList.toggle('kxc',h);b.setAttribute('aria-expanded',String(!h));b.textContent=h?'▸ แสดงสรุปเรื่องเรื่องที่ไม่รับเข้าระบบ':'▾ ซ่อนสรุปเรื่องเรื่องที่ไม่รับเข้าระบบ'};
  let c=true;try{c=localStorage.getItem('kxc2')!=='0'}catch(e){}
  b.onclick=()=>{const h=!el.classList.contains('kxc');set(h);try{localStorage.setItem('kxc2',h?'1':'0')}catch(e){}};
  el.parentNode.insertBefore(b,el);set(c)}
@@ -1434,11 +1434,11 @@ function kxAll(D,tot){
  const E=[...M.entries()].sort((p,q)=>p[0]-q[0]).map(e=>e[1]);
  const A=sm(E.map(o=>o.a)),Q=sm(E.map(o=>o.r)),B=A+Q,G=B+tot,tt=o=>o.a+o.r+o.x;
  const mx=Math.max(...E.map(tt)),im=E.findIndex(o=>tt(o)===mx);
- const tx='รวมทุกประเภท '+fm(G)+' เรื่อง = เรื่องในระบบ '+fm(B)+' เรื่อง (ร้องเรียน '+fm(A)+' + ขอความอนุเคราะห์ '+fm(Q)+') + เรื่องนอกระบบ '+fm(tot)+' เรื่อง · ตัวเลขในตารางตรงกับการ์ด · เดือนที่รวมสูงสุดคือ '+xe(E[im].l)+' ('+fm(mx)+' เรื่อง, '+pct(mx,G)+'%)';
- xshow('สรุปรวมทุกประเภท','รวมทุกประเภท (ร้องเรียน + อนุเคราะห์ + นอกระบบ)',
-  tiles([['รวมทุกประเภท',fm(G),'ร้องเรียน + อนุเคราะห์ + นอกระบบ','📊'],['เรื่องในระบบ',fm(B),'ร้องเรียน '+fm(A)+' · อนุเคราะห์ '+fm(Q)+' เรื่อง','📋'],['เรื่องนอกระบบ',fm(tot),pct(tot,G)+'% ของทั้งหมด','📈'],['เดือนที่รวมสูงสุด',xe(E[im].l),fm(mx)+' เรื่อง','🏆']])
+ const tx='รวมทุกประเภท '+fm(G)+' เรื่อง = เรื่องในระบบ '+fm(B)+' เรื่อง (ร้องเรียน '+fm(A)+' + ขอความอนุเคราะห์ '+fm(Q)+') + เรื่องเรื่องที่ไม่รับเข้าระบบ '+fm(tot)+' เรื่อง · ตัวเลขในตารางตรงกับการ์ด · เดือนที่รวมสูงสุดคือ '+xe(E[im].l)+' ('+fm(mx)+' เรื่อง, '+pct(mx,G)+'%)';
+ xshow('สรุปรวมทุกประเภท','รวมทุกประเภท (ร้องเรียน + อนุเคราะห์ + ไม่รับเข้าระบบ)',
+  tiles([['รวมทุกประเภท',fm(G),'ร้องเรียน + อนุเคราะห์ + ไม่รับเข้าระบบ','📊'],['เรื่องในระบบ',fm(B),'ร้องเรียน '+fm(A)+' · อนุเคราะห์ '+fm(Q)+' เรื่อง','📋'],['เรื่องไม่รับเข้าระบบ',fm(tot),pct(tot,G)+'% ของทั้งหมด','📈'],['เดือนที่รวมสูงสุด',xe(E[im].l),fm(mx)+' เรื่อง','🏆']])
   +'<p class="xdp">'+tx+'</p>'+srch()
-  +tbl(['เดือน','ร้องเรียน','ขอความอนุเคราะห์','รวมในระบบ','เรื่องนอกระบบ','รวมทุกประเภท','% ของทั้งหมด'],
+  +tbl(['เดือน','ร้องเรียน','ขอความอนุเคราะห์','รวมในระบบ','เรื่องไม่รับเข้าระบบ','รวมทุกประเภท','% ของทั้งหมด'],
    E.map(o=>[xe(o.l),fm(o.a),fm(o.r),fm(o.a+o.r),fm(o.x),fm(tt(o)),pct(tt(o),G)+'%']),
    {hl:im,foot:['รวม',fm(A),fm(Q),fm(B),fm(tot),fm(G),'100%']}))}
 function kxOpen(n){let D=null;try{D=xrows&&xparse(xrows)}catch(e){}
