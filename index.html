@@ -508,7 +508,7 @@ function agT7(){
   return[x.length,bk(x),x.length-bk(x),bk(c0),c0.length-bk(c0),c0.length,bk(a0),a0.length-bk(a0),bk(a1),a1.length-bk(a1),a0.length+a1.length,
    (c.length-c0.length)+(a.length-a0.length-a1.length),x.filter(r=>!String(r.w['ที่ตั้ง › จังหวัด']||'').trim()).length]};
  const th=(t,c,a)=>`<th ${a||''} style="text-align:center;${c||''}">${t}</th>`,
-  P='background:rgba(232,98,150,.32)',G='background:rgba(60,170,90,.28)',Y='background:rgba(240,190,40,.34)',Z='background:rgba(128,128,128,.2)',B='background:rgba(60,180,220,.26)',O='background:rgba(200,150,30,.34)';
+  P='background:#c2185b;color:#fff;font-weight:700;border:1px solid rgba(255,255,255,.55);',G='background:#2e7d32;color:#fff;font-weight:700;border:1px solid rgba(255,255,255,.55);',Y='background:#a65f00;color:#fff;font-weight:700;border:1px solid rgba(255,255,255,.55);',Z='background:#546e7a;color:#fff;font-weight:700;border:1px solid rgba(255,255,255,.55);',B='background:#0277bd;color:#fff;font-weight:700;border:1px solid rgba(255,255,255,.55);',O='background:#6d4c41;color:#fff;font-weight:700;border:1px solid rgba(255,255,255,.55);';
  let h=`<table><thead><tr><th rowspan="4" style="vertical-align:bottom">หน่วยงาน</th><th rowspan="4" style="vertical-align:bottom">รวมทั้งหมด<br>(เรื่อง)</th>`
  +th('พื้นที่ดำเนินการทั้งหมด',Z,'colspan="2" rowspan="3"')+th('ประเภทการดำเนินงาน',P,'colspan="8"')+`</tr><tr>`
  +th('เรื่องร้องเรียน',G,'colspan="3"')+th('เรื่องขอความอนุเคราะห์',Y,'colspan="5"')+`</tr><tr>`
