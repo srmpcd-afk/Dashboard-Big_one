@@ -1199,7 +1199,7 @@ matchMedia('(prefers-color-scheme: dark)').addEventListener('change',draw);draw(
 /* ===== แถบ เรื่องนอกระบบ : อ่านตารางสรุปในชีต "เรื่องนอกระบบ" (ปัญหามลพิษ / ช่องทาง / ประเภทกิจการ รายเดือน) ===== */
 (function(){
 const TM=['ม.ค.','ก.พ.','มี.ค.','เม.ย.','พ.ค.','มิ.ย.','ก.ค.','ส.ค.','ก.ย.','ต.ค.','พ.ย.','ธ.ค.'],EN=['jan','feb','mar','apr','may','jun','jul','aug','sep','oct','nov','dec'];
-let xch=[],xrows=null,xnames=[],xerr='',xbusy=false,xt=0;
+let xfail=0,xch=[],xrows=null,xnames=[],xerr='',xbusy=false,xt=0;
 const cl=x=>x==null?'':String(x).replace(/\s+/g,' ').trim(),xe=t=>cl(t).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c])),
 num=x=>{if(typeof x=='number')return x;const n=parseFloat(cl(x).replace(/,/g,''));return isNaN(n)?0:n},
 fm=n=>Math.round(n).toLocaleString('en-US'),pc1=(a,b)=>b?(100*a/b).toFixed(1)+'%':'-';
@@ -1259,8 +1259,8 @@ function xfltFill(){const sd=document.getElementById('side');if(!sd)return;
  el.onchange=e=>{const t=e.target,k=t.dataset.xk;if(!k)return;const pn=t.closest('.pn');
   if(t.dataset.all){xst[k].clear();pn.querySelectorAll('input[data-xk]:not([data-all])').forEach(c=>c.checked=false);t.checked=true}
   else{t.checked?xst[k].add(t.value):xst[k].delete(t.value);pn.querySelector('[data-all]').checked=!xst[k].size}
-  document.getElementById('xs_'+k).textContent=sum(k);xdraw()};
- el.onclick=e=>{if(e.target.id!=='xrs')return;Object.values(xst).forEach(q=>q.clear());el.querySelectorAll('input[data-xk]').forEach(c=>c.checked=!!c.dataset.all);XG.forEach(g=>{const q=document.getElementById('xs_'+g[0]);if(q)q.textContent='ทั้งหมด'});xdraw()};
+  document.getElementById('xs_'+k).textContent=sum(k);xdrawSoon()};
+ el.onclick=e=>{if(e.target.id!=='xrs')return;Object.values(xst).forEach(q=>q.clear());el.querySelectorAll('input[data-xk]').forEach(c=>c.checked=!!c.dataset.all);XG.forEach(g=>{const q=document.getElementById('xs_'+g[0]);if(q)q.textContent='ทั้งหมด'});xdrawSoon()};
  const hr=sd.querySelector('.xnavhr');(hr||sd).insertAdjacentElement(hr?'afterend':'afterbegin',el)}
 let xcur=null;
 const rkT=T=>T?T.cols.map((c,i)=>({h:c.h,n:csum(c),i})).sort((a,b)=>b.n-a.n):[];
@@ -1348,7 +1348,7 @@ function xheat(el){const card=el.closest('[data-xh]'),k=card.dataset.xh,id={P:'x
  if(inFoot)return ci!=null?detCat(id,rkIdx):detTotal();
  const mi=tr&&tr.dataset.mi!=null?+tr.dataset.mi:null;if(mi==null)return;
  if(ci!=null)return detCat(id,rkIdx,mi);detMonth(mi)}
-document.getElementById('xapp').addEventListener('click',e=>{if(!xcur||e.target.closest('canvas'))return;
+document.getElementById('xapp').addEventListener('click',e=>{if(e.target.id==='xretry'){xerr='';xt=0;xfail=0;xdraw();xload();return}if(!xcur||e.target.closest('canvas'))return;
  const k=e.target.closest('.xk>div');if(k){const s=k.querySelector('small');return s&&xkpi(s.textContent.trim())}
  const h=e.target.closest('[data-xh] th,[data-xh] td');if(h)return xheat(h);
  const card=e.target.closest('.card');if(card){const cv=card.querySelector('canvas');if(cv)xcard(cv.id)}});
@@ -1362,10 +1362,15 @@ function xnavFill(){const sd=document.getElementById('side');if(!sd)return;sd.qu
  if(!secs.length)return;mark(secs.some(s=>s.id===XCUR)?XCUR:secs[0].id);
  nav.onclick=e=>{const a=e.target.closest('[data-xsp]');if(a)mark(a.dataset.xsp)};
  if('IntersectionObserver'in window){xio=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting)mark(e.target.id)}),{rootMargin:'-20% 0px -70% 0px'});secs.forEach(s=>xio.observe(s))}}
-function xdraw(){xch.forEach(c=>c.destroy());xch=[];const box=document.getElementById('xapp');if(!box)return;
- const msg=t=>{box.innerHTML=`<div class="card"><h2>เรื่องนอกระบบ</h2><p class="note">${xe(t)}</p></div>`;xnavFill()};
- if(xerr)return msg(xerr);if(!xrows)return msg('กำลังดึงข้อมูลชีต “เรื่องนอกระบบ” จาก Google Sheets…');
- const D0=xparse(xrows);xD0=D0;if(!D0)return msg('ไม่พบตารางสรุป (ประเภทปัญหามลพิษ / ช่องทาง / ประเภทกิจการ) ในชีตนี้');const XF=xfilt(D0),D=XF.D;if(!D.lab.length||!sm(D.cases))return msg('ไม่มีข้อมูลนอกระบบตรงกับตัวกรองที่เลือก (ลองล้างตัวกรองปี/เดือน ปัญหามลพิษ ประเภทกิจการ หรือแหล่งที่มา)');
+const withT=(p,ms)=>{let t;return Promise.race([p,new Promise((_,no)=>{t=setTimeout(()=>no(new Error('หมดเวลาเชื่อมต่อ')),ms)})]).finally(()=>clearTimeout(t))};
+let xraf=0;const xdrawSoon=()=>{cancelAnimationFrame(xraf);xraf=requestAnimationFrame(()=>xdraw())};
+function xdraw(){const box=document.getElementById('xapp');if(!box)return;const y=window.scrollY,had=box.childElementCount>0;xcur=null;
+ try{xdraw0()}catch(err){console.error(err);xch.forEach(c=>{try{c.destroy()}catch(e){}});xch=[];box.innerHTML='<div class="card"><h2>เรื่องนอกระบบ</h2><p class="note">แสดงข้อมูลไม่สำเร็จ ('+xe(err&&err.message||err)+')</p><button type="button" class="btn" id="xretry">ลองใหม่</button></div>';try{xnavFill()}catch(e){}}
+ if(had&&XS)window.scrollTo({top:y,behavior:'instant'})}
+function xdraw0(){xch.forEach(c=>c.destroy());xch=[];const box=document.getElementById('xapp');if(!box)return;
+ const msg=t=>{box.innerHTML=`<div class="card"><h2>เรื่องนอกระบบ</h2><p class="note">${xe(t)}</p>${xerr&&!xrows?'<button type="button" class="btn" id="xretry">ลองใหม่</button>':''}</div>`;xnavFill()};
+ if(xerr&&!xrows)return msg(xerr);if(!xrows)return msg('กำลังดึงข้อมูลชีต “เรื่องนอกระบบ” จาก Google Sheets…');
+ const D0=xparse(xrows);xD0=D0;if(!D0)return msg('ไม่พบตารางสรุป (ประเภทปัญหามลพิษ / ช่องทาง / ประเภทกิจการ) ในชีตนี้');const XF=xfilt(D0),D=XF.D;if(xerr)XF.note+=' · ⚠ อัปเดตข้อมูลล่าสุดไม่สำเร็จ กำลังแสดงข้อมูลที่โหลดไว้ก่อนหน้า (ระบบจะลองใหม่อัตโนมัติ)';if(!D.lab.length||!sm(D.cases))return msg('ไม่มีข้อมูลนอกระบบตรงกับตัวกรองที่เลือก (ลองล้างตัวกรองปี/เดือน ปัญหามลพิษ ประเภทกิจการ หรือแหล่งที่มา)');
  const ink=v('--ink'),mut=v('--mut'),ac=v('--ac'),ln=v('--ln'),band=v('--band')||'#12263f',hot=v('--hot')||'31,111,208',FF='IBM Plex Sans Thai',
  PAL=['#2a7fa6','#e8913a','#4caf6a','#9b6bd1','#d6609b','#e25555','#c9a227','#8d99a6'],L=D.lab,N=L.length,
  pcol=(n,i)=>{try{const j=POL.indexOf(n);if(j>=0&&PCOL[j])return PCOL[j]}catch(e){}return PAL[i%PAL.length]},
@@ -1409,12 +1414,12 @@ async function xfetch(){let sh=null;
 function kx(){const el=document.getElementById('kx');if(!el)return;let D=null;try{D=xrows&&xparse(xrows)}catch(e){}
  if(!D){const m=xerr||(xrows?'อ่านตารางสรุปในชีต “เรื่องนอกระบบ” ไม่ได้ (ไม่พบหัวตาราง “เดือน”/“ประเภทกิจการ”)':'กำลังดึงข้อมูลชีต “เรื่องนอกระบบ”…');el.style.display='';el.innerHTML='<p class="note" style="grid-column:1/-1;margin:0">'+xe(m)+'</p>';return}const x=sm(D.cases),b=R.length;el.style.display='';
  el.innerHTML=`<div><small>จำนวนเรื่องนอกระบบ ทั้งหมด</small><b>${fm(x)}</b><small>เรื่อง · ${xe(D.lab[0])} – ${xe(D.lab[D.lab.length-1])}</small></div><div><small>รวมทุกประเภท (ร้องเรียน + อนุเคราะห์ + นอกระบบ)</small><b>${fm(b+x)}</b><small>${fm(b)} + ${fm(x)} เรื่อง</small></div>`}
-async function xload(){if(xbusy||Date.now()-xt<3e5)return;xbusy=true;
- try{xrows=await xfetch();xerr='';xt=Date.now()}catch(e){xt=Date.now();xerr='ดึงชีต “เรื่องนอกระบบ” ไม่สำเร็จ: '+(e.message||e)+(xnames.length?' · ชีตที่พบ: '+xnames.join(', '):'')+' · ตรวจสอบว่าชื่อชีตมีคำว่า “เรื่องนอกระบบ” และแชร์แบบทุกคนที่มีลิงก์ดูได้'}
- finally{xbusy=false;if(XS)xdraw();kx()}}
+async function xload(){if(xbusy||Date.now()-xt<3e5)return;xbusy=true;const pr=JSON.stringify(xrows),pe=xerr;
+ try{const nr=await withT(xfetch(),45000);if(JSON.stringify(nr)!==pr)xrows=nr;xerr='';xt=Date.now();xfail=0}catch(e){xt=Date.now()-27e4;if(++xfail<=5)setTimeout(xload,31000);xerr='ดึงชีต “เรื่องนอกระบบ” ไม่สำเร็จ: '+(e.message||e)+(xnames.length?' · ชีตที่พบ: '+xnames.join(', '):'')+' · ตรวจสอบว่าชื่อชีตมีคำว่า “เรื่องนอกระบบ” และแชร์แบบทุกคนที่มีลิงก์ดูได้'}
+ finally{xbusy=false;if(XS&&(pr!==JSON.stringify(xrows)||pe!==xerr))xdraw();kx()}}
 const s0=side;side=function(){s0.apply(this,arguments);xnavFill()};
 const fl=()=>{};
-const d0=draw;draw=function(){d0.apply(this,arguments);document.body.classList.toggle('xs',XS);if(XS)xdraw();else xnavFill();kx();xload();fl()};
+const d0=draw;draw=function(){d0.apply(this,arguments);document.body.classList.toggle('xs',XS);if(XS)xdraw();else{xnavFill();const dg=document.getElementById('xdlg');if(dg&&dg.open)dg.close()}kx();xload();fl()};
 document.getElementById('ftg').addEventListener('click',fl);
 draw();
 })();
