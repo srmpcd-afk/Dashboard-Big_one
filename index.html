@@ -335,6 +335,22 @@ body.xs #app>:not(.sb){display:none!important}
 #kx div:nth-child(1){background:linear-gradient(135deg,#0f9d8a,#0b6f7a)}#kx div:nth-child(2){background:linear-gradient(135deg,#7b4fd6,#4a2f9e)}
 #xapp{display:none}body.xs #xapp{display:block}body.xs #side>*:not(.xnav):not(.xnavhr):not(.xflt){display:none!important}.xflt .dd .pn{position:static;margin:0;box-shadow:none!important;border:0;border-top:1px solid var(--ln);border-radius:0 0 10px 10px;max-height:240px;overflow-y:auto;overscroll-behavior:contain;padding:6px}.xflt .fq{position:sticky;top:0;z-index:2;background:var(--pn);margin-bottom:4px}:root[data-theme="light"] .xflt .fq,:root[data-theme="light"] .xflt .dd .pn{background:#fff}.xflt .dd .pn label{min-height:34px}.xflt .dd[open]>summary{border-radius:10px 10px 0 0}#xapp section{scroll-margin-top:64px;margin-bottom:32px}#xapp .xk{margin-bottom:14px}
 .xk{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:14px;margin-bottom:16px}.xk div{background:var(--pn);border:1px solid var(--ln);border-radius:14px;padding:14px 20px;border-left:5px solid var(--ac)}.xk small{display:block;color:var(--mut)}.xk b{font-size:1.9rem;line-height:1.2}
+#xapp .xk>div{position:relative;overflow:hidden;color:#fff;border:0;border-radius:18px;padding:16px 18px 14px;background:linear-gradient(135deg,var(--k1),var(--k2));box-shadow:0 8px 20px -10px var(--k1);transition:transform .25s,box-shadow .25s}
+#xapp .xk>div:hover{transform:translateY(-3px);box-shadow:0 14px 26px -10px var(--k1)}
+#xapp .xk>div::before{content:"";position:absolute;right:-30px;top:-30px;width:110px;height:110px;border-radius:50%;background:rgba(255,255,255,.14)}
+#xapp .xk>div::after{content:"";position:absolute;right:20px;bottom:-40px;width:80px;height:80px;border-radius:50%;background:rgba(255,255,255,.09)}
+#xapp .xk small{position:relative;z-index:1;color:rgba(255,255,255,.92);font-size:.84rem;font-weight:600}
+#xapp .xk small:first-child{padding-right:34px}
+#xapp .xk small:first-child::after{position:absolute;right:-2px;top:-2px;font-size:1.6rem;line-height:1;filter:drop-shadow(0 2px 3px rgba(0,0,0,.18))}
+#xapp .xk small:last-child:not(:first-child){color:rgba(255,255,255,.85);font-weight:500}
+#xapp .xk b{position:relative;z-index:1;display:block;color:#fff;font-size:2.4rem;line-height:1.15;margin-top:2px;text-shadow:0 1px 2px rgba(0,0,0,.12)}
+#xapp .xk b span{font-size:1.6rem!important}
+#xapp .xk>div:nth-child(1){--k1:#1f6fd0;--k2:#4d9ae8}#xapp .xk>div:nth-child(1) small:first-child::after{content:"\1F4CB"}
+#xapp .xk>div:nth-child(2){--k1:#0f9d8a;--k2:#0b6f7a}#xapp .xk>div:nth-child(2) small:first-child::after{content:"\1F4C8"}
+#xapp .xk>div:nth-child(3){--k1:#b07d00;--k2:#e0a400}#xapp .xk>div:nth-child(3) small:first-child::after{content:"\1F4C5"}
+#xapp .xk>div:nth-child(4){--k1:#2f5f9b;--k2:#4d8fd6}#xapp .xk>div:nth-child(4) small:first-child::after{content:"\1F3ED"}
+#xapp .xk>div:nth-child(5){--k1:#7b4fd6;--k2:#4a2f9e}#xapp .xk>div:nth-child(5) small:first-child::after{content:"\1F4E1"}
+@media(prefers-reduced-motion:reduce){#xapp .xk>div{transition:none}#xapp .xk>div:hover{transform:none}}
 .xh{position:relative;width:100%}
 #xapp details.xt{margin-top:8px}#xapp .xt table td{max-width:260px;overflow:hidden;text-overflow:ellipsis}#xapp .xt td,#xapp .xt th{text-align:left}
 </style></head><body>
