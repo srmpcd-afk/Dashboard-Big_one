@@ -333,7 +333,7 @@ table.hm{border-collapse:separate;border-spacing:3px;font-size:13.5px;table-layo
 body.xs #app>:not(.sb){display:none!important}
 #kx{margin-top:14px}#kx div{color:#fff;border:0;overflow:hidden}#kx div::before{display:none}#kx small{color:rgba(255,255,255,.88)}#kx b{color:#fff}
 #kx div:nth-child(1){background:linear-gradient(135deg,#0f9d8a,#0b6f7a)}#kx div:nth-child(2){background:linear-gradient(135deg,#7b4fd6,#4a2f9e)}
-#xapp{display:none}body.xs #xapp{display:block}body.xs #side>:not(.xnav){display:none!important}#xapp section{scroll-margin-top:64px;margin-bottom:32px}#xapp .xk{margin-bottom:14px}
+#xapp{display:none}body.xs #xapp{display:block}body.xs #side>.spy:not(.xnav),body.xs #side>hr.sp:not(.xnavhr){display:none!important}#xapp section{scroll-margin-top:64px;margin-bottom:32px}#xapp .xk{margin-bottom:14px}
 .xk{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:14px;margin-bottom:16px}.xk div{background:var(--pn);border:1px solid var(--ln);border-radius:14px;padding:14px 20px;border-left:5px solid var(--ac)}.xk small{display:block;color:var(--mut)}.xk b{font-size:1.9rem;line-height:1.2}
 .xh{position:relative;width:100%}
 #xapp details.xt{margin-top:8px}#xapp .xt table td{max-width:260px;overflow:hidden;text-overflow:ellipsis}#xapp .xt td,#xapp .xt th{text-align:left}
@@ -1197,11 +1197,11 @@ function xparse(rows){
  o.cases=cases||(o.B?o.B.tot:o.C?o.C.tot:o.P.tot);return o}
 const sm=a=>a.reduce((p,q)=>p+q,0),csum=c=>sm(c.v);
 let xio=null,XCUR='';
-function xnavFill(){const sd=document.getElementById('side');if(!sd)return;const old=sd.querySelector('.xnav');if(old)old.remove();if(xio){xio.disconnect();xio=null}
+function xnavFill(){const sd=document.getElementById('side');if(!sd)return;sd.querySelectorAll('.xnav,.xnavhr').forEach(e=>e.remove());if(xio){xio.disconnect();xio=null}
  if(!XS)return;const secs=[...document.querySelectorAll('#xapp section')];
  const nav=document.createElement('div');nav.className='spy xnav';
  nav.innerHTML='<h3>ส่วนของเรื่องนอกระบบ</h3>'+(secs.length?secs.map(s=>{const t=s.querySelector('h2.sec');return`<a href="#${s.id}" data-xsp="${s.id}">${xe(t?t.textContent:s.id)}</a>`}).join(''):'<p class="note" style="margin:0">กำลังโหลดข้อมูล…</p>');
- sd.insertAdjacentElement('afterbegin',nav);
+ const hr=document.createElement('hr');hr.className='sp xnavhr';sd.insertAdjacentElement('afterbegin',hr);sd.insertAdjacentElement('afterbegin',nav);
  const mark=id=>{XCUR=id;nav.querySelectorAll('[data-xsp]').forEach(a=>a.classList.toggle('on',a.dataset.xsp===id))};
  if(!secs.length)return;mark(secs.some(s=>s.id===XCUR)?XCUR:secs[0].id);
  nav.onclick=e=>{const a=e.target.closest('[data-xsp]');if(a)mark(a.dataset.xsp)};
@@ -1216,7 +1216,7 @@ function xdraw(){xch.forEach(c=>c.destroy());xch=[];const box=document.getElemen
  tot=sm(D.cases),mi=D.cases.indexOf(Math.max(...D.cases)),rk=T=>T?T.cols.map((c,i)=>({h:c.h,n:csum(c),i})).sort((a,b)=>b.n-a.n):[],
  rp=rk(D.P),rc=rk(D.C),rb=rk(D.B),pt=D.P?sm(D.P.tot):0,ct=D.C?sm(D.C.tot):0,bt=D.B?sm(D.B.tot):0;
  const kp=(t,b,s)=>`<div><small>${t}</small><b>${b}</b>${s?`<small>${s}</small>`:''}</div>`;
- let h=`<section id="xs-ov"><h2 class="sec">เรื่องนอกระบบ</h2><p class="note" style="margin:-4px 0 12px">ข้อมูลนอกระบบเป็นตารางสรุปรายเดือน จึงไม่มีตัวกรองเหมือนแถบ “ทั้งหมด” · เลือกหัวข้อจากเมนูด้านซ้ายเพื่อเลื่อนไปยังส่วนที่ต้องการ</p><div class="xk">${kp('จำนวนเรื่องทั้งหมด',fm(tot),L[0]+' – '+L[N-1])}${kp('เฉลี่ยต่อเดือน',fm(tot/N),'เรื่อง')}${kp('เดือนที่รับมากสุด',xe(L[mi]),fm(D.cases[mi])+' เรื่อง')}${D.P?kp('ปัญหามลพิษ (ครั้ง)',fm(pt),'เฉลี่ย '+(tot?(pt/tot).toFixed(2):'-')+' ปัญหา/เรื่อง'):''}${rc[0]?kp('ช่องทางหลัก',`<span style="font-size:1.3rem">${xe(rc[0].h)}</span>`,pc1(rc[0].n,ct)):''}</div><div class="g">`;
+ let h=`<section id="xs-ov"><h2 class="sec">เรื่องนอกระบบ</h2><p class="note" style="margin:-4px 0 12px">ตัวกรองด้านซ้ายใช้กับแถบ “ทั้งหมด” เท่านั้น เพราะข้อมูลนอกระบบเป็นตารางสรุปรายเดือน · เลือกหัวข้อจากเมนูด้านซ้ายเพื่อเลื่อนไปยังส่วนที่ต้องการ</p><div class="xk">${kp('จำนวนเรื่องทั้งหมด',fm(tot),L[0]+' – '+L[N-1])}${kp('เฉลี่ยต่อเดือน',fm(tot/N),'เรื่อง')}${kp('เดือนที่รับมากสุด',xe(L[mi]),fm(D.cases[mi])+' เรื่อง')}${D.P?kp('ปัญหามลพิษ (ครั้ง)',fm(pt),'เฉลี่ย '+(tot?(pt/tot).toFixed(2):'-')+' ปัญหา/เรื่อง'):''}${rc[0]?kp('ช่องทางหลัก',`<span style="font-size:1.3rem">${xe(rc[0].h)}</span>`,pc1(rc[0].n,ct)):''}</div><div class="g">`;
  h+=`<div class="card s8"><h2>เรื่องที่รับ รายเดือน</h2><p class="ins">เดือน ${xe(L[mi])} รับเรื่องมากที่สุด ${fm(D.cases[mi])} เรื่อง · เส้นประ = ค่าเฉลี่ย ${fm(tot/N)} เรื่อง/เดือน</p><div class="xh" style="height:300px"><canvas id="xm"></canvas></div></div>`;
  if(D.C)h+=`<div class="card s4"><h2>ช่องทางที่รับเรื่อง</h2><p class="ins">${xe(rc[0].h)} ${pc1(rc[0].n,ct)} ของทุกช่องทาง</p><div class="xh" style="height:300px"><canvas id="xd"></canvas></div></div>`;
  h+=`</div></section>`;
@@ -1257,7 +1257,7 @@ async function xload(){if(xbusy||Date.now()-xt<3e5)return;xbusy=true;
  try{xrows=await xfetch();xerr='';xt=Date.now()}catch(e){xt=Date.now();xerr='ดึงชีต “เรื่องนอกระบบ” ไม่สำเร็จ: '+(e.message||e)+(xnames.length?' · ชีตที่พบ: '+xnames.join(', '):'')+' · ตรวจสอบว่าชื่อชีตมีคำว่า “เรื่องนอกระบบ” และแชร์แบบทุกคนที่มีลิงก์ดูได้'}
  finally{xbusy=false;if(XS)xdraw();kx()}}
 const s0=side;side=function(){s0.apply(this,arguments);xnavFill()};
-const fl=()=>{const b=document.getElementById('ftg');if(b&&XS)b.innerHTML=b.innerHTML.replace('ตัวกรอง','เมนู')};
+const fl=()=>{};
 const d0=draw;draw=function(){d0.apply(this,arguments);document.body.classList.toggle('xs',XS);if(XS)xdraw();else xnavFill();kx();xload();fl()};
 document.getElementById('ftg').addEventListener('click',fl);
 draw();
