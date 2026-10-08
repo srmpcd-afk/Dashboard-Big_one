@@ -1265,7 +1265,7 @@ function xfltFill(){const sd=document.getElementById('side');if(!sd)return;
 let xcur=null;
 const rkT=T=>T?T.cols.map((c,i)=>({h:c.h,n:csum(c),i})).sort((a,b)=>b.n-a.n):[];
 const pct=(a,b)=>b?(100*a/b).toFixed(1):'0.0',sg=x=>(x>=0?'+':'−')+Math.abs(x).toFixed(1)+'%',
- barc=(n,mx)=>{const p=mx?Math.round(100*n/mx):0;return{t:fm(n),s:`background:linear-gradient(90deg,var(--ch) ${p}%,transparent ${p}%)`}};
+ barc=n=>fm(n);
 function tbl(head,rows,o={}){const lc=o.lc||1,al=j=>j<lc?'':' class="r"';
  return`<div class="xtw"><table class="xt"><thead><tr>${head.map((h,j)=>`<th${al(j)}>${h}</th>`).join('')}</tr></thead><tbody>${rows.map((r,i)=>`<tr${o.hl===i?' class="hl"':''}>${r.map((c,j)=>typeof c==='object'?`<td${al(j)} style="${c.s}">${c.t}</td>`:`<td${al(j)}>${c}</td>`).join('')}</tr>`).join('')}</tbody>${o.foot?`<tfoot><tr>${o.foot.map((c,j)=>`<td${al(j)}>${c}</td>`).join('')}</tr></tfoot>`:''}</table></div>`}
 const IC=['📋','📊','📅','🏆'];
