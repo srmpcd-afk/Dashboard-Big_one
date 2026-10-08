@@ -345,6 +345,11 @@ body.xs #app>:not(.sb){display:none!important}
 #xapp .xk small:last-child:not(:first-child){color:rgba(255,255,255,.85);font-weight:500}
 #xapp .xk b{position:relative;z-index:1;display:block;color:#fff;font-size:2.4rem;line-height:1.15;margin-top:2px;text-shadow:0 1px 2px rgba(0,0,0,.12)}
 #xapp .xk b span{font-size:1.6rem!important}
+/*xd*/
+#xdlg{width:min(980px,96vw);padding:0;max-height:92vh;overflow:auto}.xdb{padding:20px}.xdx{border:0;background:var(--h1);color:var(--ink);width:34px;height:34px;border-radius:50%;cursor:pointer;font-size:1rem;flex:none}.xdx:hover{background:var(--ch)}
+.xdk{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px;margin:0 0 12px}.xdk div{background:var(--h1);border-radius:12px;padding:10px 14px}.xdk small{display:block;color:var(--mut);font-size:.8rem}.xdk b{font-size:1.4rem;line-height:1.25}
+.xdp{margin:0 0 14px;line-height:1.75;background:var(--h1);border-left:4px solid var(--ac);border-radius:10px;padding:10px 14px}#xdlg h3{margin:18px 0 8px;font-size:1rem}
+.xt{width:100%;border-collapse:collapse;font-size:.92rem;font-variant-numeric:tabular-nums}.xt th{color:var(--mut);font-weight:600;font-size:.8rem;text-align:left;padding:8px 10px;border-bottom:1px solid var(--ln)}.xt td{padding:8px 10px;border-bottom:1px solid var(--ln)}.xt .r{text-align:right}.xt tr.hl td{background:color-mix(in srgb,var(--ac) 16%,transparent);font-weight:700}.xt tfoot td{font-weight:700;border-bottom:0;background:var(--h1)}
 #xapp .xk>div:nth-child(1){--k1:#1f6fd0;--k2:#4d9ae8}#xapp .xk>div:nth-child(1) small:first-child::after{content:"\1F4CB"}
 #xapp .xk>div:nth-child(2){--k1:#0f9d8a;--k2:#0b6f7a}#xapp .xk>div:nth-child(2) small:first-child::after{content:"\1F4C8"}
 #xapp .xk>div:nth-child(3){--k1:#b07d00;--k2:#e0a400}#xapp .xk>div:nth-child(3) small:first-child::after{content:"\1F4C5"}
@@ -1224,7 +1229,7 @@ function xfilt(D){
  const P=mkT(D.P,pA,xst.p),B=mkT(D.B,bA,xst.b),C=mkT(D.C,cA,xst.c);
  let cases=sl(D.cases);
  if(bA&&D.B)cases=B?B.tot:zero();else if(cA&&D.C)cases=C?C.tot:zero();
- let note='ตัวกรองด้านซ้ายในแท็บนี้ใช้กับข้อมูลเรื่องนอกระบบโดยเฉพาะ ไม่เกี่ยวกับตัวกรองในแท็บ “ทั้งหมด” · เลือกหัวข้อจากเมนูด้านซ้ายเพื่อเลื่อนไปยังส่วนที่ต้องการ';
+ let note='ตัวกรองด้านซ้ายในแท็บนี้ใช้กับข้อมูลเรื่องนอกระบบโดยเฉพาะ ไม่เกี่ยวกับตัวกรองในแท็บ “ทั้งหมด” · เลือกหัวข้อจากเมนูด้านซ้ายเพื่อเลื่อนไปยังส่วนที่ต้องการ · คลิกที่กราฟทุกอันเพื่อดูตารางรายละเอียด';
  if(pA)note+=' · 1 เรื่องมีได้หลายปัญหา จำนวนเรื่องจึงไม่เปลี่ยนตามตัวกรองปัญหามลพิษ';
  if(bA&&cA)note+=' · เลือกทั้งประเภทกิจการและช่องทาง: แต่ละตารางกรองตามหมวดของตัวเอง ส่วนจำนวนเรื่องนับตามประเภทกิจการ';
  return{D:{lab:sl(D.lab),P,B,C,cases},pf:pA,note}}
@@ -1243,6 +1248,68 @@ function xfltFill(){const sd=document.getElementById('side');if(!sd)return;
   document.getElementById('xs_'+k).textContent=sum(k);xdraw()};
  el.onclick=e=>{if(e.target.id!=='xrs')return;Object.values(xst).forEach(q=>q.clear());el.querySelectorAll('input[data-xk]').forEach(c=>c.checked=!!c.dataset.all);XG.forEach(g=>{const q=document.getElementById('xs_'+g[0]);if(q)q.textContent='ทั้งหมด'});xdraw()};
  const hr=sd.querySelector('.xnavhr');(hr||sd).insertAdjacentElement(hr?'afterend':'afterbegin',el)}
+let xcur=null;
+const rkT=T=>T?T.cols.map((c,i)=>({h:c.h,n:csum(c),i})).sort((a,b)=>b.n-a.n):[];
+const pct=(a,b)=>b?(100*a/b).toFixed(1):'0.0',sg=x=>(x>=0?'+':'−')+Math.abs(x).toFixed(1)+'%',
+ barc=(n,mx)=>({t:fm(n),s:`background:linear-gradient(90deg,var(--ch) ${mx?Math.round(100*n/mx):0}%,transparent ${mx?Math.round(100*n/mx):0}%)`});
+function tbl(head,rows,o={}){const lc=o.lc||1,al=j=>j<lc?'':' class="r"';
+ return`<div class="ov"><table class="xt"><thead><tr>${head.map((h,j)=>`<th${al(j)}>${h}</th>`).join('')}</tr></thead><tbody>${rows.map((r,i)=>`<tr${o.hl===i?' class="hl"':''}>${r.map((c,j)=>typeof c==='object'?`<td${al(j)} style="${c.s}">${c.t}</td>`:`<td${al(j)}>${c}</td>`).join('')}</tr>`).join('')}</tbody>${o.foot?`<tfoot><tr>${o.foot.map((c,j)=>`<td${al(j)}>${c}</td>`).join('')}</tr></tfoot>`:''}</table></div>`}
+const tiles=a=>`<div class="xdk">${a.map(x=>`<div><small>${x[0]}</small><b>${x[1]}</b>${x[2]?`<small>${x[2]}</small>`:''}</div>`).join('')}</div>`;
+function xshow(title,sub,body){let d=document.getElementById('xdlg');
+ if(!d){d=document.createElement('dialog');d.id='xdlg';document.body.appendChild(d);d.addEventListener('click',e=>{if(e.target===d||(e.target.closest&&e.target.closest('[data-xc]')))d.close()})}
+ d.innerHTML=`<div class="xdb"><div class="tdh"><div><h2>${xe(title)}</h2><small>${xe(sub)}</small></div><button type="button" class="xdx" data-xc aria-label="ปิด">✕</button></div>${body}</div>`;
+ if(!d.open)d.showModal();d.scrollTop=0}
+const topAt=(T,i)=>{if(!T)return null;const r=T.cols.map(c=>({h:c.h,n:c.v[i]})).sort((a,b)=>b.n-a.n);return r[0]&&r[0].n>0?{h:r[0].h,n:r[0].n,p:pct(r[0].n,T.tot[i])}:null};
+const subT=()=>{const L=xcur.D.lab;return'ช่วง '+L[0]+(L.length>1?' – '+L[L.length-1]:'')+' · ข้อมูลตามตัวกรองที่เลือกในแท็บนี้'};
+function detMonth(i){const x=xcur,D=x.D,L=D.lab,c=D.cases[i],mx=Math.max(...D.cases),mn=Math.min(...D.cases),
+ df=x.avg?100*(c-x.avg)/x.avg:0,pv=i>0?D.cases[i-1]:null,ch=pv?100*(c-pv)/pv:null,
+ tp=topAt(D.P,i),tc=topAt(D.C,i),tb=topAt(D.B,i);
+ let tx=`เดือน ${xe(L[i])} มีเรื่องนอกระบบ ${fm(c)} เรื่อง คิดเป็น ${pct(c,x.tot)}% ของทั้งช่วง ${df>=0?'สูงกว่า':'ต่ำกว่า'}ค่าเฉลี่ยรายเดือน (${fm(x.avg)} เรื่อง) ${Math.abs(df).toFixed(1)}%`;
+ if(ch!=null)tx+=` และ${ch>=0?'เพิ่มขึ้น':'ลดลง'}จากเดือนก่อนหน้า (${xe(L[i-1])}) ${Math.abs(ch).toFixed(1)}%`;
+ if(L.length>1){if(c===mx)tx+=' · เป็นเดือนที่รับเรื่องมากที่สุดในช่วงนี้';else if(c===mn)tx+=' · เป็นเดือนที่รับเรื่องน้อยที่สุดในช่วงนี้'}
+ const dom=[tc&&`ช่องทางหลัก <b>${xe(tc.h)}</b> (${fm(tc.n)} ครั้ง, ${tc.p}%)`,tb&&`ประเภทกิจการสูงสุด <b>${xe(tb.h)}</b> (${fm(tb.n)} เรื่อง, ${tb.p}%)`,tp&&`ปัญหามลพิษสูงสุด <b>${xe(tp.h)}</b> (${fm(tp.n)} ครั้ง, ${tp.p}%)`].filter(Boolean);
+ if(dom.length)tx+=' · ในเดือนนี้ '+dom.join(' · ');
+ const rows=L.map((l,j)=>[xe(l),barc(D.cases[j],mx),pct(D.cases[j],x.tot)+'%',x.avg?sg(100*(D.cases[j]-x.avg)/x.avg):'-',j&&D.cases[j-1]?sg(100*(D.cases[j]-D.cases[j-1])/D.cases[j-1]):'–']);
+ let b=tiles([['จำนวนเรื่อง',fm(c),'เรื่อง'],['สัดส่วนของทั้งช่วง',pct(c,x.tot)+'%',fm(c)+' จาก '+fm(x.tot)],['เทียบค่าเฉลี่ย',sg(df),'เฉลี่ย '+fm(x.avg)+' เรื่อง/เดือน'],['เทียบเดือนก่อน',ch==null?'–':sg(ch),ch==null?'ไม่มีเดือนก่อนหน้า':xe(L[i-1])]])+`<p class="xdp">${tx}</p><h3>เรื่องที่รับ รายเดือน (ตรงกับกราฟ)</h3>`+tbl(['เดือน','จำนวนเรื่อง','% ของทั้งช่วง','เทียบค่าเฉลี่ย','เปลี่ยนจากเดือนก่อน'],rows,{hl:i,foot:['รวม',fm(x.tot),'100%','','']});
+ const g=[['ปัญหามลพิษ',D.P,'ครั้ง'],['ช่องทางที่รับเรื่อง',D.C,'ครั้ง'],['ประเภทกิจการ',D.B,'เรื่อง']].filter(a=>a[1]),r2=[];
+ g.forEach(a=>{a[1].cols.map(cc=>({h:cc.h,n:cc.v[i]})).filter(q=>q.n>0).sort((p,q)=>q.n-p.n).slice(0,3).forEach((q,k)=>r2.push([k?'':a[0],xe(q.h),fm(q.n)+' '+a[2],pct(q.n,a[1].tot[i])+'%']))});
+ if(r2.length)b+=`<h3>ในเดือน ${xe(L[i])} แยกตามหมวด (3 อันดับแรก)</h3>`+tbl(['หมวด','รายการ','จำนวน','% ของหมวดในเดือนนี้'],r2,{lc:2});
+ xshow('เรื่องที่รับ รายเดือน · '+L[i],subT(),b)}
+function detCat(id,sel){const x=xcur,D=x.D,L=D.lab,N=x.N,cf={xd:['C','ช่องทางที่รับเรื่อง','ครั้ง'],xp:['P','ปัญหามลพิษ','ครั้ง'],xb:['B','ประเภทกิจการ','เรื่อง']}[id],T=D[cf[0]];if(!T)return;
+ const r=rkT(T),tot=sm(r.map(q=>q.n)),s=sel==null||!r[sel]?0:sel,q=r[s],c=T.cols[q.i],mxv=Math.max(...c.v),pl=L[c.v.indexOf(mxv)],mx=r[0].n,
+ pk=cc=>{const m=Math.max(...cc.v);return xe(L[cc.v.indexOf(m)])+' ('+fm(m)+')'};
+ const rows=r.map((o,k)=>[String(k+1),xe(o.h),barc(o.n,mx),pct(o.n,tot)+'%',fm(o.n/N),pk(T.cols[o.i])]);
+ let tx=`<b>${xe(q.h)}</b> มี ${fm(q.n)} ${cf[2]} คิดเป็น ${pct(q.n,tot)}% ของ${cf[1]}ทั้งหมด (${fm(tot)} ${cf[2]}) เป็นอันดับ ${s+1} จาก ${r.length} เฉลี่ยเดือนละ ${fm(q.n/N)} ${cf[2]} และสูงสุดในเดือน ${xe(pl)} (${fm(mxv)} ${cf[2]})`;
+ if(id==='xp'&&x.tot)tx+=` · เมื่อเทียบกับจำนวนเรื่องทั้งหมด (${fm(x.tot)} เรื่อง) เท่ากับ ${(100*q.n/x.tot).toFixed(1)} ครั้งต่อ 100 เรื่อง · 1 เรื่องมีได้หลายปัญหา จำนวนรวมจึงมากกว่าจำนวนเรื่องได้`;
+ if(id==='xb'&&r.length>1)tx+=` · ห่างจากอันดับ ${s?1:2} ${fm(Math.abs(q.n-r[s?0:1].n))} ${cf[2]}`;
+ const mr=L.map((l,j)=>[xe(l),barc(c.v[j],mxv),pct(c.v[j],T.tot[j])+'%']);
+ const b=tiles([['รายการที่เลือก',xe(q.h),'อันดับ '+(s+1)+' จาก '+r.length],['จำนวนรวม',fm(q.n),cf[2]],['สัดส่วน',pct(q.n,tot)+'%','ของ'+cf[1]+'ทั้งหมด'],['เดือนสูงสุด',xe(pl),fm(mxv)+' '+cf[2]]])
+ +`<p class="xdp">${tx}</p><h3>${cf[1]}ทั้งหมด (ตรงกับกราฟ)</h3>`+tbl(['อันดับ',cf[1],'จำนวน ('+cf[2]+')','% ของทั้งหมด','เฉลี่ย/เดือน','เดือนสูงสุด (จำนวน)'],rows,{lc:2,hl:s,foot:['','รวม',fm(tot),'100%',fm(tot/N),'']})
+ +`<h3>รายเดือน: ${xe(q.h)}</h3>`+tbl(['เดือน','จำนวน ('+cf[2]+')','% ของ'+cf[1]+'ในเดือนนั้น'],mr,{hl:c.v.indexOf(mxv),foot:['รวม',fm(q.n),pct(q.n,tot)+'%']});
+ xshow(cf[1]+' · '+q.h,subT(),b)}
+function detStack(id,di,mi){const x=xcur,D=x.D,L=D.lab,cf={xsp:['P',5,'ปัญหามลพิษ','ครั้ง'],xsc:['C',4,'ช่องทางที่รับเรื่อง','ครั้ง'],xsb:['B',5,'ประเภทกิจการ','เรื่อง']}[id],T=D[cf[0]];if(!T)return;
+ const r=rkT(T),top=r.slice(0,cf[1]),rest=r.slice(cf[1]),u=cf[3],
+ S=top.map(q=>({h:q.h,v:T.cols[q.i].v}));if(rest.length)S.push({h:'อื่นๆ',v:L.map((_,j)=>sm(rest.map(q=>T.cols[q.i].v[j]))),rest});
+ const tt=S.map(o=>sm(o.v)),all=sm(tt);
+ const mat=L.map((l,j)=>[xe(l),...S.map(o=>fm(o.v[j])),`<b>${fm(T.tot[j])}</b>`]);
+ let b='',tx='',ttl=cf[2]+' รายเดือน';
+ if(mi!=null){const m=T.tot[mi],ord=S.map((o,k)=>k).sort((a,b2)=>S[b2].v[mi]-S[a].v[mi]);
+  const sel=di!=null&&S[di]?di:ord[0],o=S[sel],n=o.v[mi],av=tt[sel]/L.length,df=av?100*(n-av)/av:0,rk2=ord.indexOf(sel)+1;
+  tx=`ใน <b>${xe(L[mi])}</b> <b>${xe(o.h)}</b> มี ${fm(n)} ${u} คิดเป็น ${pct(n,m)}% ของ${cf[2]}ในเดือนนั้น (${fm(m)} ${u}) เป็นอันดับ ${rk2} ของเดือน ${df>=0?'สูงกว่า':'ต่ำกว่า'}ค่าเฉลี่ยรายเดือนของหมวดนี้ (${fm(av)} ${u}) ${Math.abs(df).toFixed(1)}%`;
+  if(o.rest)tx+=` · “อื่นๆ” รวมรายการที่อยู่นอก ${cf[1]} อันดับแรกของช่วงนี้ (${rest.length} รายการ)`;
+  if(id==='xsp')tx+=' · 1 เรื่องมีได้หลายปัญหา';
+  const rows=ord.map(k=>{const q=S[k],a=tt[k]/L.length;return[xe(q.h),barc(q.v[mi],S[ord[0]].v[mi]),pct(q.v[mi],m)+'%',fm(a),a?sg(100*(q.v[mi]-a)/a):'-']});
+  b+=tiles([['เดือน',xe(L[mi]),''],['รายการที่เลือก',xe(o.h),'อันดับ '+rk2+' ของเดือน'],['จำนวน',fm(n),u],['สัดส่วนในเดือน',pct(n,m)+'%','จาก '+fm(m)+' '+u]])+`<p class="xdp">${tx}</p><h3>${cf[2]}ใน ${xe(L[mi])} (ตรงกับแท่งของกราฟ)</h3>`+tbl(['รายการ','จำนวน ('+u+')','% ของเดือน','ค่าเฉลี่ยรายเดือน','เทียบค่าเฉลี่ย'],rows,{hl:ord.indexOf(sel),foot:['รวม',fm(m),'100%','','']});
+  if(o.rest){const rr=o.rest.map(q=>({h:q.h,n:T.cols[q.i].v[mi]})).sort((p,q2)=>q2.n-p.n);b+=`<h3>รายการที่รวมใน “อื่นๆ” ใน ${xe(L[mi])}</h3>`+tbl(['รายการ','จำนวน ('+u+')','% ของเดือน'],rr.map(q=>[xe(q.h),fm(q.n),pct(q.n,m)+'%']),{foot:['รวม',fm(o.v[mi]),pct(o.v[mi],m)+'%']})}
+  ttl=cf[2]+' · '+L[mi]}
+ else{const k=tt.indexOf(Math.max(...tt));tx=`ตลอดช่วง ${xe(L[0])} – ${xe(L[L.length-1])} มี${cf[2]}รวม ${fm(all)} ${u} รายการสูงสุดคือ <b>${xe(S[k].h)}</b> ${fm(tt[k])} ${u} (${pct(tt[k],all)}%) · คลิกที่แท่งของกราฟเพื่อดูรายละเอียดของเดือนและรายการนั้น`;b+=`<p class="xdp">${tx}</p>`}
+ b+=`<h3>ทุกเดือน (ตรงกับกราฟ)</h3>`+tbl(['เดือน',...S.map(o=>xe(o.h)),'รวม'],mat,{hl:mi==null?-1:mi,foot:['รวม',...tt.map(fm),fm(all)]});
+ xshow(ttl,subT(),b)}
+function xclick(id,e,c){if(!xcur)return;const g=(m,o)=>c.getElementsAtEventForMode(e,m,o,true);
+ if(id==='xm'){const a=g('nearest',{axis:'x',intersect:false});return detMonth(a.length?a[0].index:xcur.D.cases.indexOf(Math.max(...xcur.D.cases)))}
+ if(id==='xd'){const a=g('nearest',{intersect:true});return detCat('xd',a.length?a[0].index:null)}
+ if(id==='xp'||id==='xb'){const a=g('nearest',{axis:'y',intersect:false});return detCat(id,a.length?a[0].index:null)}
+ const a=g('nearest',{intersect:true});if(a.length)return detStack(id,a[0].datasetIndex,a[0].index);const b=g('index',{intersect:false});detStack(id,null,b.length?b[0].index:null)}
 let xio=null,XCUR='';
 function xnavFill(){const sd=document.getElementById('side');if(!sd)return;sd.querySelectorAll('.xnav,.xnavhr').forEach(e=>e.remove());if(xio){xio.disconnect();xio=null}
  xfltFill();if(!XS)return;const secs=[...document.querySelectorAll('#xapp section')];
@@ -1276,9 +1343,9 @@ box.innerHTML=h;xnavFill();
  const lbl={id:'xl',afterDatasetsDraw(c,_,o){if(!o.on)return;const x=c.ctx,hz=c.options.indexAxis=='y';x.save();x.fillStyle=ink;x.font='600 12px "'+FF+'"';x.textBaseline='middle';
   c.getDatasetMeta(0).data.forEach((e,i)=>{const t=o.t(i);if(hz){x.textAlign='left';x.fillText(t,e.x+6,e.y)}else{x.textAlign='center';x.fillText(t,e.x,e.y-10)}});x.restore()}},
  tip={backgroundColor:band,titleColor:'#fff',bodyColor:'#dbe7f5',padding:10,cornerRadius:10,titleFont:{family:FF,weight:'700'},bodyFont:{family:FF}},
- mk=(id,cfg)=>{const cv=document.getElementById(id);if(cv)xch.push(new Chart(cv,cfg))},
+ mk=(id,cfg)=>{const cv=document.getElementById(id);if(!cv)return;cfg.options=cfg.options||{};cfg.options.onClick=(e,_a,c)=>xclick(id,e,c);cv.style.cursor='pointer';cv.title='คลิกเพื่อดูตารางรายละเอียด';xch.push(new Chart(cv,cfg))},
  sc=(st,hz)=>({x:{stacked:st,grid:{display:false},ticks:{color:hz?mut:ink,precision:0,font:{family:FF}}},y:{stacked:st,beginAtZero:true,grid:{display:!hz,color:ln},border:{display:false},ticks:{color:hz?ink:mut,precision:0,font:{family:FF}}}});
- const avg=tot/N;
+ const avg=tot/N;xcur={D,N,tot,avg};
  mk('xm',{type:'bar',data:{labels:L,datasets:[{data:D.cases,backgroundColor:D.cases.map((n,i)=>i==mi?ac:ac+'88'),borderRadius:4,barPercentage:.75}]},
   options:{maintainAspectRatio:false,layout:{padding:{top:24}},plugins:{legend:{display:false},tooltip:{...tip,callbacks:{label:q=>fm(q.parsed.y)+' เรื่อง'}},xl:{on:1,t:i=>fm(D.cases[i])}},scales:sc(false,false)},
   plugins:[lbl,{id:'avg',afterDatasetsDraw(c){const a=c.chartArea,y=c.scales.y.getPixelForValue(avg),x=c.ctx;x.save();x.setLineDash([6,4]);x.strokeStyle=v('--y');x.lineWidth=1.5;x.beginPath();x.moveTo(a.left,y);x.lineTo(a.right,y);x.stroke();x.restore()}}]});
