@@ -470,10 +470,11 @@ const nz=o=>String(o.a).replace(/\s+/g,''),
  pick=k=>rows.filter(o=>[k[0],k[1]||k[0]].map(x=>x.replace(/\s+/g,'')).includes(nz(o))).flatMap(o=>o.x),
  pb=(n,v,c)=>{if(!n)return'<td>-</td>';const p=100*v/n;return`<td>${p.toFixed(1)}<span class="bar" style="width:${p*.9}px;background:${c}"></span></td>`},
  rw=(nm,x)=>{const a=L({x,n:x.length});return`<tr><td>${ex(nm)}</td>${a.slice(0,6).map(v=>'<td>'+v+'</td>').join('')}${pb(a[0],a[4],'var(--g)')}${pb(a[0],a[5],'var(--y)')}</tr>`},
- gp=t=>`<tr><td colspan="9" style="text-align:left;font-weight:700;background:var(--h1)">${t}</td></tr>`;
-h+=gp('กองตรวจมลพิษ')+AG1.map(k=>rw(k[1]||k[0],pick(k))).join('');
-h+=gp('สำนักงานสิ่งแวดล้อมและควบคุมมลพิษที่ 1-16')+AG2.map(k=>rw(k[1],pick(k))).join('');
-if(oth.length)h+=gp('หน่วยงานอื่น')+oth.map(o=>rw(o.a,o.x)).join('');
+ sb=(nm,x)=>rw(nm,x).replace(/<td>/g,'<td style="font-weight:600;background:rgba(224,161,0,.09);border-top:1px solid var(--ln)">'),
+ gp=t=>`<tr><td colspan="9" style="text-align:left;font-weight:700;background:rgba(110,135,170,.15)">${t}</td></tr>`;
+h+=gp('กองตรวจมลพิษ')+AG1.map(k=>rw(k[1]||k[0],pick(k))).join('')+sb('รวมกองตรวจมลพิษ',AG1.flatMap(pick));
+h+=gp('สำนักงานสิ่งแวดล้อมและควบคุมมลพิษที่ 1-16')+AG2.map(k=>rw(k[1],pick(k))).join('')+sb('รวมสำนักงานสิ่งแวดล้อมฯ ที่ 1-16',AG2.flatMap(pick));
+if(oth.length)h+=gp('หน่วยงานอื่น')+oth.map(o=>rw(o.a,o.x)).join('')+sb('รวมหน่วยงานอื่น',oth.flatMap(o=>o.x));
 const allx=rows.flatMap(o=>o.x),T=L({x:allx,n:allx.length});
 document.getElementById('t3').innerHTML=rows.length?h+`</tbody><tfoot><tr><td>รวมทั้งหมด</td>${T.slice(0,6).map(x=>'<td>'+x+'</td>').join('')}${pb(T[0],T[4],'var(--g)')}${pb(T[0],T[5],'var(--y)')}</tr></tfoot></table>`:'<p class="note">ไม่มีข้อมูลหน่วยงานรับผิดชอบในตัวกรองนี้ (มีเฉพาะเรื่องร้องเรียน)</p>';agT4();agT5();agT7()}
 /* ตารางสรุปตามหน่วยงาน (เรื่องร้องเรียน + ขอความอนุเคราะห์) */
@@ -523,11 +524,12 @@ function agT7(){
   oth=grp.filter(o=>!known.has(nz(o.a))),
   pk=k=>grp.filter(o=>names(k).includes(nz(o.a))).flatMap(o=>o.x),
   rw=(nm,x)=>{const a=L(x);return`<tr><td>${esc(nm)}</td>${a.slice(0,11).map(v=>'<td>'+(v||'-')+'</td>').join('')}</tr>`},
-  gp=t=>`<tr><td colspan="13" style="text-align:left;font-weight:700;background:var(--h1)">${t}</td></tr>`;
+  sb=(nm,x)=>rw(nm,x).replace(/<td>/g,'<td style="font-weight:600;background:rgba(224,161,0,.09);border-top:1px solid var(--ln)">'),
+  gp=t=>`<tr><td colspan="13" style="text-align:left;font-weight:700;background:rgba(110,135,170,.15)">${t}</td></tr>`;
  grp.forEach(o=>{L(o.x).forEach((v,i)=>T[i]+=v)});
- h+=gp('กองตรวจมลพิษ')+G1.map(k=>rw(k[1]||k[0],pk(k))).join('');
- h+=gp('สำนักงานสิ่งแวดล้อมและควบคุมมลพิษที่ 1-16')+G2.map(k=>rw(k[1],pk(k))).join('');
- if(oth.length)h+=gp('หน่วยงานอื่น / ไม่ระบุ')+oth.map(o=>rw(o.a,o.x)).join('');
+ h+=gp('กองตรวจมลพิษ')+G1.map(k=>rw(k[1]||k[0],pk(k))).join('')+sb('รวมกองตรวจมลพิษ',G1.flatMap(pk));
+ h+=gp('สำนักงานสิ่งแวดล้อมและควบคุมมลพิษที่ 1-16')+G2.map(k=>rw(k[1],pk(k))).join('')+sb('รวมสำนักงานสิ่งแวดล้อมฯ ที่ 1-16',G2.flatMap(pk));
+ if(oth.length)h+=gp('หน่วยงานอื่น / ไม่ระบุ')+oth.map(o=>rw(o.a,o.x)).join('')+sb('รวมหน่วยงานอื่น / ไม่ระบุ',oth.flatMap(o=>o.x));
  h+=`</tbody><tfoot><tr><td>Grand total</td>${T.slice(0,11).map(v=>'<td>'+(v||'-')+'</td>').join('')}</tr></tfoot></table>`;
  el.innerHTML=h;
  const rest=T[11],np=T[12];
@@ -549,12 +551,13 @@ function agT5(){
   return[n,x.filter(r=>r.c==0).length,x.filter(r=>r.c==2).length,x.filter(r=>r.c==1).length,x.filter(r=>r.c==3).length,d,w]};
  const pb=(n,v,c)=>{if(!n)return'<td>-</td>';const p=100*v/n;return`<td>${p.toFixed(1)}<span class="bar" style="width:${p*.9}px;background:${c}"></span></td>`},
    row=(nm,x)=>{const a=L(x);return`<tr><td>${esc(nm)}</td>${a.map(v=>'<td>'+v+'</td>').join('')}${pb(a[0],a[5],'var(--g)')}${pb(a[0],a[6],'var(--y)')}</tr>`},
-  grp=t=>`<tr><td colspan="10" style="text-align:left;font-weight:700;background:var(--h1)">${t}</td></tr>`,
+  sb=(nm,x)=>row(nm,x).replace(/<td>/g,'<td style="font-weight:600;background:rgba(224,161,0,.09);border-top:1px solid var(--ln)">'),
+  grp=t=>`<tr><td colspan="10" style="text-align:left;font-weight:700;background:rgba(110,135,170,.15)">${t}</td></tr>`,
   sh=(t,rs,cs)=>`<th ${rs?'rowspan="2"':''} ${cs?'colspan="'+cs+'"':''} style="text-align:center;vertical-align:bottom">${t}</th>`;
  let h=`<table><thead><tr>${sh('หน่วยงาน',1)}${sh('จำนวนเรื่อง<br>ขอความอนุเคราะห์',1)}${sh('การดำเนินการ (เรื่อง)',0,4)}${sh('ดำเนินการแล้วเสร็จ',1)}${sh('อยู่ระหว่างดำเนินการ',1)}${sh('% แล้วเสร็จ',1)}${sh('% ระหว่างดำเนินการ',1)}</tr><tr>${['ตรวจสอบ','ประสาน','เข้าร่วมตรวจสอบ','อยู่ระหว่างมอบหมาย'].map(t=>sh(t)).join('')}</tr></thead><tbody>`;
- h+=grp('กองตรวจมลพิษ')+G1.map(k=>row(k[1]||k[0],A.filter(r=>un(r)==k[0]))).join('');
- h+=grp('สำนักงานสิ่งแวดล้อมและควบคุมมลพิษที่ 1-16')+G2.map(k=>row(k[1],A.filter(r=>un(r)==k[0]))).join('');
- if(oth.length)h+=grp('ไม่ระบุหน่วยงาน')+row('ไม่ระบุ / อื่นๆ',oth);
+ h+=grp('กองตรวจมลพิษ')+G1.map(k=>row(k[1]||k[0],A.filter(r=>un(r)==k[0]))).join('')+sb('รวมกองตรวจมลพิษ',G1.flatMap(k=>A.filter(r=>un(r)==k[0])));
+ h+=grp('สำนักงานสิ่งแวดล้อมและควบคุมมลพิษที่ 1-16')+G2.map(k=>row(k[1],A.filter(r=>un(r)==k[0]))).join('')+sb('รวมสำนักงานสิ่งแวดล้อมฯ ที่ 1-16',G2.flatMap(k=>A.filter(r=>un(r)==k[0])));
+ if(oth.length)h+=grp('ไม่ระบุหน่วยงาน')+row('ไม่ระบุ / อื่นๆ',oth)+sb('รวมไม่ระบุหน่วยงาน',oth);
  const T=L(A);
  h+=`</tbody><tfoot><tr><td>รวม</td>${T.map(v=>'<td>'+v+'</td>').join('')}${pb(T[0],T[5],'var(--g)')}${pb(T[0],T[6],'var(--y)')}</tr></tfoot></table>`;
  el.innerHTML=h;
