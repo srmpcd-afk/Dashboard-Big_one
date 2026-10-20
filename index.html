@@ -463,7 +463,7 @@ const mv=by(MN,(r,i)=>r.m==i),mi=mv.indexOf(Math.max(...mv));fmBar('c1',MN,mv);T
 const rank=(id,ii,L,vals,pre)=>{const o=L.map((l,i)=>[l,vals[i]]).filter(x=>x[1]>0).sort((a,b)=>b[1]-a[1]);TX(ii,o.length?pre(o[0]):'ไม่มีข้อมูลตามตัวกรองนี้');
 rl(id,o.map(x=>x[0]),o.map(x=>x[1]),n)},P=o=>Math.round(100*o[1]/n);
 polv();
-rank('c3','i3',rq?ACTR:BIZ,rq?by(ACTR,(r,i)=>r.c==i):by(BIZ,(r,i)=>r.b==i),o=>rq?`${o[0]} มากที่สุด ${o[1]} เรื่อง (${P(o)}%)`:`${o[0]} ถูกร้องเรียนมากที่สุด ${o[1]} เรื่อง (${P(o)}%)`);
+rank('c3','i3',rq?ACTR:BIZ,rq?by(ACTR,(r,i)=>r.c==i):by(BIZ,(r,i)=>r.b==i),o=>rq?`${o[0]} มากที่สุด ${o[1]} เรื่อง (${P(o)}%)`:`${o[0]=="อื่นๆ/ไม่ระบุ"?"อื่นๆ":o[0]} ถูกร้องเรียนมากที่สุด ${o[1]} เรื่อง (${P(o)}%)`);
 rank('c4','i4',SRC,SRC.map((_,i)=>sum(D2.map(r=>r.ss.filter(x=>x==i).length))),o=>rq?`${o[0]} ขอความอนุเคราะห์มากที่สุด ${o[1]} ครั้ง (${P(o)}%)`:`ช่องทางหลักคือ ${o[0]} ${o[1]} ครั้ง (${P(o)}%)`);
 const BK=['ไม่เกิน 15 วัน','16–30 วัน','31–45 วัน','เกิน 45 วัน'],bv=BK.map((_,i)=>dd.filter(r=>[r.d<=15,r.d>15&&r.d<=30,r.d>30&&r.d<=45,r.d>45][i]).length);
 dur(BK,bv);TX('i5','');
@@ -913,14 +913,14 @@ document.getElementById('pol').onclick=e=>{const b=e.target.closest('.pc');if(!b
 const SEL=()=>POL.map((_,j)=>j).filter(j=>F.p.has(j));
 const CC=()=>TH2=='dark'?'#5fb0cf':'#177089',CA='#e0a526',RLC={c3:'#2a7fa6',c4:'#1fb5a8',c7:'#e8913a',c8:'#d6609b',c9:'#9b6bd1',c10:'#4caf6a'},DPAL=['#2a7fa6','#e8913a','#4caf6a','#9b6bd1','#d6609b','#8d99a6'],NOD='<p class="note">ไม่มีข้อมูลตามตัวกรองนี้</p>';
 function rl(id,L,V,T){id=='c8'||id=='c9'||id=='c10'?lp(id,L,V,T):wf(id,L,V,id=='c4'?'ครั้ง':'เรื่อง')}
-function wf(id,L,V,unit){const el=document.getElementById(id);if(!el)return;const t=sum(V);if(!t){el.innerHTML=NOD;return}
+function wf(id,L,V,unit){const DN=x=>id=="c3"&&x=="อื่นๆ/ไม่ระบุ"?"อื่นๆ":x;const el=document.getElementById(id);if(!el)return;const t=sum(V);if(!t){el.innerHTML=NOD;return}
 let S=L.map((l,i)=>[l,V[i],[l]]),rest=[];if(S.length>6){rest=S.slice(5);S=S.slice(0,5).concat([['รายการที่เหลือ ('+rest.length+')',sum(rest.map(x=>x[1])),rest.map(x=>x[0])]])}
-const mx=Math.max(...S.map(x=>x[1])),pc=x=>Math.round(100*x/t),at=x=>`data-det="${id}" data-n="${encodeURIComponent(JSON.stringify(x[2]||[x[0]]))}" data-t="${esc(x[0])}" tabindex="0" role="button"`,
-row=(x,i,r)=>`<div class="rk"${r?'':` data-k="${i}"`} ${at(x)} style="--c:${DPAL[i]};--w:${Math.max(3,100*x[1]/mx).toFixed(1)}%;--d:${i*80}ms"><span class="bd">${r?'':rest.length&&i==5?'+':i+1}</span><div><div class="tp"><span>${esc(x[0])}</span><span><b>${x[1]}</b><em>${pc(x[1])}%</em></span></div><div class="tr"><i></i></div></div></div>`;
-el.innerHTML=`<div class="rkw"><div class="hero" style="--c:${DPAL[0]}"><b>${pc(S[0][1])}%</b><span>${esc(S[0][0])}<small>มากที่สุด · ${S[0][1]} จาก ${t} ${unit}</small></span></div><div class="sgb">${S.map((x,i)=>`<i data-k="${i}" ${at(x)} title="${esc(x[0])} ${pc(x[1])}%" style="--v:${x[1]};--c:${DPAL[i]};animation-delay:${i*80}ms"></i>`).join('')}<div class="stip"></div></div><div>${S.map((x,i)=>row(x,i)).join('')}${rest.length?`<details><summary>ดูรายการที่เหลือ (${rest.length})</summary>${rest.map(x=>row([x[0],x[1],[x[0]]],5,1)).join('')}</details>`:''}</div></div>`;
+const mx=Math.max(...S.map(x=>x[1])),pc=x=>Math.round(100*x/t),at=x=>`data-det="${id}" data-n="${encodeURIComponent(JSON.stringify(x[2]||[x[0]]))}" data-t="${esc(DN(x[0]))}" tabindex="0" role="button"`,
+row=(x,i,r)=>`<div class="rk"${r?'':` data-k="${i}"`} ${at(x)} style="--c:${DPAL[i]};--w:${Math.max(3,100*x[1]/mx).toFixed(1)}%;--d:${i*80}ms"><span class="bd">${r?'':rest.length&&i==5?'+':i+1}</span><div><div class="tp"><span>${esc(DN(x[0]))}</span><span><b>${x[1]}</b><em>${pc(x[1])}%</em></span></div><div class="tr"><i></i></div></div></div>`;
+el.innerHTML=`<div class="rkw"><div class="hero" style="--c:${DPAL[0]}"><b>${pc(S[0][1])}%</b><span>${esc(DN(S[0][0]))}<small>มากที่สุด · ${S[0][1]} จาก ${t} ${unit}</small></span></div><div class="sgb">${S.map((x,i)=>`<i data-k="${i}" ${at(x)} title="${esc(DN(x[0]))} ${pc(x[1])}%" style="--v:${x[1]};--c:${DPAL[i]};animation-delay:${i*80}ms"></i>`).join('')}<div class="stip"></div></div><div>${S.map((x,i)=>row(x,i)).join('')}${rest.length?`<details><summary>ดูรายการที่เหลือ (${rest.length})</summary>${rest.map(x=>row([x[0],x[1],[x[0]]],5,1)).join('')}</details>`:''}</div></div>`;if(id=="c3"&&L.includes("อื่นๆ/ไม่ระบุ"))el.insertAdjacentHTML("beforeend",`<div class="note tnote tn3"><b>หมายเหตุ :</b><ol><li><span class="no">๑.</span>เช่น ที่ดินจัดสรร เตาเผาศพ ท่าอากาศยาน น้ำเน่าเสียในคลอง ฉีดพ่นสารเคมี การถมดิน เป็นต้น</li></ol></div>`);
 const sgb=el.querySelector('.sgb'),tip=el.querySelector('.stip'),sg=[...sgb.querySelectorAll('i')],rw=[...el.querySelectorAll('.rk[data-k]')];
 const act=k=>{sg.forEach(c=>{const on=c.dataset.k==k;c.style.opacity=on?1:.2;c.style.transform=on?'scaleY(1.8)':''});rw.forEach(r=>{r.classList.toggle('hl',r.dataset.k==k);r.style.opacity=r.dataset.k==k?1:.45});
-const c=sg[k],x=S[k];tip.innerHTML=`<b>${esc(x[0])}</b> ${x[1]} ${unit} · ${pc(x[1])}%`;tip.style.borderColor=DPAL[k];tip.classList.add('on');
+const c=sg[k],x=S[k];tip.innerHTML=`<b>${esc(DN(x[0]))}</b> ${x[1]} ${unit} · ${pc(x[1])}%`;tip.style.borderColor=DPAL[k];tip.classList.add('on');
 const w2=tip.offsetWidth,cx=c.offsetLeft+c.offsetWidth/2;tip.style.left=Math.min(Math.max(cx,w2/2),sgb.clientWidth-w2/2)+'px'},
 off=()=>{sg.forEach(c=>{c.style.opacity=1;c.style.transform=''});rw.forEach(r=>{r.classList.remove('hl');r.style.opacity=1});tip.classList.remove('on')};
 sg.forEach(c=>{c.onmouseenter=()=>act(+c.dataset.k);c.onmouseleave=off});rw.forEach(r=>{r.onmouseenter=r.onfocus=()=>act(+r.dataset.k);r.onmouseleave=r.onblur=off})}
